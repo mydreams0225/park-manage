@@ -1,4 +1,5 @@
 import pagingComponent from './paging.vue'
+
 const paging={
     install:function(Vue){
         Vue.component('Paging',pagingComponent)
@@ -6,3 +7,5 @@ const paging={
 };
 
 export default paging;
+
+

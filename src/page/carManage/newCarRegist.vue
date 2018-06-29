@@ -1,11 +1,11 @@
 <template>
 	<section>
 	 <div class="parent">
-    <template>
-       <el-tabs :tab-position="tabPosition" style="height: 200px;">
+    <template >
+       <el-tabs :tab-position="tabPosition"style="margin-top:15px" type="border-card" >
         <el-tab-pane  label="新车登记注册">
           <!-- 读卡操作 -->
-           <div style="margin-top:15px;">
+           <div class="margin-tops">
              <el-row :gutter="20">
               <el-col :span="6">
                 <div class="grid-content bg-purple">
@@ -332,9 +332,6 @@
 </script>
 
 <style scoped>
-.parent{
-  text-align:left;
-}
 .sq_body{
   height:60px;
   line-height:60px;

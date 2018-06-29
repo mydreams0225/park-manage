@@ -2,7 +2,7 @@
 	<section>
 		<div class="parent">
 			<!-- 查询区 -->
-      	<div class="carType">
+      	<div class="margin-tops">
       		<form class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
 	      		<el-select v-model="v_park" filterable placeholder="所属停车场">
 	                    <el-option
@@ -12,12 +12,12 @@
 	                      :value="item.value">
 	                    </el-option>
 	                  </el-select>
-	                   <el-button  type="primary" icon="el-icon-search">查询</el-button>
-	                   <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
+	                   <el-button  type="primary" icon="el-icon-search" size="medium">查询</el-button>
+	                   <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')" size="medium">清除</el-button>
               </form>
       	</div>
       	<!-- 操作区 -->
-      	<div class="carType">
+      	<div class="margin-tops">
               <template>
                     <el-table
                       :data="tableData"
@@ -60,7 +60,7 @@
               </template>
             </div>
              <!--  分页 -->
-         <div class="carType">
+         <div>
 
             <el-pagination
               @size-change="handleSizeChange"
@@ -112,12 +112,7 @@
 	}
 </script>
 <style scoped>
-  .parent{
-  	 text-align:left;
-  }
-  .carType{
-  	margin-top:15px;
-  }
+
   .backgrounds{
   	color:#fff;
   	padding:3px;

@@ -1,3 +1,11 @@
+/*所有页面用到的样式*/
+.margin-tops{
+  margin-top:15px !important;
+}
+.parent{
+  text-align:left !important;
+}
+/*所有页面用到的样式end*/
 .aside{
 	width:230px; background-color:#394555 !important;
 }
@@ -83,3 +91,23 @@
   .el-table .cell, .el-table th div{
     overflow:visible !important;
  }
+
+.record .el-tabs__item{
+   background-color:#EAEDF1 !important;
+}
+.record .el-tabs__item.is-active{
+  background-color:#fff !important;
+}
+.el-submenu .el-menu-item{
+    min-width:200px !important;
+  }
+  .el-menu-item-group__title{
+    padding:0 0 0 40px !important;
+  }
+  /*home里面的新增三级菜单样式*/
+  .xz .el-submenu__title{
+    padding-left: 40px !important;
+    background-color:#F4F6F8 !important;
+    color:#000 !important;
+    
+  }

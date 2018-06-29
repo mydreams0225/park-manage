@@ -1,18 +1,18 @@
 <template>
 	<section>
-     <div class="tenet-parent">
+     <div class="parent">
         <!-- 操作区 -->
-       <div>
-         <el-button  type="danger" icon="el-icon-delete" >删除</el-button>
-         <el-button  type="danger" icon="el-icon-delete" >删除查询到的记录</el-button>
-         <el-button  icon="el-icon-circle-check-outline" >根据在场车辆数纠正空车位数</el-button>
+       <div class="margin-tops">
+         <el-button  type="danger" icon="el-icon-delete" size="medium">删除</el-button>
+         <el-button  type="danger" icon="el-icon-delete" size="medium">删除查询到的记录</el-button>
+         <el-button  icon="el-icon-circle-check-outline" size="medium">根据在场车辆数纠正空车位数</el-button>
          <div class="fr">
-           <el-button  icon="el-icon-upload2" type="primary" >批量导入</el-button>
-           <el-button  icon="el-icon-upload" type="primary" >导出EXCEL报表</el-button>
+           <el-button  icon="el-icon-upload2" type="primary" size="medium" >批量导入</el-button>
+           <el-button  icon="el-icon-upload" type="primary" size="medium">导出EXCEL报表</el-button>
          </div>
        </div>
        <!-- 查询区 -->
-       <div class="query">
+       <div class="margin-tops">
          <form class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
            <el-select v-model="v_park" filterable placeholder="所属停车场">
                     <el-option
@@ -87,14 +87,12 @@
                       :value="item.value">
                     </el-option>
            </el-select>
-           <el-button type="primary" icon="el-icon-search">查询</el-button>
-           <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
+           <el-button type="primary" icon="el-icon-search" size="medium">查询</el-button>
+           <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')" size="medium">清除</el-button>
          </form>
        </div>
        <!-- 数据展示区 -->
        <div> 
-         
-      
           <el-row>
              <el-col :span="6" v-for="(o, index) in 12" :key="o" >
                <el-card  class="fatherImg">
@@ -111,22 +109,24 @@
                </el-card>
              </el-col>
           </el-row>
-    </div>
+       </div>
        <!-- 展示区end -->
-     </div>
-     <!--  分页 -->
-               <div class="block">
-   
-                  <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page.sync="currentPage1"
-                    :page-size="10"
-                    layout="total, prev, pager, next"
-                    :total="12">
-                  </el-pagination>
-                </div>
-             <!-- 分页end -->
+     
+      <!--  分页 -->
+      <div >
+
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage1"
+          :page-size="10"
+          layout="total, prev, pager, next"
+          :total="12">
+        </el-pagination>
+      </div>
+      <!-- 分页end -->
+    
+    </div>
 	</section>
 </template>
 
@@ -209,10 +209,7 @@
 </script>
 
 <style scoped>
-   *{
-    
-    text-align:left;
-   }
+ 
   .el-col {
     border-radius: 4px;
    
@@ -230,15 +227,11 @@
     border-radius: 4px;
     min-height: 36px;
   }
-  .tenet-parent{
-    margin-top:15px;
-  }
+
   .fr{
     float:right;
   }
-  .query{
-    margin-top:15px;
-  }
+
   .el-input-group{
     width:200px;
   }

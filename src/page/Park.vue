@@ -12,107 +12,74 @@
            </div>
         </div>
         <div> -->
+        <div class="parent">
           <form class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
-
-                  <el-input   id="client" name="client" placeholder="点击选择" readonly="readonly">
-                    <template slot="prepend">所属客户</template>   
-                  </el-input>
-                 <!--  <div class="sel" style="display:inline-block">
-                    <div class="span">系统类型</div>
-
-                      <select name="types" id="types"> 
-                          <option value="">全部</option>
-                      </select>
-                  </div> -->
-                  <el-select v-model="sys_type" filterable placeholder="系统类型">
+                    <el-input   id="client" name="client" placeholder="点击选择" readonly="readonly">
+                      <template slot="prepend">所属客户</template>   
+                    </el-input>
+                    <el-select v-model="sys_type" filterable placeholder="系统类型">
+                        <el-option
+                          v-for="item in types"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    <el-input   id="names" name="names" placeholder="名称" >
+                     <template slot="prepend">名称</template>   
+                    </el-input>
+                    <el-input   id="codes" name="codes" placeholder="编码">
+                     <template slot="prepend">编码</template>   
+                    </el-input>
+                    <el-input   id="address" name="address" placeholder="地址">
+                     <template slot="prepend">地址</template>   
+                    </el-input>
+                    <el-select v-model="online_status" filterable placeholder="在线状态">
                       <el-option
-                        v-for="item in types"
+                        v-for="item in online"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
                       </el-option>
                     </el-select>
-                  <el-input   id="names" name="names" placeholder="名称" >
-                   <template slot="prepend">名称</template>   
-                  </el-input>
-                  <el-input   id="codes" name="codes" placeholder="编码">
-                   <template slot="prepend">编码</template>   
-                  </el-input>
-                  <el-input   id="address" name="address" placeholder="地址">
-                   <template slot="prepend">地址</template>   
-                  </el-input>
-                  <el-select v-model="online_status" filterable placeholder="在线状态">
-                    <el-option
-                      v-for="item in online"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                  <!-- <div class="sel w" style="display:inline-block">
-                    <div class="span">在线状态</div>
-
-                      <select class="wm" name="" id=""> 
-                          <option value="">全部</option>
-                      </select>
-                  </div> -->
-               <!--     <div class="sel address" style="display:inline-block">
-                    <div class="span">地区</div> -->
-                       <el-select v-model="v_provice" filterable placeholder="--选择省份--">
-                    <el-option
-                      v-for="item in provice"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                  <el-select v-model="v_city" filterable placeholder="--选择城市--">
-                    <el-option
-                      v-for="item in city"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                  <el-select v-model="v_area" filterable placeholder="--区/县--">
-                    <el-option
-                      v-for="item in area"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                      <!-- <select   name="" id=""> 
-                          <option value="">--选择省份--</option>
-                      </select>
-                      <select  name="" id=""> 
-                          <option value="">--选择城市--</option>
-                      </select>
-                      <select name="" id=""> 
-                          <option value="">--区/县--</option>
-                      </select> -->
-           <!--        </div> -->
-                   <el-select v-model="project_statu" filterable placeholder="工程状态">
-                    <el-option
-                      v-for="item in project_status"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                 <!--  <div class="sel w" style="display:inline-block">
-                    <div class="span">工程状态</div>
-
-                      <select class="wm" name="" id=""> 
-                          <option value="">全部</option>
-                      </select>
-                  </div> -->
-                  <el-button type="primary" icon="el-icon-search">查询</el-button>
-                  <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
-          </form>
+                    <el-select v-model="v_provice" filterable placeholder="--选择省份--">
+                      <el-option
+                        v-for="item in provice"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                    <el-select v-model="v_city" filterable placeholder="--选择城市--">
+                      <el-option
+                        v-for="item in city"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                    <el-select v-model="v_area" filterable placeholder="--区/县--">
+                      <el-option
+                        v-for="item in area"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                     <el-select v-model="project_statu" filterable placeholder="工程状态">
+                      <el-option
+                        v-for="item in project_status"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                    <el-button size="medium" type="primary" icon="el-icon-search">查询</el-button>
+                    <el-button size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
+           </form>
         </div>
         <!-- gridview -->
-        <div style="margin-top:15px;font-size:12px;">
+        <div class="margin-tops" style="font-size:12px;">
               <template>
                     <el-table
                       :data="tableData"
@@ -164,11 +131,11 @@
                          <template slot-scope="scope">
                           <div style="display:inline-block;vertical-align:top ">
                              <a href="#" class="el-icon-upload operate green"></a>
-                          <a href="#" class="el-icon-setting operate blue" @click="$router.push('/carinfoList')">设备管理</a>
+                          <a href="#" class="el-icon-setting operate blue" @click="$router.push('/parkingandEntryequi')">设备管理</a>
                           </div >
                          
                           <div style="display:inline-block;position:relative">
-                            <a href="#" class="el-icon-caret-bottom operate blue after" >操作更多</a>
+                            <!-- <a href="#" class="el-icon-caret-bottom operate blue after" >操作更多</a> -->
                            
                            <!--  <ul class="dropdown-menu">
                              <li>强制出场</li>

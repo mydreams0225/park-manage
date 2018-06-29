@@ -26,11 +26,7 @@
 		</el-col>
 
 		<el-col :xs="24" :sm="24" :md="24" :lg="24" class="main">
-
-				
-			
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'" >
-				
 				<!--导航菜单-->
 				<el-menu :default-active="$route.path" class="el-menu-vertical-demo el-menus" @open="handleopen" @close="handleclose" @select="handleselect"
 					 unique-opened router v-show="!collapsed" >
@@ -40,8 +36,26 @@
 				     </div>
 					<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
 						<el-submenu :index="index+''" v-if="!item.leaf">
-							<template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
-							<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">{{child.name}}</el-menu-item>
+							<template slot="title" ><i :class="item.iconCls"></i>{{item.name}}</template>
+
+								<el-menu-item-group  v-for="(child,indexs)  in item.children"  :index="child.path" :key="child.path"  v-if="!child.hidden">
+		                                <!-- <el-menu class="xz"  v-if="!child.path" :default-active="child.path"> -->
+		                                <el-submenu  :index="child.path"  v-if="child.z &&!item.leaf">
+		                                	<template slot="title" class="child_title"><i :class="child.iconCls"></i>{{child.name}}</template>
+		                                	<el-menu-item  v-for="(sun,i)  in child.children" :index="sun.path" :key="sun.path" >
+		                                		{{sun.name}}
+		                                	</el-menu-item>
+		                                </el-submenu>
+		                                <!-- </el-menu> -->
+		                                <el-menu-item :index="child.path" v-if="!child.z" :key="child.path"> {{child.name}}  </el-menu-item>
+		                       </el-menu-item-group>
+		                       
+                                <!-- <el-menu-item v-if="child.path">{{child.name}}</el-menu-item> -->
+							
+							<!-- </el-menu-item-group> -->
+                            <!--  <el-menu-item v-for="sun in child.children" :index="sun.path" :key="sun.path" v-if="!sun.hidden"> {{sun.name}}</el-menu-item> -->
+							
+							
 						</el-submenu>
 						<el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
 					</template>
@@ -56,7 +70,12 @@
 						<template v-if="!item.leaf">
 							<div class="el-submenu__title" style="padding-left: 10px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"><i :class="item.iconCls" ></i></div>
 							<ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"> 
-								<li v-for="child in item.children" v-if="!child.hidden" :key="child.path" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==child.path?'is-active':''" @click="$router.push(child.path)">{{child.name}}</li>
+								<li v-for="child in item.children" v-if="!child.hidden" :key="child.path" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==child.path?'is-active':''"  @click="$router.push(child.path)">{{child.name}}
+                                    <!-- zlz ok-->
+                                    <!-- <ul class="sun">
+                                    	<li v-for="sun in child.children" v-if="!sun.hidden" :key="sun.path" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==sun.path?'is-active':''" @click="$router.push(sun.path)">{{sun.name}}</li>
+                                    </ul> -->
+								</li>
 							</ul>
 						</template>
 						<template v-else>
@@ -82,7 +101,9 @@
 						<transition name="fade" mode="out-in">
 							<router-view></router-view>
 						</transition>
+
 					</el-col>
+
 				</div>
 			</section>
 		</el-col>
@@ -115,10 +136,10 @@
 				console.log('submit!');
 			},
 			handleopen() {
-				//console.log('handleopen');
+				console.log('handleopen');
 			},
 			handleclose() {
-				//console.log('handleclose');
+				console.log('handleclose');
 			},
 			handleselect: function (a, b) {
 			},
@@ -319,5 +340,11 @@ html body{
 				}
 			}
 		}
+	}
+	.el-submenu .el-menu-item{
+		min-width:200px
+	}
+	.sun .el-submenu .el-menu-item{
+		z-index:99999;
 	}
 </style>

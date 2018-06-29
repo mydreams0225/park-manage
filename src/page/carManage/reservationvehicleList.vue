@@ -2,7 +2,7 @@
 	<section>
 		<div class="parent">
 			<!-- 查询区 -->
-		<div class="list">
+		<div class="margin-tops">
 			<form class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
 				<el-select v-model="v_park" filterable placeholder="所属停车场">
                     <el-option
@@ -29,12 +29,12 @@
                       :value="item.value">
                     </el-option>
                 </el-select>
-                <el-button type="primary" icon="el-icon-search">查询</el-button>
-                <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
+                <el-button type="primary" icon="el-icon-search" size="medium">查询</el-button>
+                <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')" size="medium">清除</el-button>
 			</form>
 		</div>
 		<!-- 展示区 -->
-		<div class="list">
+		<div class="margin-tops">
               <template>
                     <el-table
                       :data="tableData"
@@ -85,7 +85,7 @@
         
         </div>
 			<!-- 分页区 -->
-	    <div class="list">
+	    <div>
 	        <Paging v-bind:total="totals"></Paging>
 	    </div>
 		</div>
@@ -122,12 +122,8 @@
 	}
 </script>
 <style scoped>
-   .parent{
-   	  text-align:left;
-   }
-   .list{
-   	  margin-top:15px;
-   }
+ 
+  
    .el-input-group{
     width:200px;
   }

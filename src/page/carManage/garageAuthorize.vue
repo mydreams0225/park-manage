@@ -1,8 +1,11 @@
 <template>
 	<section>
 		<div class="parent">
+			<div class="margin-tops">
+				
+			
 			<template>
-				  <el-tabs v-model="activeName" >
+				  <el-tabs v-model="activeName" type="border-card">
 				    <el-tab-pane label="按车辆分组授权" name="first">
 				    	<div  class="tsd">
 				             <el-row :gutter="20">
@@ -102,6 +105,7 @@
 				    
 				  </el-tabs>
 				</template>
+				</div>
 		</div>
 	</section>
 </template>
@@ -116,9 +120,7 @@
  }
 </script>
 <style scoped>
- .parent{
- 	text-align:left;
- }
+
  .tsd{
  	padding-bottom:15px;
  	 border-bottom: 1px #999 dotted;

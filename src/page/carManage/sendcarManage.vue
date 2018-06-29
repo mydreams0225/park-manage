@@ -2,11 +2,11 @@
 	<section>
 	  <div class="parent">
 	  	<!-- 操作区 -->
-	  	<div class="sendcarManage">
-	  		<el-button type="primary" @click="centerDialogVisible = true"><strong><i class="el-icon-plus"></i></strong>我要派车</el-button>
+	  	<div class="margin-tops">
+	  		<el-button size="medium" type="primary" @click="centerDialogVisible = true"><strong><i class="el-icon-plus"></i></strong>我要派车</el-button>
 	  	</div>
 	     <!-- 查询区 -->
-         <div class="sendcarManage">
+         <div class="margin-tops">
          	<form class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
          		<el-select v-model="v_park" filterable placeholder="所属停车场">
                     <el-option
@@ -54,12 +54,12 @@
                       placeholder="选择日期时间">
                     </el-date-picker>
                   </div>
-           <el-button type="primary" icon="el-icon-search">查询</el-button>
-           <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
+           <el-button type="primary" icon="el-icon-search" size="medium">查询</el-button>
+           <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')" size="medium">清除</el-button>
             </form>
         </div>
         <!-- 数据展示区 -->
-        <div class="sendcarManage">
+        <div class="margin-tops">
               <template>
                     <el-table
                       :data="tableData"
@@ -122,7 +122,7 @@
           
         </div>
         <!-- 分页区 -->
-	    <div class="sendcarManage">
+	    <div >
 	        <Paging v-bind:total="totals"></Paging>
 	        
 	    </div>
@@ -172,12 +172,8 @@
 	}
 </script>
 <style scoped>
-   .parent{
-   	  text-align:left;
-   }
-   .sendcarManage{
-   	  margin-top:15px;
-   }
+ 
+ 
 
    .el-input-group{
     width:200px;
@@ -186,6 +182,6 @@
     width:130px;
   }
   .dates{
-  display:inline-block;
-}
+   display:inline-block;
+ }
 </style>

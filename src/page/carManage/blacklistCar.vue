@@ -2,8 +2,8 @@
 	<section>
 		<div class="parent">
 				<!-- 操作区 -->
-      	<div class="blacklistCar">
-      	  <el-button type="primary" @click="centerDialogVisible = true"><strong><i class="el-icon-plus"></i></strong>新增</el-button>
+      	<div class="margin-tops">
+      	  <el-button size="medium" type="primary" @click="centerDialogVisible = true"><strong><i class="el-icon-plus"></i></strong>新增</el-button>
       	  <el-dialog 
 				  title="添加黑名单信息"
 				  :visible.sync="centerDialogVisible"
@@ -110,10 +110,10 @@
 				    <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
 				  </span>
 				</el-dialog>
-      	  <el-button type="success"><strong><i class="el-icon-upload"></i></strong> 导出EXCEL报表</el-button>	
+      	  <el-button type="success"><strong><i class="el-icon-upload"></i></strong size="medium"> 导出EXCEL报表</el-button>	
       	</div>
       	<!-- 查询区 -->
-      	<div class="blacklistCar query">
+      	<div class="margin-tops query">
       		<form class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
 	      		<el-select v-model="v_park" filterable placeholder="所属停车场">
 	                    <el-option
@@ -137,11 +137,11 @@
                 <el-input   id="register_no" name="register_no" placeholder="注册号" >
                    <template slot="prepend">注册号</template>   
                 </el-input>
-               <el-button  type="primary" icon="el-icon-search">查询</el-button>
-               <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
+               <el-button  type="primary" icon="el-icon-search" size="medium">查询</el-button>
+               <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')" size="medium">清除</el-button>
               </form>
       	</div>
-      	 <div class="blacklistCar">
+      	 <div class="margin-tops">
               <template>
                     <el-table
                       :data="tableData"
@@ -189,7 +189,7 @@
               </template>
          </div>
              <!--  分页 -->
-         <div class="blacklistCar">
+         <div>
 
             <el-pagination
               @size-change="handleSizeChange"
@@ -242,16 +242,15 @@
     }
 </script>
 <style scoped>
- .query .el-select .el-input {
-    width: 130px;
 
+   .el-input-group{
+    width:200px;
   }
-  .parent{
-  	text-align:left;
+  .el-select{
+    width:130px;
   }
-  .blacklistCar{
-  	margin-top:15px;
-  }
+
+
   .el-button--success {
   	float:right;
   }
