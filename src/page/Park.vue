@@ -13,9 +13,9 @@
         </div>
         <div> -->
         <div class="parent">
-          <form class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
-                    <el-input   id="client" name="client" placeholder="点击选择" readonly="readonly">
-                      <template slot="prepend">所属客户</template>   
+          <form :model="filters" class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
+                    <el-input   id="client" name="client" placeholder="点击选择" readonly="readonly" >
+                      <template slot="prepend"> 所属客户</template>   
                     </el-input>
                     <el-select v-model="sys_type" filterable placeholder="系统类型">
                         <el-option
@@ -25,7 +25,7 @@
                           :value="item.value">
                         </el-option>
                       </el-select>
-                    <el-input   id="names" name="names" placeholder="名称" >
+                    <el-input   id="names" name="names" placeholder="名称" v-model="filters.name" >
                      <template slot="prepend">名称</template>   
                     </el-input>
                     <el-input   id="codes" name="codes" placeholder="编码">
@@ -74,7 +74,7 @@
                         :value="item.value">
                       </el-option>
                     </el-select>
-                    <el-button size="medium" type="primary" icon="el-icon-search">查询</el-button>
+                    <el-button size="medium" type="primary" icon="el-icon-search" v-on:click="getPark">查询</el-button>
                     <el-button size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
            </form>
         </div>
@@ -82,7 +82,7 @@
         <div class="margin-tops" style="font-size:12px;">
               <template>
                     <el-table
-                      :data="tableData"
+                      :data="parkList"
                       border
                       style="width: 100% ;">
                       <el-table-column
@@ -131,7 +131,7 @@
                          <template slot-scope="scope">
                           <div style="display:inline-block;vertical-align:top ">
                              <a href="#" class="el-icon-upload operate green"></a>
-                          <a href="#" class="el-icon-setting operate blue" @click="$router.push('/parkingandEntryequi')">设备管理</a>
+                             <a href="#" class="el-icon-setting operate blue" @click="$router.push('/parkingandEntryequi')">设备管理</a>
                           </div >
                          
                           <div style="display:inline-block;position:relative">
@@ -172,69 +172,87 @@
       </template>
 
 <script>
+import { getParklist } from '../api/api';
 	export default {
      methods: {
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-      },
-      callbackSelTenant:function(){
-          var aa=document.getElementsByTagName("input");  
-          console.log(aa);
-                for(var i=0;i<aa.length;i++){  
-                    if (aa[i].type=="text"){  
-                        aa[i].value = "";  
-                    }  
-                }  
-      },
-      getUrl(){
-        for(item in $router.options.routes){
-          console.log(item);
-        }
-      }
+              getPark:function(){
+                 let para = {
+                    name: this.filters.name
+                  };
+                  //this.loading = true;
+                  //NProgress.start();
+                  getParklist(para).then((res) => {
+                    this.parkList = res.data.parkList;
+                   // this.loading = false;
+                    //NProgress.done();
+        });
+              },
+              handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+              },
+              handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+              },
+              callbackSelTenant:function(){
+                  var aa=document.getElementsByTagName("input");  
+                  console.log(aa);
+                        for(var i=0;i<aa.length;i++){  
+                            if (aa[i].type=="text"){  
+                                aa[i].value = "";  
+                            }  
+                        }  
+              },
+              getUrl(){
+                for(item in $router.options.routes){
+                  console.log(item);
+                }
+              }
     },
-   
+   mounted() {
+      this.getPark();
+    },
     
     data(){
-      return{
-        currentPage1: 1,
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          types: '停车场管理系统（网页版）',
-          online:'在线2小时'
-        }],
-        types: [{
-          value: '选项1',
-          label: '停车场管理系统（网页版）'
-        }],
-        sys_type:'',
-        online:[{
-          value:"1",
-          label:'在线'
-        },{
-          value:'2',
-          label:'离线'
-        }],
-        online_status:'',
-        project_status:[{
-          value:'1',
-          label:'新建'
-        }],
-        project_statu:'',
-        provice:[{}],
-        v_provice:'',
-        city:[{
-          value:'1',
-          label:'广州',
-        }],
-        v_city:'',
-        area:[{}],
-        v_area:''
+          return{
+                filters: {
+                  name: '1'
+                },
+                currentPage1: 1,
+                parkList: [{
+                  date: '2016-05-02',
+                  name: '王小虎',
+                  types: '停车场管理系统（网页版）',
+                  online:'在线2小时'
+                }],
+                types: [{
+                  value: '选项1',
+                  label: '停车场管理系统（网页版）'
+                }],
+                sys_type:'',
+                online:[{
+                  value:"1",
+                  label:'在线'
+                },{
+                  value:'2',
+                  label:'离线'
+                }],
+                online_status:'',
+                project_status:[{
+                  value:'1',
+                  label:'新建'
+                }],
+                project_statu:'',
+                provice:[{}],
+                v_provice:'',
+                city:[{
+                  value:'1',
+                  label:'广州',
+                }],
+                v_city:'',
+                area:[{}],
+                v_area:''
 
-      }
+          }
     }
 	}
 </script>
@@ -346,6 +364,7 @@ a:hover{
 }
 .blue{
    background-color:#31b0d5; 
+   border:1px solid #31b0d5;
 }
 .green{
    background-color:#5cb85c;;
@@ -372,8 +391,10 @@ a:hover{
   }
   .green{
     background-color:#5cb85c;
+    border:1px solid #5cb85c;
   }
   .red{
     background-color:#d9534f;
+
   }
 </style>

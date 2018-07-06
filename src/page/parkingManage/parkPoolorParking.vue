@@ -69,7 +69,7 @@
                     <el-button size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
             </div>
             <div class="margin-tops">
-				 <template>
+				         <template>
                     <el-table
                       :data="tableData"
                       border

@@ -150,7 +150,7 @@
 					//type: 'warning'
 				}).then(() => {
 					sessionStorage.removeItem('user');
-					_this.$router.push('/login');
+					_this.$router.push({path:'/login'});
 				}).catch(() => {
 				});
 			},

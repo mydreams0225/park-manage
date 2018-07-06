@@ -60,6 +60,25 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
+	            <el-select v-model="v_parkingTime" filterable placeholder="停车时长">
+	                    <el-option
+	                      v-for="item in parkingTime"
+	                      :key="item.value"
+	                      :label="item.label"
+	                      :value="item.value">
+	                    </el-option>
+	            </el-select>
+	            <el-input   id="dutyMan" name="dutyMan" placeholder="请输入值" >
+	            	 <template slot="prepend">请输入值</template>   
+                </el-input>
+                <el-select v-model="v_min" filterable placeholder="分钟">
+	                    <el-option
+	                      v-for="item in min"
+	                      :key="item.value"
+	                      :label="item.label"
+	                      :value="item.value">
+	                    </el-option>
+	            </el-select>
 	             <el-button type="primary" icon="el-icon-search" size="medium">查询</el-button>
                  <el-button size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
                  <div class="rights"> 
@@ -100,10 +119,13 @@
                         label="通道">
                       </el-table-column>
                       <el-table-column
-                        prop="start_date1"
+                        prop="in_date"
                         label="入场时间">
                       </el-table-column>
-
+                      <el-table-column
+                        prop="out_date"
+                        label="出场时间">
+                      </el-table-column>
                       <el-table-column
                         prop="release_method"
                         label="放行方式">
@@ -174,7 +196,7 @@
 }
 .rights{
 	position:absolute;
-	top:45px;
+	top:90px;
 	right:0;
 }
 </style>

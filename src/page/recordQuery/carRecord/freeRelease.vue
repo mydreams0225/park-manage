@@ -158,23 +158,23 @@
 	}
 </script>
 <style scoped>
- /*公共属性*/
-     .el-input-group{
-        width:200px;
-      }
-	  .el-select{
-	    width:130px;
-	  }
-  /*公共属性*/
-   .dates{
-   display:inline-block;
-}
-.querys{
-	position:relative;
-}
-.rights{
-	position:absolute;
-	top:45px;
-	right:0;
-}
+	     /*公共属性*/
+	    .el-input-group{
+	        width:200px;
+	      }
+		.el-select{
+		    width:130px;
+		  }
+	    /*公共属性*/
+	    .dates{
+	       display:inline-block;
+	     }
+		.querys{
+			position:relative;
+		}
+		.rights{
+			position:absolute;
+			top:45px;
+			right:0;
+		}
 </style>

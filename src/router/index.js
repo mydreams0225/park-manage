@@ -56,12 +56,15 @@ import monthCar from '@/page/financeReport/monthCar'
 Vue.use(Router)
 
 export default new Router({
+  mode:'history',
   routes: [
             {
-              path: '/',
+              path: '/login',
               name: '',
               component: Login,
+
               hidden:true
+
             },
             {
                 path: '/park',
@@ -70,9 +73,7 @@ export default new Router({
                 iconCls: 'el-icon-goods',//图标样式class
                 children: [
                     { path: '/parklist', component: Park, name: '停车场列表' },
-                    { path: '/attendcar', component: AttendCar, name: '在场车辆' },
-                    
-                    
+                    { path: '/attendcar', component: AttendCar, name: '在场车辆' },                    
                 ]
              },
              {

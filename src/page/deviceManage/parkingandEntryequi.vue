@@ -2,7 +2,7 @@
 	<section>
 		<div class="parent">
 			<div class="margin-tops ">
-				<el-select v-model="v_park" filterable placeholder="所属停车场">
+				<el-select v-model="v_park"  filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in park"
 	                      :key="item.value"
@@ -11,38 +11,54 @@
 	                    </el-option>
 	            </el-select>
 			</div>
-			<div class="margin-tops left">
-				<el-tree
-			      :data="data5"
-			      show-checkbox
-			      node-key="id"
-			      default-expand-all
-			      :expand-on-click-node="false">
-			      <span class="custom-tree-node" slot-scope="{ node, data }">
-			       <span>{{ node.label }}</span>
-			        <span>
-			          <el-button
-			            type="text"
-			            size="mini"
-			            @click="() => append(data)">
-			            添加
-			          </el-button>
-			          <el-button
-			            type="text"
-			            size="mini"
-			            @click="() => append(data)">
-			            查看
-			          </el-button>
-			          <el-button
-			            type="text"
-			            size="mini"
-			            @click="() => remove(node, data)">
-			            删除
-			          </el-button>
-			        </span>
-			      </span>
-			    </el-tree>
-			</div>
+			<el-row :gutter="24">
+				  <el-col :span="8"><div class="grid-content bg-purple">
+				  	<div class="margin-tops left">
+						<el-tree
+					      :data="data5"
+					      node-key="id"
+					      default-expand-all
+					      :expand-on-click-node="false"
+					      highlight-current
+					      @node-click="nodeClick">
+					      <span class="custom-tree-node" slot-scope="{ node, data }">
+					       <span>{{ node.label }}  </span>
+
+					        <span>
+					          <el-button
+					            type="text"
+					            size="mini"
+					            @click="() => append(data)">
+					            添加
+					          </el-button>
+					          <el-button
+					            type="text"
+					            size="mini"
+					            @click="() => append(data)">
+					            查看
+					          </el-button>
+					          <el-button
+					            type="text"
+					            size="mini"
+					            @click="() => remove(node, data)">
+					            删除
+					          </el-button>
+					        </span>
+					      </span>
+					    </el-tree>
+					</div>
+				  </div></el-col>
+				  <el-col :span="16">
+				  	<div class="grid-content bg-purple">
+				  	 <div class="margin-tops right">
+				         <div class="title">属性信息</div>
+				         <div class="r-content"></div>
+			         </div>
+				    </div>
+				</el-col>
+			</el-row>
+			
+			
 		</div>
 	</section>
 </template>
@@ -117,6 +133,7 @@
         data5: JSON.parse(JSON.stringify(data)),
         v_park:'',
         park:[{}],
+        nodeLabel:''
         // url:'1'
       }
     },
@@ -136,17 +153,30 @@
         const index = children.findIndex(d => d.id === data.id);
         children.splice(index, 1);
       },
-
+      nodeClick(obj,node,zujian){
+      	this.nodeLabel=node.label;
+        // if(node.key=="10"){
+        // 	var obj=document.getElementsByClassName("r-content")[0];
+        // 	obj.innerHTML="停车物联网关";
+        // 	console.log("obj");
+        // }
+        // else{
+        // 	console.log(this.nodeLabel);
+        // }
+        var obj=document.getElementsByClassName("r-content")[0];
+         	obj.innerHTML=node.label;
+      },
       renderContent(h, { node, data, store }) {
         return (
           <span class="custom-tree-node">
-            <span>{node.label}</span>
+            <span>{node.label} </span>
             <span>
               <el-button size="mini" type="text" on-click={ () => this.append(data) }>Append</el-button>
               <el-button size="mini" type="text" on-click={ () => this.remove(node, data) }>Delete</el-button>
             </span>
           </span>);
-      }
+      },
+     
     }
   };
 </script>
@@ -160,9 +190,16 @@
     padding-right: 8px;
   }
   .left{
-  	width:50%;
+  	
   	border:1px solid #ccc;
-  	border-radius:5px;
   	padding:5px;
+  }
+  .right{
+  	border:1px solid #ccc;
+  	
+  }
+  .right .title{
+     background-color:#eee;
+     padding:5px; 
   }
 </style>
