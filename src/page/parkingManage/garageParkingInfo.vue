@@ -107,7 +107,7 @@
         <!-- 分页 -->
         <div>
 		        <Paging v-bind:total="totals"></Paging>		        
-		</div>
+		    </div>
 	  </div>
 	</section>
 </template>

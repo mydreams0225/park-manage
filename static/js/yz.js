@@ -55,7 +55,7 @@
 			}
 			ctx.textBaseline = "middle";
 
-			ctx.fillStyle = randomColor(180, 240);
+			ctx.fillStyle = randomColor(240, 255);
 			ctx.fillRect(0, 0, this.options.width, this.options.height);
 
 			if(this.options.type == "blend") { //判断验证码类型
@@ -65,9 +65,10 @@
 			} else {
 				var txtArr = this.options.letterArr;
 			}
-
+            this.options.code="";
 			for(var i = 1; i <= 4; i++) {
 				var txt = txtArr[randomNum(0, txtArr.length)];
+				console.log(txt);
 				this.options.code += txt;
 				ctx.font = randomNum(this.options.height/2, this.options.height) + 'px SimHei'; //随机生成字体大小
 				ctx.fillStyle = randomColor(50, 160); //随机生成字体颜色		
@@ -87,31 +88,34 @@
 				ctx.translate(-x, -y);
 			}
 			/**绘制干扰线**/
-			for(var i = 0; i < 4; i++) {
-				ctx.strokeStyle = randomColor(40, 180);
-				ctx.beginPath();
-				ctx.moveTo(randomNum(0, this.options.width), randomNum(0, this.options.height));
-				ctx.lineTo(randomNum(0, this.options.width), randomNum(0, this.options.height));
-				ctx.stroke();
-			}
-			/**绘制干扰点**/
-			for(var i = 0; i < this.options.width/4; i++) {
-				ctx.fillStyle = randomColor(0, 255);
-				ctx.beginPath();
-				ctx.arc(randomNum(0, this.options.width), randomNum(0, this.options.height), 1, 0, 2 * Math.PI);
-				ctx.fill();
-			}
+			// for(var i = 0; i < 4; i++) {
+			// 	ctx.strokeStyle = randomColor(40, 180);
+			// 	ctx.beginPath();
+			// 	ctx.moveTo(randomNum(0, this.options.width), randomNum(0, this.options.height));
+			// 	ctx.lineTo(randomNum(0, this.options.width), randomNum(0, this.options.height));
+			// 	ctx.stroke();
+			// }
+			// /**绘制干扰点**/
+			// for(var i = 0; i < this.options.width/4; i++) {
+			// 	ctx.fillStyle = randomColor(0, 255);
+			// 	ctx.beginPath();
+			// 	ctx.arc(randomNum(0, this.options.width), randomNum(0, this.options.height), 1, 0, 2 * Math.PI);
+			// 	ctx.fill();
+			// }
 		},
 		
 		/**验证验证码**/
 		validate: function(code){
+
 			var code = code.toLowerCase();
 			var v_code = this.options.code.toLowerCase();
+			console.log('v-code'+v_code)
 			if(code == v_code){
 				return true;
 			}else{
 				return false;
 			}
+			
 		}
 	}
 	/**生成字母数组**/

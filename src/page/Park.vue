@@ -28,7 +28,7 @@
                     <el-input   id="names" name="names" placeholder="名称" v-model="filters.name" >
                      <template slot="prepend">名称</template>   
                     </el-input>
-                    <el-input   id="codes" name="codes" placeholder="编码">
+                    <el-input   id="codes" name="codes" placeholder="编码" >
                      <template slot="prepend">编码</template>   
                     </el-input>
                     <el-input   id="address" name="address" placeholder="地址">
@@ -155,7 +155,11 @@
               </div>
 
        <!--  分页 -->
-         <div class="block">
+        <!-- 分页 -->
+        <div>
+            <Paging v-bind:total="totals"></Paging>           
+        </div>
+        <!--  <div class="block">
 
             <el-pagination
               @size-change="handleSizeChange"
@@ -165,7 +169,7 @@
               layout="total, prev, pager, next"
               :total="1">
             </el-pagination>
-          </div>
+          </div> -->
              <!-- 分页end -->
         </section>
 
@@ -177,13 +181,17 @@ import { getParklist } from '../api/api';
      methods: {
               getPark:function(){
                  let para = {
-                    name: this.filters.name
+                    name: this.filters.name,
+                    // pagesize:this.totals.pagesize,
                   };
-                  //this.loading = true;
+                  this.loading = true;
                   //NProgress.start();
+                  console.log('para',para)
                   getParklist(para).then((res) => {
-                    this.parkList = res.data.parkList;
-                   // this.loading = false;
+                    this.parkList = res;
+                    console.log(res)
+                    
+                   this.loading = false;
                     //NProgress.done();
         });
               },
@@ -215,14 +223,25 @@ import { getParklist } from '../api/api';
     data(){
           return{
                 filters: {
-                  name: '1'
+                  name: '1',
+                  types: '停车场管理系统（网页版）',
+                  codes:'1',
                 },
-                currentPage1: 1,
+                totals:{
+                  totalnum:10,
+                  pagesize:10,
+                  currentPage1:1
+               },
                 parkList: [{
                   date: '2016-05-02',
-                  name: '王小虎',
+                  name: '1',
                   types: '停车场管理系统（网页版）',
-                  online:'在线2小时'
+                  codes:'3323',
+                  address:'dongjing',
+                  unit:'单位',
+                  status:'实时信息',
+                  online:'在线2小时',
+
                 }],
                 types: [{
                   value: '选项1',

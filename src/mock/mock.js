@@ -27,6 +27,7 @@ export default {
       let {username, password} = JSON.parse(config.data);
       return new Promise((resolve, reject) => {
               let user = null;
+              
               setTimeout(() => {
                 let hasUser = LoginUsers.some(u => {
                   if (u.username === username && u.password === password) {
