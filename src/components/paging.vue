@@ -4,11 +4,11 @@
 		<div class="block">
          
             <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
+             background
+             
               :current-page.sync="total.currentPage1"
               :page-size.sync="total.pagesize"
-              layout="total, prev, pager, next"
+              layout="total, prev,pager, next"
               :total="total.totalnum">
             </el-pagination>
           </div>
@@ -18,10 +18,15 @@
 	export default{
          methods: {
 
-		      handleSizeChange(val) {
-		        console.log(`每页 ${val} 条`);
-		      },
+		      // handleSizeChange(val) {
+
+		      //   console.log(`每页 1 条`);
+		      // },
+
 		      handleCurrentChange(val) {
+		      	this.total.currentPage1=val
+     
+		      	// this.page = val;
 		        console.log(`当前页: ${val}`);
 		      },
 		     },

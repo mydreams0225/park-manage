@@ -4,11 +4,15 @@ import router from './router'
 import Element from 'element-ui'
 
 import paging from './components'
+//新增
 
-// import axios from 'axios';
+ import axios from 'axios';
+ Vue.prototype.$axios = axios;
+
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 // Vue.prototype.$axios = axios;
 Vue.config.productionTip = false
+require('./mock.js')
 Vue.use(Element)
 Vue.use(router)
 Vue.use(paging)
@@ -17,22 +21,22 @@ Vue.use(paging)
 
 
 
-router.beforeEach((to, from, next) => {
-	console.log('z')
-	console.log(!user && to.path != '/login');
+// router.beforeEach((to, from, next) => {
+// 	console.log('z')
+// 	console.log(!user && to.path != '/login');
 
-  if (to.path == '/login') {
-  	console.log(to.path)
-    sessionStorage.removeItem('user');
-  }
-  let user = JSON.parse(sessionStorage.getItem('user'));
-  if (!user && to.path != '/login') {
-    next({ path: '/login' })
-  } else {
-  	console.log('111s');
-    next()
-  }
-})
+//   if (to.path == '/login') {
+//   	console.log(to.path)
+//     sessionStorage.removeItem('user');
+//   }
+//   let user = JSON.parse(sessionStorage.getItem('user'));
+//   if (!user && to.path != '/login') {
+//     next({ path: '/login' })
+//   } else {
+//   	console.log('111s');
+//     next()
+//   }
+// })
 
 /* eslint-disable no-new */
 new Vue({

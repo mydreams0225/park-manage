@@ -14,7 +14,7 @@
         <div> -->
         <div class="parent">
           <form :model="filters" class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
-                    <el-input   id="client" name="client" placeholder="点击选择" readonly="readonly" >
+                    <el-input   id="client" name="client" placeholder="点击选择" readonly="readonly" v-on:click="searchPark" style="cursor:pointer" >
                       <template slot="prepend"> 所属客户</template>   
                     </el-input>
                     <el-select v-model="sys_type" filterable placeholder="系统类型">
@@ -42,6 +42,8 @@
                         :value="item.value">
                       </el-option>
                     </el-select>
+                   <!--  <div class="demo" v-on:click="areaLists">hhda1</div> -->
+
                     <el-select v-model="v_provice" filterable placeholder="--选择省份--">
                       <el-option
                         v-for="item in provice"
@@ -79,9 +81,11 @@
            </form>
         </div>
         <!-- gridview -->
-        <div class="margin-tops" style="font-size:12px;">
+        <div class="margin-tops" style="font-size:12px;" >
               <template>
                     <el-table
+                      :loading="listLoading"
+                      element-loading-text="拼命加载中"
                       :data="parkList"
                       border
                       style="width: 100% ;">
@@ -156,20 +160,20 @@
 
        <!--  分页 -->
         <!-- 分页 -->
-        <div>
-            <Paging v-bind:total="totals"></Paging>           
-        </div>
-        <!--  <div class="block">
+        <!-- <div>
+            <Paging v-bind:total="totals"  v-on:btn-click="handleCurrentChange"></Paging>           
+        </div> -->
+         <div class="block">
 
             <el-pagination
-              @size-change="handleSizeChange"
+              
               @current-change="handleCurrentChange"
               :current-page.sync="currentPage1"
-              :page-size="1"
+              :page-size=3
               layout="total, prev, pager, next"
-              :total="1">
+              :total.sync="totalnum">
             </el-pagination>
-          </div> -->
+          </div>
              <!-- 分页end -->
         </section>
 
@@ -179,26 +183,34 @@
 import { getParklist } from '../api/api';
 	export default {
      methods: {
-              getPark:function(){
+            areaLists(){
+              $('.demo').areaCon()
+            },
+            // $('.demo').areaCon(),
+              getPark(){
                  let para = {
                     name: this.filters.name,
-                    // pagesize:this.totals.pagesize,
+                    currentPage1:this.currentPage1,
                   };
-                  this.loading = true;
+                  this.listLoading = true;
                   //NProgress.start();
                   console.log('para',para)
+
                   getParklist(para).then((res) => {
-                    this.parkList = res;
-                    console.log(res)
+                  // this.$axios.get('../../static/json/park.json',{ para: para }).then((res) => {
+                     this.parkList = (eval(res)).data;
+                    this.totalnum=(eval(res)).total;
+                    console.log("fff"+res)
                     
-                   this.loading = false;
+                   this.listLoading = false;
                     //NProgress.done();
-        });
+            });
               },
-              handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
-              },
+              // handleSizeChange(val) {
+              //   console.log(`每页 ${val} 条`);
+              // },
               handleCurrentChange(val) {
+                this.getPark();
                 console.log(`当前页: ${val}`);
               },
               callbackSelTenant:function(){
@@ -216,20 +228,34 @@ import { getParklist } from '../api/api';
                 }
               }
     },
+    watch:{
+      areaLists(){
+              $('.demo').areaCon()
+            }
+    },
    mounted() {
       this.getPark();
+      this.areaLists();
     },
+    // watch:{
+    //   $('.demo').areaCon()
+    // },
     
     data(){
           return{
+           
+            listLoading:false,
                 filters: {
-                  name: '1',
-                  types: '停车场管理系统（网页版）',
-                  codes:'1',
+                  name: '',
+                  types: '',
+                  codes:'',
                 },
+                
+                totalnum:15,
+                currentPage1:2,
                 totals:{
-                  totalnum:10,
-                  pagesize:10,
+                  totalnum:3,
+                  pagesize:1,
                   currentPage1:1
                },
                 parkList: [{
@@ -273,10 +299,12 @@ import { getParklist } from '../api/api';
 
           }
     }
+   
 	}
 </script>
 
 <style scoped>
+
 
     *{
        text-align:left;

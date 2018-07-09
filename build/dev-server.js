@@ -96,3 +96,6 @@ module.exports = {
   }
 }
 
+var fakedata= require('./fakedata.js');
+app.use('/api', fakedata);
+

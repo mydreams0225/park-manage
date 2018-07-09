@@ -97,20 +97,28 @@ import axios from 'axios';
 										            // loginParams.append("password",this.ruleForm2.checkPass );
 										            // console.log(loginParams)
 									             requestLogin(loginParams).then(data => {
+    												// axios.post('../../static/json/login.json', {
+												    //    firstName: 'Fred',
+												    //     lastName: 'Flintstone'
+												    //  }).then(data=>{
+												    console.log(data)
 											              this.logining = false;
 											              let { msg, code, user } = data;
+											              console.log(code)
 											              if (code !== 200) {
 													                this.$message({
 													                  message: msg,
 													                  type: 'error'
 													                });
 											              } else {
-											                     	console.log('122'+code);
+											                     	console.log('122'+data);
 													                sessionStorage.setItem('user', JSON.stringify(data));
 
 													                this.$router.push({ path: '/parklist' });
 											              }
 									            });
+									             
+									              //this.$router.push({ path: '/parklist' });
 									         }else{
 									         	alert('验证码错误');
 									             return false;
@@ -131,7 +139,7 @@ import axios from 'axios';
     top: 0px;
     bottom: 0px;
     width: 100%;
-    background:url(../../static/img/login.jpg) no-repeat;
+    background:url(../../static/img/login.jpg) ;
     overflow:auto;
 }
     .form-fade-enter-active, .form-fade-leave-active{
