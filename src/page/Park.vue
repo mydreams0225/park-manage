@@ -14,7 +14,7 @@
         <div> -->
         <div class="parent">
           <form :model="filters" class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
-                    <el-input   id="client" name="client" placeholder="点击选择" readonly="readonly" v-on:click="searchPark" style="cursor:pointer" >
+                    <el-input   id="client" name="client" placeholder="点击选择" readonly="readonly"  style="cursor:pointer" >
                       <template slot="prepend"> 所属客户</template>   
                     </el-input>
                     <el-select v-model="sys_type" filterable placeholder="系统类型">
@@ -52,7 +52,7 @@
                         :value="item.value">
                       </el-option>
                     </el-select>
-                    <el-select v-model="v_city" filterable placeholder="--选择城市--">
+                    <el-select v-model="v_city" filterable placeholder="--选择城市--" disabled="disabled">
                       <el-option
                         v-for="item in city"
                         :key="item.value"
@@ -60,7 +60,7 @@
                         :value="item.value">
                       </el-option>
                     </el-select>
-                    <el-select v-model="v_area" filterable placeholder="--区/县--">
+                    <el-select v-model="v_area" filterable placeholder="--区/县--" disabled="disabled">
                       <el-option
                         v-for="item in area"
                         :key="item.value"
@@ -198,8 +198,12 @@ import { getParklist } from '../api/api';
 
                   getParklist(para).then((res) => {
                   // this.$axios.get('../../static/json/park.json',{ para: para }).then((res) => {
-                     this.parkList = (eval(res)).data;
-                    this.totalnum=(eval(res)).total;
+                     //本地写法
+                    //  this.parkList = (eval(res)).data;
+                    // this.totalnum=(eval(res)).total;
+                    //请求后端写法
+                       this.parkList = res;
+                    //this.totalnum=(eval(res)).total;
                     console.log("fff"+res)
                     
                    this.listLoading = false;

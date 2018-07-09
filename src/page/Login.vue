@@ -89,12 +89,17 @@ import axios from 'axios';
 
 
 									             this.logining = true;
-									             var loginParams = { 
-									            	    username: this.ruleForm2.account, 
-									            	    password: this.ruleForm2.checkPass };
-									            	// let loginParams=new URLSearchParams();
-										            // loginParams.append("username",this.ruleForm2.account);
-										            // loginParams.append("password",this.ruleForm2.checkPass );
+									             //传参方式1
+									             // var loginParams = { 
+									            	//     username: this.ruleForm2.account, 
+									            	//     password: this.ruleForm2.checkPass };
+									            //传参方式2
+									            // var loginParams =new FormData();
+									            // loginParams.append("username",this.ruleForm2.account);
+										           //  loginParams.append("password",this.ruleForm2.checkPass );
+									            	let loginParams=new URLSearchParams();
+										            loginParams.append("username",this.ruleForm2.account);
+										            loginParams.append("password",this.ruleForm2.checkPass );
 										            // console.log(loginParams)
 									             requestLogin(loginParams).then(data => {
     												// axios.post('../../static/json/login.json', {
