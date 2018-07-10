@@ -32,7 +32,7 @@
                       :data="tableData"
                       border
                       style="width: 100% ;"
-                      @selection-change="">
+                      >
                       <el-table-column
                         prop="seri_no"
                         label="序号"

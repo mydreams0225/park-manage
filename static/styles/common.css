@@ -111,3 +111,7 @@
     color:#000 !important;
     
   }
+  .el-cascader__label{
+    
+    top:5px !important;
+  }

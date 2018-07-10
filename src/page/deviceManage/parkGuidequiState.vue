@@ -36,8 +36,7 @@
                     <el-table
                       :data="tableData"
                       border
-                      style="width: 100% ;"
-                      @selection-change="">
+                      style="width: 100% ;">
                       <el-table-column
                         prop="seri_no"
                         label="序号"

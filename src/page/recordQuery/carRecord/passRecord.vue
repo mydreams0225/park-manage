@@ -63,7 +63,7 @@
 	             <el-button type="primary" icon="el-icon-search" size="medium">查询</el-button>
                  <el-button size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
                  <div class="rights"> 
-                 	<el-button type="success"><strong><i class="el-icon-upload"></i></strong size="medium"> 导出EXCEL报表</el-button>	
+                 	<el-button type="success" size="medium"><strong><i class="el-icon-upload"></i></strong > 导出EXCEL报表</el-button>	
                  </div>
 			</div>
 			<div class="margin-tops">
@@ -72,7 +72,7 @@
                       :data="tableData"
                       border
                       style="width: 100% ;"
-                      @selection-change="">
+                      >
                       <el-table-column
 		                  type="selection"
 		                  width="55">

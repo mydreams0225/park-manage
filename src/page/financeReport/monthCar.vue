@@ -49,7 +49,7 @@
 		                      :data="tableData"
 		                      border
 		                      style="width: 100% ;"
-		                      @selection-change="">
+		                      >
 		                      
 		                      <el-table-column
 		                        prop="group_name"

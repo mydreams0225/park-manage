@@ -2,7 +2,7 @@
 	<section>
 	 <div class="parent">
     <template >
-       <el-tabs :tab-position="tabPosition"style="margin-top:15px" type="border-card" >
+       <el-tabs :tab-position="tabPosition" style="margin-top:15px" type="border-card" >
         <el-tab-pane  label="新车登记注册">
           <!-- 读卡操作 -->
            <div class="margin-tops">
@@ -287,9 +287,10 @@
             </el-row>
            </div>
            <div class="font upload" style="margin-top:30px">
+            <input type="file" @change="getFile($event)">
              <a href=""><strong><i class="el-icon-document"></i> 选择批量导入Excel文件...</strong></a>
              <div style="margin-top:15px">
-               <el-button size="small" type="primary"><i class="el-icon-upload2"></i>上传并保存</el-button>
+               <el-button size="small" type="primary" @click="submitForm($event)"><i class="el-icon-upload2"></i>上传并保存</el-button>
                <el-button size="small" type="primary"><i class="el-icon-download"></i>下载模板</el-button>
              </div>
            </div>
@@ -302,7 +303,8 @@
 </template>
 
 <script>
-
+import $axios from 'axios';
+import { postFile } from '../../api/api';
 	export default {
     data() {
       return {
@@ -325,9 +327,53 @@
         v_car_group:'',
         car_group:[{}],
         v_tab2_park:'',
-        tab2_park:[{}],
+        tab2_park:[{value: '选项1',
+                  label: '停车场管理系统（网页版）'}],
       };
-    }
+    },
+    methods:{
+      getFile(event) {
+            this.file = event.target.files[0];
+            console.log(this.file);
+          },
+      submitForm(event) {
+            event.preventDefault();
+             // let formData = new FormData();
+            let formData=new URLSearchParams();
+            formData.append('name', this.tab2_park[0].label);
+            
+    
+            formData.append('file', this.file);
+ 
+            let config = {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }
+    console.log(formData);
+    postFile(formData).then(data => {
+            //this.$axios.post('', formData, config).then(function (res) {
+              console.log(res)
+              if (res.status === 200) {
+                /*这里做处理*/
+              }
+            })
+            // getParklist(para).then((res) => {
+            //       // this.$axios.get('../../static/json/park.json',{ para: para }).then((res) => {
+            //          //本地写法
+            //          this.parkList = (eval(res)).data;
+            //         this.totalnum=(eval(res)).total;
+            //         //请求后端写法
+            //            // this.parkList = res;
+            //         //this.totalnum=(eval(res)).total;
+            //         console.log("fff"+res)
+                    
+            //        this.listLoading = false;
+            //         //NProgress.done();
+            // });
+          }
+    
+   }
 	}
 </script>
 

@@ -51,7 +51,7 @@
 			                  :data="tableData"
 			                  border
 			                  style="width: 100% ;"
-			                  @selection-change="">
+			                  >
 			                  <el-table-column
 				                  type="selection"
 				                  width="55">
@@ -139,7 +139,7 @@
 			                  :data="tablegroup"
 			                  border
 			                  style="width: 100% ;"
-			                  @selection-change="">
+			                  >
 			                  <el-table-column
 				                  type="selection"
 				                  width="55">

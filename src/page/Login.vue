@@ -102,13 +102,15 @@ import axios from 'axios';
 										            loginParams.append("password",this.ruleForm2.checkPass );
 										            // console.log(loginParams)
 									             requestLogin(loginParams).then(data => {
+
     												// axios.post('../../static/json/login.json', {
 												    //    firstName: 'Fred',
 												    //     lastName: 'Flintstone'
 												    //  }).then(data=>{
-												    console.log(data)
+												    console.log('data'+data)
 											              this.logining = false;
 											              let { msg, code, user } = data;
+
 											              console.log(code)
 											              if (code !== 200) {
 													                this.$message({
@@ -117,7 +119,10 @@ import axios from 'axios';
 													                });
 											              } else {
 											                     	console.log('122'+data);
-													                sessionStorage.setItem('user', JSON.stringify(data));
+																					sessionStorage.setItem('user', JSON.stringify(data));
+																					//setCookie('Token', data.token) //登录成功后将token存储在cookie之中
+																					sessionStorage.setItem('Token', data.token);
+                                          
 
 													                this.$router.push({ path: '/parklist' });
 											              }

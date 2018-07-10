@@ -149,8 +149,7 @@
                       :data="dt"
                       border
                       tooltip-effect="dark"
-                      style="width: 100%"
-                      @selection-change="">
+                      style="width: 100%">
                       <el-table-column
                         type="selection"
                         width="55">
@@ -257,7 +256,7 @@
                         width="200"
                         show-overflow-tooltip>
                          <template slot-scope="scope">
-                                <a href=""style="padding:5px; background-color:#1a72c1;color:#fff; border-radius:5px;" ><i class="el-icon-document"></i></a>
+                                <a href="" style="padding:5px; background-color:#1a72c1;color:#fff; border-radius:5px;" ><i class="el-icon-document"></i></a>
                                 <a href=""  style="padding:5px; background-color:#1a72c1;color:#fff; border-radius:5px;"><i class="el-icon-edit"></i></a>
                                 <a href="" style="padding:5px; background-color:#d9534f;color:#fff; border-radius:5px;"><i class="el-icon-delete"></i></a>
                               </template>
@@ -286,167 +285,172 @@
 </template>
 
 <script>
-  export default {
-    data(){
-       return{
-        currentPage1: 1,
-        dt: [{
-          car_no: '粤A33333',
-          regist_no: '粤A88888',
-          seat_no: '1518',
-          price_type:'月票车',
-          car_type:'小型车',
-          car_group:'',
-          client:'',
-          phone:'',
-          address:'',
-          vld:'',
-          balance:'$1',
-          role_park:'主车库',
-          end_r_time:'2018-3-3',
-          end_c_time:'2018-3-4',
-          end_edit_person:'技术部',
-          memo:'cs',
-          status:'离场',
-
-        }],
-         isopen:false,
-         v_park:'',
-         park:[{}],
-         v_presence_status:'',
-         presence_status:[{}],
-         v_isoverdue:'',
-         isoverdue:[{}],
-        v_vld:'',
-        vld:[{
-          value:'',
-          label:'有效期时间'
-        },{
-          value:'1',
-          label:'小于等于（<=）'
-        },{
-          value:'2',
-          label:'大于等于（>=）'
-        },{
-          value:'3',
-          label:'等于（=）'
-        }],
-        v_price_type:'',
-        price_type:[{}],
-        v_car_type:'',
-        car_type:[{}],
-        v_car_group:'',
-        car_group:[{}],
-        v_parking_type:'',
-        parking_type:[{}],
-        v_pay_rule_group:'',
-        pay_rule_group:[{}],
-        v_garage:'',
-        garage:[{}],
-        v_admin:'',
-        admin:[{}],
-        end_value:''
-       }
+export default {
+  data() {
+    return {
+      currentPage1: 1,
+      dt: [
+        {
+          car_no: "粤A33333",
+          regist_no: "粤A88888",
+          seat_no: "1518",
+          price_type: "月票车",
+          car_type: "小型车",
+          car_group: "",
+          client: "",
+          phone: "",
+          address: "",
+          vld: "",
+          balance: "$1",
+          role_park: "主车库",
+          end_r_time: "2018-3-3",
+          end_c_time: "2018-3-4",
+          end_edit_person: "技术部",
+          memo: "cs",
+          status: "离场"
+        }
+      ],
+      isopen: false,
+      v_park: "",
+      park: [{}],
+      v_presence_status: "",
+      presence_status: [{}],
+      v_isoverdue: "",
+      isoverdue: [{}],
+      v_vld: "",
+      vld: [
+        {
+          value: "",
+          label: "有效期时间"
+        },
+        {
+          value: "1",
+          label: "小于等于（<=）"
+        },
+        {
+          value: "2",
+          label: "大于等于（>=）"
+        },
+        {
+          value: "3",
+          label: "等于（=）"
+        }
+      ],
+      v_price_type: "",
+      price_type: [{}],
+      v_car_type: "",
+      car_type: [{}],
+      v_car_group: "",
+      car_group: [{}],
+      v_parking_type: "",
+      parking_type: [{}],
+      v_pay_rule_group: "",
+      pay_rule_group: [{}],
+      v_garage: "",
+      garage: [{}],
+      v_admin: "",
+      admin: [{}],
+      end_value: ""
+    };
+  },
+  methods: {
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
     },
-    methods:{
-      
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-      },
-      callbackSelTenant:function(){
-          var aa=document.getElementsByTagName("input");  
-          console.log(aa);
-                for(var i=0;i<aa.length;i++){  
-                    if (aa[i].type=="text"){  
-                        aa[i].value = "";  
-                    }  
-                }  
-      },
-   
-      callbackSelTenant:function(){
-          var aa=document.getElementsByTagName("input");  
-          console.log(aa);
-                for(var i=0;i<aa.length;i++){  
-                    if (aa[i].type=="text"){  
-                        aa[i].value = "";  
-                    }  
-                }  
-      },
-      operate:function(){
-        console.log(this.isopen);
-        // var dropdownmenu=document.getElementsByClassName('dropdown-menu')[0];
-          if(!this.isopen){
-            
-            document.getElementsByClassName("dropdown-menu")[0].classList.add("open");
-            this.isopen=true;
-          }else{
-             document.getElementsByClassName("dropdown-menu")[0].classList.remove("open");
-             this.isopen=false;
-          }
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+    },
+    callbackSelTenant: function() {
+      var aa = document.getElementsByTagName("input");
+      console.log(aa);
+      for (var i = 0; i < aa.length; i++) {
+        if (aa[i].type == "text") {
+          aa[i].value = "";
+        }
+      }
+    },
+
+    callbackSelTenant: function() {
+      var aa = document.getElementsByTagName("input");
+      console.log(aa);
+      for (var i = 0; i < aa.length; i++) {
+        if (aa[i].type == "text") {
+          aa[i].value = "";
+        }
+      }
+    },
+    operate: function() {
+      console.log(this.isopen);
+      // var dropdownmenu=document.getElementsByClassName('dropdown-menu')[0];
+      if (!this.isopen) {
+        document
+          .getElementsByClassName("dropdown-menu")[0]
+          .classList.add("open");
+        this.isopen = true;
+      } else {
+        document
+          .getElementsByClassName("dropdown-menu")[0]
+          .classList.remove("open");
+        this.isopen = false;
       }
     }
   }
+};
 </script>
 
 <style scoped>
-
- 
-
- .el-icon-caret-bottom:before{
-  content:""
- }
- .after::after{
-  content:"\e60b"
- }
- .t1{
-  display:inline-block;
-  position:relative;
- }
+.el-icon-caret-bottom:before {
+  content: "";
+}
+.after::after {
+  content: "\e60b";
+}
+.t1 {
+  display: inline-block;
+  position: relative;
+}
 .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    display: none;
-    float: left;
-    min-width: 160px;
-    padding: 5px 0px 5px 17px;
-    margin: 2px 0 0;
-    font-size: 14px;
-    text-align: left;
-    list-style: none;
-    background-color: #fff;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    border: 1px solid #ccc;
-    border: 1px solid rgba(0,0,0,.15);
-    border-radius: 4px;
-    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
-    box-shadow: 0 6px 12px rgba(0,0,0,.175);
-    height:40px;
-    line-height:40px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0px 5px 17px;
+  margin: 2px 0 0;
+  font-size: 14px;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  height: 40px;
+  line-height: 40px;
 }
- .open{
-  display:block;
+.open {
+  display: block;
 }
-.dropdown-menu:hover{
-    background-color:#eee;
-    cursor:pointer;
+.dropdown-menu:hover {
+  background-color: #eee;
+  cursor: pointer;
 }
 
-   .el-input-group{
-    width:200px;
-  }
-  .el-select{
-    width:130px;
-  }
-  .dates{
-    display:inline-block;
-  }
-  .el-table_1_column_18 .el-tooltip{
-    background-color:red;
-  }
+.el-input-group {
+  width: 200px;
+}
+.el-select {
+  width: 130px;
+}
+.dates {
+  display: inline-block;
+}
+.el-table_1_column_18 .el-tooltip {
+  background-color: red;
+}
 </style>

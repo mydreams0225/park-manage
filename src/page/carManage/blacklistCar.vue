@@ -110,7 +110,7 @@
 				    <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
 				  </span>
 				</el-dialog>
-      	  <el-button type="success"><strong><i class="el-icon-upload"></i></strong size="medium"> 导出EXCEL报表</el-button>	
+      	  <el-button type="success" size="medium"><strong><i class="el-icon-upload"></i></strong > 导出EXCEL报表</el-button>	
       	</div>
       	<!-- 查询区 -->
       	<div class="margin-tops query">

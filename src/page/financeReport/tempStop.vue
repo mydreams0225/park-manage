@@ -52,7 +52,7 @@
 				                      border
 				                      show-summary
 				                      style="width: 100% ;"
-				                      @selection-change="">  
+				                      >  
 				                      <el-table-column
 				                        prop="date"
 				                        label="日期">
@@ -127,7 +127,7 @@
 				                      border
 				                      show-summary
 				                      style="width: 100% ;"
-				                      @selection-change="">  
+				                      >  
 				                      <el-table-column
 				                        prop="date"
 				                        label="日期">
@@ -202,7 +202,7 @@
 				                      border
 				                      show-summary
 				                      style="width: 100% ;"
-				                      @selection-change="">  
+				                      >  
 				                      <el-table-column
 				                        prop="date"
 				                        label="日期">
@@ -277,7 +277,7 @@
 				                      border
 				                      show-summary
 				                      style="width: 100% ;"
-				                      @selection-change="">  
+				                     >  
 				                      <el-table-column
 				                        prop="date"
 				                        label="日期">

@@ -34,7 +34,7 @@
 	                  :data="tableData"
 	                  border
 	                  style="width: 100% ;"
-	                  @selection-change="">
+	                  >
 	                  <el-table-column
 		                  type="selection"
 		                  width="55">
