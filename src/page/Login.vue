@@ -37,6 +37,10 @@
 
 <script>
 import { requestLogin } from "../api/api";
+//getMenu
+// import { getMenu } from "../api/api";
+ import MenuUtils from '@/utils/MenuUtils'
+ var routers = []
 import axios from "axios";
 export default {
   data() {
@@ -80,6 +84,13 @@ var exp = new Date();
 exp.setTime(exp.getTime() + Days*24*60*60*1000);
 document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
 },
+login(datas){
+        window.sessionStorage.setItem('userRole',JSON.stringify(datas))
+        console.log('woshiduixiang')
+        console.log(datas)
+        MenuUtils(routers , datas)
+        
+      },
     handleSubmit2(ev) {
       var _this = this;
       this.$refs.ruleForm2.validate(valid => {
@@ -115,11 +126,17 @@ document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
                 });
               } else {
                 console.log("122" + data);
-                sessionStorage.setItem("user", JSON.stringify(data));
+                window.sessionStorage.setItem("user", JSON.stringify(data));
                 this.setCookie('Token', data.token) //登录成功后将token存储在cookie之中
                // sessionStorage.setItem("Token", data.token);
-
-                this.$router.push({ path: "/parklist" });
+                axios.get(`../../static/json/rolelist.json`,{ params: {a:"1"} }).then(res => {
+                   console.log("res.data")
+                  console.log(res.data)
+                  this.login(res.data.menus)
+                   this.$router.addRoutes(routers)
+                   this.$router.push({ path: '/parklist' });
+                })
+                //this.$router.push({ path: "/parklist" });
               }
             });
 

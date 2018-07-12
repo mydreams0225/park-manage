@@ -28,7 +28,10 @@
 		<el-col :xs="24" :sm="24" :md="24" :lg="24" class="main">
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'" >
 				<!--导航菜单-->
-				<el-menu :default-active="$route.path" class="el-menu-vertical-demo el-menus" @open="handleopen" @close="handleclose" @select="handleselect"
+        <el-menu :default-active="$route.path" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect" theme="dark" unique-opened router>
+					<menu-tree :nodes="$router.options.routes"></menu-tree>
+				</el-menu>
+				<!-- <el-menu :default-active="$route.path" class="el-menu-vertical-demo el-menus" @open="handleopen" @close="handleclose" @select="handleselect"
 					 unique-opened router v-show="!collapsed" >
 					 <div class="tools" @click.prevent="collapse">
 					   <i>|||</i>
@@ -39,27 +42,20 @@
 							<template slot="title" ><i :class="item.iconCls"></i>{{item.name}}</template>
 
 								<el-menu-item-group  v-for="child  in item.children"  :index="child.path" :key="child.path"  v-if="!child.hidden">
-		                                <!-- <el-menu class="xz"  v-if="!child.path" :default-active="child.path"> -->
+		                              
 		                                <el-submenu  :index="child.path"  v-if="child.z &&!item.leaf">
 		                                	<template slot="title" class="child_title"><i :class="child.iconCls"></i>{{child.name}}</template>
 		                                	<el-menu-item  v-for="sun  in child.children" :index="sun.path" :key="sun.path" >
 		                                		{{sun.name}}
 		                                	</el-menu-item>
 		                                </el-submenu>
-		                                <!-- </el-menu> -->
+		                               
 		                                <el-menu-item :index="child.path" v-if="!child.z" :key="child.path"> {{child.name}}  </el-menu-item>
 		                       </el-menu-item-group>
-		                       
-                                <!-- <el-menu-item v-if="child.path">{{child.name}}</el-menu-item> -->
-							
-							<!-- </el-menu-item-group> -->
-                            <!--  <el-menu-item v-for="sun in child.children" :index="sun.path" :key="sun.path" v-if="!sun.hidden"> {{sun.name}}</el-menu-item> -->
-							
-							
 						</el-submenu>
 						<el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path" :key="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
 					</template>
-				</el-menu>
+				</el-menu> -->
 				<!--导航菜单-折叠后-->
 				<ul class="el-menu el-menu-vertical-demo collapsed el-menus"  v-show="collapsed" ref="menuCollapsed">
 					 <div class="tools" @click.prevent="collapse">
@@ -113,10 +109,12 @@
 <script>
 import { getRole } from "../api/api";
 import parkFee from '@/page/financeReport/parkFee'
+import MenuTree from '@/page/MenuTree'
 export default {
 
   data() {
     return {
+      nodes: this.$router.options.routes,
       sysName: "logo",
       w:
         window.innerWidth ||
@@ -176,22 +174,18 @@ export default {
       )[0].style.display = status ? "block" : "none";
     }
   },
-  created(){
-        getRole().then(res => {
-          console.log(res);
-            // console.log(this.$router.options.routes[0].children)
-        
-            // this.$router.options.routes[0].children.push({//插入路由
-            //   name:'list',
-            //   path: '/park',
-            //   component:parkFee
-            // });
-            // console.log('11')
-            // this.$router.addRoutes(this.$router.options.routes);//调用a
-
-
-    });
-  },
+  created() {
+		//这里没有直接使用this.$router.options.routes，是因为addRoute的路由规则，在这里this.$router.options.routes获取不到
+		//有兴趣的可以看一下源码，是为什么获取不到，但是却又有规则了 
+		//另外在开发的时候，可能由于是热部署，也会不断重复的给nodes添加元素，造成导航条有重复的，简单解决，可以设置一个开关
+		let isLoadNodes = sessionStorage.getItem('isLoadNodes')
+		// if (!isLoadNodes) {
+			let data = JSON.parse(window.sessionStorage.getItem('userRole'))
+			this.nodes.push(...data)
+			console.log(this.nodes)
+			sessionStorage.setItem('isLoadNodes', 'true')
+		// }
+	},
   mounted() {
     var user = sessionStorage.getItem("user");
     if (user) {
@@ -199,7 +193,10 @@ export default {
       this.sysUserName = user.name || "";
       this.sysUserAvatar = user.avatar || "";
     }
-  }
+  },
+  components: {
+		MenuTree
+	}
   // watch: {
   //       myScreen (val, oldval) {
   //         let w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
@@ -311,6 +308,7 @@ html body {
         width: 230px;
         background-color: #222;
         color: #fff;
+         overflow-y: scroll;
       }
       .el-menu {
         height: 100%;

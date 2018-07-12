@@ -55,6 +55,15 @@ router.beforeEach((to, from, next) => {
     next({ path: '/login' })
   } else {
     console.log('111s');
+//     this.router.options.routes[10].children.push({//插入路由
+//       name:'list',
+//       path: 'list',
+//       component: resolve => require(['@/page/test.vue'], resolve)//将组件用require引进来
+//     });
+// console.log(this.router.options.routes)
+// this.router.addRoutes(this.router.options.routes);//调用
+
+
     next()
   }
 })

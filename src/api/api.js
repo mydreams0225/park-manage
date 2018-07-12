@@ -53,7 +53,7 @@ export const requestLogin = params => { console.log(params);  return $axios.get(
 // 	return $axios.post(`http://192.168.0.105:5846/Home/DataTable`,
 // 		 params ).then(res => res.data);};
 export const getParklist = params => { console.log(params); return $axios.get(`../../static/json/park.json`,{ params: params }).then(res => res.data);};
-export const getRole = params => { console.log(params); return $axios.get(`../../static/json/role.json`,{ params: params }).then(res => res.data);};
+//export const getRole = params => { console.log(params); return $axios.get(`../../static/json/role.json`,{ params: params }).then(res => res.data);};
 export const getPermission = params => { console.log(params); return $axios.get(`../../static/json/rolelist.js`,{ params: params }).then(res => res.data);};
 
    export const postFile = params => { console.log(params); 
@@ -65,6 +65,9 @@ export const getPermission = params => { console.log(params); return $axios.get(
 }    //{headers:{'Access-Control-Allow-Origin': "*"}}
 ).then(res => 
 	 res.data); };
+
+
+   export const getRole = params => { console.log(params); return $axios.get(`../../static/json/role.json`,{ params: params }).then(res => res.data);};
 
 // export const requestFile = params => { console.log(params); return $axios.get(``,{ params: params }).then(res => res.data);};
 

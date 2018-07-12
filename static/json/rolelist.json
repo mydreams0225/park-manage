@@ -1,0 +1,31 @@
+{
+    "menus":[
+        {
+            "path": "/park",
+            "component": "Home",
+            "name": "停车场管理",
+            "leaf":false,
+            "iconCls": "el-icon-goods",
+            "children": [
+                { "path": "/parklist","id":"1-1", "component": "Park", "leaf":true, "name": "停车场列表" },
+                { "path": "/attendcar","id":"1-2", "component": "AttendCar",  "leaf":true, "name": "在场车辆" }                   
+            ]
+         },
+         {
+            "path": "/carmanage",
+            "component": "Home",
+            "leaf":false,
+            "name": "车辆管理",
+            "iconCls": "el-icon-tickets",
+            "children": [
+                { "path": "/carinfoList", "component": "carinfoList",  "leaf":false, "name": "车辆信息列表",            
+                    "children": [
+                        { "path": "/carinfoList", "component": "carinfoList",  "leaf":true, "name": "车辆信息列表"            
+                            
+                        }   ]
+                }               
+            ]
+         }
+         
+    ]
+  }
