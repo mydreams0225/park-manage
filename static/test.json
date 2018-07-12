@@ -1,4 +1,46 @@
-{"date": "2016-05-02",
-                  "name": "王小虎",
-                 
-                }
+{
+  "login": {
+    "token": "rr",
+    "code": 200,
+    "id": 1,
+    "username": "admin",
+    "password": "123456",
+    "avatar": "https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png",
+    "name": "张大大"
+  },
+  "parklist": {
+    "data": [
+      {
+        "date": "2016-05-02",
+        "name": "1",
+        "types": "停车场管理系统（网页版）",
+        "codes": "3323",
+        "address": "dongjing",
+        "unit": "单位",
+        "status": "实时信息",
+        "online": "在线2小时"
+      },
+      {
+        "date": "2016-05-02",
+        "name": "1",
+        "types": "停车场管理系统（网页版）",
+        "codes": "3323",
+        "address": "dongjing",
+        "unit": "单位",
+        "status": "实时信息",
+        "online": "在线2小时"
+      },
+      {
+        "date": "2016-05-02",
+        "name": "1",
+        "types": "停车场管理系统（网页版）",
+        "codes": "3323",
+        "address": "dongjing",
+        "unit": "单位",
+        "status": "实时信息",
+        "online": "在线2小时"
+      }
+    ],
+    "total": 9
+  }
+}

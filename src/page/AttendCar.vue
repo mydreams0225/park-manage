@@ -3,8 +3,8 @@
      <div class="parent">
         <!-- 操作区 -->
        <div class="margin-tops">
-         <el-button  type="danger" icon="el-icon-delete" size="medium">删除</el-button>
-         <el-button  type="danger" icon="el-icon-delete" size="medium">删除查询到的记录</el-button>
+         <el-button  type="danger" icon="el-icon-delete" size="medium" @click="handleDel()">删除</el-button>
+         <el-button  type="danger" icon="el-icon-delete" size="medium" @click="handleDel()">删除查询到的记录</el-button>
          <el-button  icon="el-icon-circle-check-outline" size="medium">根据在场车辆数纠正空车位数</el-button>
          <div class="fr">
            <el-button  icon="el-icon-upload2" type="primary" size="medium" >批量导入</el-button>
@@ -130,21 +130,6 @@
         <el-form-item label="车牌号" prop="name">
           <el-input v-model="editForm.car_no" auto-complete="off" ></el-input>
         </el-form-item>
-        <!-- <el-form-item label="性别">
-          <el-radio-group v-model="editForm.sex">
-            <el-radio class="radio" :label="1">男</el-radio>
-            <el-radio class="radio" :label="0">女</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="年龄">
-          <el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>
-        </el-form-item>
-        <el-form-item label="生日">
-          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="editForm.addr"></el-input>
-        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -243,35 +228,26 @@ export default {
       carlist: [
         {
           url:
-            "http://pic.people.com.cn/NMediaFile/2018/0619/MAIN201806191422000284134827157.jpg",
-          car_no: "粤A9M33 临时车",
+            "../../static/img/car.jpg",
+          car_no: "粤A9M33",
           desc: "2018--3-3 4：13:4停车·"
         },
         {
           url:
-            "http://pic.people.com.cn/NMediaFile/2018/0619/MAIN201806191422000284134827157.jpg",
-          car_no: "赣A8888 临时车",
+            "../../static/img/car.jpg",
+          car_no: "赣A8888",
           desc: "2018--3-3 4：13:4停车·"
         },
         {
           url:
-            "http://pic.people.com.cn/NMediaFile/2018/0619/MAIN201806191422000284134827157.jpg",
-          car_no: "赣F6666 临时车"
+            "../../static/img/car.jpg",
+          car_no: "赣F6666"
         }
       ],
       currentPage1: 1,
       checked: false,
       currentDate: new Date(),
-      park: [
-        {
-          value: "",
-          label: "所属停车场"
-        },
-        {
-          value: "1",
-          label: "停车场1"
-        }
-      ],
+      park:configs.park,
       v_park: "",
       // 计费类型
       v_price_type: "",
@@ -380,7 +356,9 @@ export default {
   padding: 0;
   float: right;
 }
-
+.fatherImg {
+  min-height:167px;
+}
 .image {
   width: 100%;
   display: block;
@@ -423,16 +401,25 @@ export default {
 }
 
 .info {
-  background-color: #000;
-  opacity: 0.6;
+  width: 93%;
+  background-color:rgb(0,0,0,0.8);
   color: #fff;
   font-size: 12px;
-  padding: 5px;
+  position: absolute;
+  height: 20px;
+  bottom: 12px;
+  left: 11px;
+  /* padding: 5px; */
 }
 .info .r {
   position: absolute;
-  bottom: 15px;
-  right: 15px;
+  bottom: 0;
+  right: 0;
+}
+.info .l{
+  position: absolute;
+  bottom:0;
+  left: 0;
 }
 .el-card__body {
   padding: 0 !important;

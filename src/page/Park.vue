@@ -15,13 +15,24 @@
         <div> -->
         <div class="parent">
           <form :model="filters" class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
-                    <el-input   id="client" name="client" placeholder="点击选择" readonly="readonly" v-on:click="clientsearch ()" style="cursor:pointer" >
+                    <el-input clearable :value="filters.clientValue"   id="client" name="client" placeholder="点击选择" readonly="readonly"  v-on:click.native="dialogTableVisible = true" style="cursor:pointer" >
                       <template slot="prepend"> 所属客户</template>   
                     </el-input>
-                    
-  
-
-                    <el-select v-model="v_sys_type" filterable placeholder="系统类型">
+                    <el-dialog title="选择所属客户" :visible.sync="dialogTableVisible" width="550px" >
+                      <form class="clientSearch">
+                        <el-input   id="s_names" name="s_names" placeholder="名称" :value="filters.name" >
+                        <template slot="prepend">名称</template>   
+                        </el-input>
+                        <el-input   id="s_codes" name="s_codes" placeholder="编码" :value="filters.codes" >
+                        <template slot="prepend">编码</template>   
+                        </el-input>
+                        <el-button size="medium" type="primary" icon="el-icon-search" >查询</el-button>
+                      </form>
+                      <el-table :data="clientData" @row-click="clientCheck" ref="clientTable">
+                        <el-table-column property="clientName" label="" ></el-table-column>
+                      </el-table>
+                    </el-dialog>
+                    <el-select v-model="filters.v_sys_type" id="types"  filterable placeholder="系统类型">
                         <el-option
                           v-for="item in types"
                           :key="item.value"
@@ -32,13 +43,13 @@
                     <el-input   id="names" name="names" placeholder="名称" v-model="filters.name" >
                      <template slot="prepend">名称</template>   
                     </el-input>
-                    <el-input   id="codes" name="codes" placeholder="编码" >
+                    <el-input   id="codes" name="codes" placeholder="编码" v-model="filters.codes">
                      <template slot="prepend">编码</template>   
                     </el-input>
-                    <el-input   id="address" name="address" placeholder="地址">
+                    <el-input   id="address" name="address" placeholder="地址" v-model="filters.address">
                      <template slot="prepend">地址</template>   
                     </el-input>
-                    <el-select v-model="online_status" filterable placeholder="在线状态">
+                    <el-select v-model="filters.online_status" filterable placeholder="在线状态">
                       <el-option
                         v-for="item in online"
                         :key="item.value"
@@ -49,10 +60,11 @@
                    <!--  <div class="demo" v-on:click="areaLists">hhda1</div> -->
                          <div style="display:inline-block ;font-size:14px;">
                       <span class="demonstration">地区</span>
-                      <el-cascader style="font-size:14px; text-align:center;"    
-                        :options="options"
+                      <el-cascader style="font-size:14px; text-align:center;"   
+
+                        :options="area"
                         expand-trigger="hover"
-                        v-model="selectedOptions"
+                        v-model="filters.v_area"
                         @change="handleChange">
                       </el-cascader>
                     </div>
@@ -80,7 +92,7 @@
                         :value="item.value">
                       </el-option>
                     </el-select> -->
-                     <el-select v-model="v_project_statu" filterable placeholder="工程状态">
+                     <el-select v-model="filters.v_project_statu" filterable placeholder="工程状态">
                       <el-option
                         v-for="item in project_status"
                         :key="item.value"
@@ -201,10 +213,24 @@ export default {
     clientsearch() {
       console.log("client");
     },
-
+    clientCheck(row, column) {
+      this.dialogFormVisible = false;
+      this.dialogTableVisible = false;
+      console.log("zlz");
+      this.filters.clientValue = row.clientName;
+      // console.log(column)
+    },
     getPark() {
       let para = {
         name: this.filters.name,
+        code: this.filters.codes,
+        type: this.filters.types,
+        address: this.filters.address,
+        area:this.filters.v_area[2],
+        sys_type: this.filters.v_sys_type,
+        online_status: this.filters.online_status,
+        clientValue: this.filters.clientValue,
+        v_project_statu:this.filters.v_project_statu,
         currentPage1: this.currentPage1
       };
       this.listLoading = true;
@@ -233,13 +259,27 @@ export default {
       console.log(`当前页: ${val}`);
     },
     callbackSelTenant: function() {
-      var aa = document.getElementsByTagName("input");
-      console.log(aa);
-      for (var i = 0; i < aa.length; i++) {
-        if (aa[i].type == "text") {
-          aa[i].value = "";
-        }
+      console.log(this.filters);
+    for(var item in this.filters){
+      if(typeof (this.filters[item]) =="object"){
+        this.filters[item]=[]
+          
+      }else{
+         this.filters[item]=""
       }
+      
+     
+    }
+      // this.filters.name = "";
+      // this.filters.codes = "";
+      // this.filters.address = "";
+      // this.filters.online_status = "";
+      // this.filters.clientValue = "";
+      // this.filters.v_sys_type = "";
+      // this.filters.v_project_statu="";
+      
+
+      // this.v_area="";
     },
     getUrl() {
       for (item in $router.options.routes) {
@@ -257,31 +297,35 @@ export default {
 
   data() {
     return {
-      options: configs.options,
-      selectedOptions: [],
+      clientValue: "",
+      clientData: [{ clientName: "酒店一" }, { clientName: "酒店二" }],
+      dialogTableVisible: false,
+      dialogFormVisible: false,
+      area: configs.options,
+      
       outerVisible: false,
       innerVisible: false,
       listLoading: false,
       filters: {
         name: "",
         types: "",
-        codes: ""
+        codes: "",
+        address: "",
+        online_status: "",
+        v_area: [],
+        v_sys_type: "",
+        v_project_statu: ""
       },
 
       totalnum: 15,
       currentPage1: 2,
-      totals: {
-        totalnum: 3,
-        pagesize: 1,
-        currentPage1: 1
-      },
       parkList: configs.parkList,
       types: configs.parksys,
-      v_sys_type: "",
+      
       online: configs.online,
-      online_status: "",
+      
       project_status: configs.project_status,
-      v_project_statu: ""
+      
     };
   }
 };
@@ -333,7 +377,9 @@ i {
 .el-input-group {
   width: 250px;
 }
-
+.clientSearch .el-input-group {
+  width: 200px;
+}
 .form-inline {
   margin-top: 15px;
 }

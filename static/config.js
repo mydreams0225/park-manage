@@ -14790,14 +14790,14 @@ const configs = {
         label: '系统类型'
     },
     {
-        value: '选项1',
+        value: '停车场管理系统（网页版',
         label: '停车场管理系统（网页版）'
     }],
     online: [{
-        value: "1",
+        value: "在线",
         label: '在线'
     }, {
-        value: '2',
+        value: '离线',
         label: '离线'
     }],
     project_status: [{
@@ -14815,7 +14815,17 @@ const configs = {
         status: '实时信息',
         online: '在线2小时',
 
-    }]
+    }],
+    park:[
+        {
+          value: "-1",
+          label: "所属停车场"
+        },
+        {
+          value: "停车场1",
+          label: "停车场1"
+        }
+      ]
 
 
 }

@@ -111,7 +111,10 @@
 </template>
 
 <script>
+import { getRole } from "../api/api";
+import parkFee from '@/page/financeReport/parkFee'
 export default {
+
   data() {
     return {
       sysName: "logo",
@@ -173,7 +176,22 @@ export default {
       )[0].style.display = status ? "block" : "none";
     }
   },
+  created(){
+        getRole().then(res => {
+          console.log(res);
+            // console.log(this.$router.options.routes[0].children)
+        
+            // this.$router.options.routes[0].children.push({//插入路由
+            //   name:'list',
+            //   path: '/park',
+            //   component:parkFee
+            // });
+            // console.log('11')
+            // this.$router.addRoutes(this.$router.options.routes);//调用a
 
+
+    });
+  },
   mounted() {
     var user = sessionStorage.getItem("user");
     if (user) {

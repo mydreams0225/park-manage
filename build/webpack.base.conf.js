@@ -32,6 +32,7 @@ module.exports = {
       : config.dev.assetsPublicPath
   },
   resolve: {
+    //自动解析扩展
     extensions: ['.js', '.vue', '.json'],
     alias: {
       '@': resolve('src'),
