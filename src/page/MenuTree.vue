@@ -18,8 +18,11 @@ export default {
   name: 'MenuTree',
   data() {
     return {
-
+           
     }
+  },
+  created(){
+   
   },
   props: {
     nodes: {

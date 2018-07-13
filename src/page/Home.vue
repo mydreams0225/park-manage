@@ -57,7 +57,7 @@
 					</template>
 				</el-menu> -->
 				<!--导航菜单-折叠后-->
-				<ul class="el-menu el-menu-vertical-demo collapsed el-menus"  v-show="collapsed" ref="menuCollapsed">
+				<!-- <ul class="el-menu el-menu-vertical-demo collapsed el-menus"  v-show="collapsed" ref="menuCollapsed">
 					 <div class="tools" @click.prevent="collapse">
 					   <i>|||</i>
 
@@ -67,10 +67,7 @@
 							<div class="el-submenu__title" style="padding-left: 10px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"><i :class="item.iconCls" ></i></div>
 							<ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"> 
 								<li v-for="child in item.children" v-if="!child.hidden" :key="child.path" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==child.path?'is-active':''"  @click="$router.push(child.path)">{{child.name}}
-                                    <!-- zlz ok-->
-                                    <!-- <ul class="sun">
-                                    	<li v-for="sun in child.children" v-if="!sun.hidden" :key="sun.path" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==sun.path?'is-active':''" @click="$router.push(sun.path)">{{sun.name}}</li>
-                                    </ul> -->
+
 								</li>
 							</ul>
 						</template>
@@ -80,13 +77,12 @@
 							</li>
 						</template>
 					</li>
-				</ul>
+				</ul> -->
 			</aside>
 			<section class="content-container">
 				<div class="grid-content bg-purple-light">
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" class="breadcrumb-container">
                         
-						<!-- <strong class="title">{{$route.name}}</strong> -->
 						<el-breadcrumb separator="/" class="breadcrumb-inner">
 							<el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
 								{{ item.name }}
@@ -108,10 +104,9 @@
 
 <script>
 import { getRole } from "../api/api";
-import parkFee from '@/page/financeReport/parkFee'
-import MenuTree from '@/page/MenuTree'
+import parkFee from "@/page/financeReport/parkFee";
+import MenuTree from "@/page/MenuTree";
 export default {
-
   data() {
     return {
       nodes: this.$router.options.routes,
@@ -175,17 +170,17 @@ export default {
     }
   },
   created() {
-		//这里没有直接使用this.$router.options.routes，是因为addRoute的路由规则，在这里this.$router.options.routes获取不到
-		//有兴趣的可以看一下源码，是为什么获取不到，但是却又有规则了 
-		//另外在开发的时候，可能由于是热部署，也会不断重复的给nodes添加元素，造成导航条有重复的，简单解决，可以设置一个开关
-		let isLoadNodes = sessionStorage.getItem('isLoadNodes')
-		// if (!isLoadNodes) {
-			let data = JSON.parse(window.sessionStorage.getItem('userRole'))
-			this.nodes.push(...data)
-			console.log(this.nodes)
-			sessionStorage.setItem('isLoadNodes', 'true')
-		// }
-	},
+    //这里没有直接使用this.$router.options.routes，是因为addRoute的路由规则，在这里this.$router.options.routes获取不到
+    //有兴趣的可以看一下源码，是为什么获取不到，但是却又有规则了
+    //另外在开发的时候，可能由于是热部署，也会不断重复的给nodes添加元素，造成导航条有重复的，简单解决，可以设置一个开关
+    let isLoadNodes = sessionStorage.getItem("isLoadNodes");
+    // if (!isLoadNodes) {
+    let data = JSON.parse(window.sessionStorage.getItem("userRole"));
+    this.nodes.push(...data);
+    console.log(this.nodes);
+    sessionStorage.setItem("isLoadNodes", "true");
+    // }
+  },
   mounted() {
     var user = sessionStorage.getItem("user");
     if (user) {
@@ -195,8 +190,8 @@ export default {
     }
   },
   components: {
-		MenuTree
-	}
+    MenuTree
+  }
   // watch: {
   //       myScreen (val, oldval) {
   //         let w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
@@ -308,7 +303,7 @@ html body {
         width: 230px;
         background-color: #222;
         color: #fff;
-         overflow-y: scroll;
+        overflow-y: scroll;
       }
       .el-menu {
         height: 100%;

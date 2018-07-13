@@ -356,9 +356,9 @@ export default {
   padding: 0;
   float: right;
 }
-.fatherImg {
+/* .fatherImg {
   min-height:167px;
-}
+} */
 .image {
   width: 100%;
   display: block;
@@ -401,15 +401,16 @@ export default {
 }
 
 .info {
-  width: 93%;
+  width: 100%;
   background-color:rgb(0,0,0,0.8);
   color: #fff;
   font-size: 12px;
   position: absolute;
   height: 20px;
-  bottom: 12px;
-  left: 11px;
+  bottom: 0;
+  left: 0;
   /* padding: 5px; */
+  /* margin:5px; */
 }
 .info .r {
   position: absolute;

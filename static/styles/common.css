@@ -115,3 +115,7 @@
     
     top:5px !important;
   }
+  /* 在场车辆 */
+  .el-card__body{
+    position: relative;
+  }

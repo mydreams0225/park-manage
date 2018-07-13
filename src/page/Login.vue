@@ -39,8 +39,8 @@
 import { requestLogin } from "../api/api";
 //getMenu
 // import { getMenu } from "../api/api";
- import MenuUtils from '@/utils/MenuUtils'
- var routers = []
+import MenuUtils from "@/utils/MenuUtils";
+var routers = [];
 import axios from "axios";
 export default {
   data() {
@@ -65,8 +65,8 @@ export default {
       checked: true,
       verifyCode: "1"
     };
-	},
-	
+  },
+
   mounted() {
     this.gv();
   },
@@ -77,21 +77,20 @@ export default {
     handleReset2() {
       this.$refs.ruleForm2.resetFields();
     },
- setCookie(name,value)
-{
-var Days = 7;
-var exp = new Date();
-exp.setTime(exp.getTime() + Days*24*60*60*1000);
-document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
-},
-login(datas){
-        window.sessionStorage.setItem('userRole',JSON.stringify(datas))
-        console.log('woshiduixiang')
-        console.log(datas)
-        MenuUtils(routers , datas)
-        
-      },
+    setCookie(name, value) {
+      var Days = 7;
+      var exp = new Date();
+      exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+      document.cookie =
+        name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+    },
+    login(datas) {
+       sessionStorage.setItem("userRole", JSON.stringify(datas));
+      var parent_id=0;
+      MenuUtils(routers, datas,parent_id);
+    },
     handleSubmit2(ev) {
+      window.sessionStorage.removeItem("user");
       var _this = this;
       this.$refs.ruleForm2.validate(valid => {
         if (valid) {
@@ -114,7 +113,7 @@ login(datas){
             // console.log(loginParams)
 
             requestLogin(loginParams).then(data => {
-              console.log( data);
+              console.log(data);
               this.logining = false;
               let { msg, code, user } = data;
 
@@ -125,17 +124,22 @@ login(datas){
                   type: "error"
                 });
               } else {
-                console.log("122" + data);
                 window.sessionStorage.setItem("user", JSON.stringify(data));
-                this.setCookie('Token', data.token) //登录成功后将token存储在cookie之中
-               // sessionStorage.setItem("Token", data.token);
-                axios.get(`../../static/json/rolelist.json`,{ params: {a:"1"} }).then(res => {
-                   console.log("res.data")
-                  console.log(res.data)
-                  this.login(res.data.menus)
-                   this.$router.addRoutes(routers)
-                   this.$router.push({ path: '/parklist' });
-                })
+                this.setCookie("Token", data.token); //登录成功后将token存储在cookie之中
+                // sessionStorage.setItem("Token", data.token);
+                axios
+                  .get(`../../static/json/rolelist.json`, {
+                    params: { a: "1" }
+                  })
+                  .then(res => {
+                    console.log('fdfdgfsdgfds')
+                    console.log(res.data.menus);
+                    console.log('dddd')
+                    this.login(res.data.menus);
+                    
+                    this.$router.addRoutes(routers);
+                    this.$router.push({ path: "/parklist" });
+                  });
                 //this.$router.push({ path: "/parklist" });
               }
             });
