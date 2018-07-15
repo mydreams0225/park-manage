@@ -19,10 +19,21 @@ Vue.use(Element)
 Vue.use(router)
 Vue.use(paging)
 
-
+import MenuUtils from "@/utils/MenuUtils";
+var routers = [];
+import axios from "axios";
 
 import { getPermission } from "@/api/api";
-
+import {constantRouterMap} from '@/router'
+let data = JSON.parse(sessionStorage.getItem('userRole'));
+ 
+if (data){
+  //这里是防止用户手动刷新页面，整个app要重新加载,动态新增的路由，会消失，所以我们重新add一次
+  let routes = []
+  MenuUtils(routes,data)
+  router.addRoutes(routes)
+  window.sessionStorage.removeItem('isLoadNodes')
+}
 router.beforeEach((to, from, next) => {
   // getPermission().then(res => {
     
@@ -43,21 +54,50 @@ router.beforeEach((to, from, next) => {
   //     next()
   //   }
   // })
+
+ 
   console.log('z')
   console.log(!user && to.path != '/login');
 
   if (to.path == '/login') {
     console.log(to.path)
     sessionStorage.removeItem('user');
+     window.sessionStorage.removeItem('isLoadNodes')
+    // window.location.href = '/'
+    // return false
   }
   let user = JSON.parse(sessionStorage.getItem('user'));
   if (!user && to.path != '/login') {
     next({ path: '/login' })
   } else {
+    // if (router.path) {
+    //    next()
+    // }else{
+    //     alert('no fount')
+    // }
+    // if(getCookie('token')){
+
+      // axios
+      // .get(`../../static/json/rolelist.json`, {
+      //   params: { a: "1" }
+      // })
+      // .then(res => {
+      //   console.log('fdfdgfsdgfds')
+      //   console.log(res.data.menus);
+      //   console.log('dddd')
+      // login(res.data.menus);
+        
+      //   router.addRoutes(routers);
+      //   router.push({ path: "/parklist" });
+      //   console.log(this.$router)
+      // });
+    // }
     console.log('111s');
+   
+     
+  
 
-
-    next()
+     next()
   }
 })
 

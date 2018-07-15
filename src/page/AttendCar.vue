@@ -13,8 +13,8 @@
        </div>
        <!-- 查询区 -->
        <div class="margin-tops">
-         <form class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
-           <el-select v-model="v_park" filterable placeholder="所属停车场">
+         <form :model="filters" class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
+           <el-select v-model="filters.v_park" filterable placeholder="所属停车场">
                     <el-option
                       v-for="item in park"
                       :key="item.value"
@@ -22,13 +22,13 @@
                       :value="item.value">
                     </el-option>
            </el-select>
-           <el-input   id="car_no" name="car_no" placeholder="车牌号">
+           <el-input   id="s_car_no" name="s_car_no" placeholder="车牌号" v-model="filters.car_no">
                    <template slot="prepend">车牌号</template>   
            </el-input>
-           <el-input   id="regist_no" name="regist_no" placeholder="注册号">
+           <el-input   id="s_regist_no" name="s_regist_no" placeholder="注册号" v-model="filters.regist_no">
                    <template slot="prepend">注册号</template>   
            </el-input>
-            <el-select v-model="v_price_type" filterable placeholder="计费类型">
+            <el-select v-model="filters.v_price_type" filterable placeholder="计费类型">
                     <el-option
                       v-for="item in price_type"
                       :key="item.value"
@@ -36,7 +36,7 @@
                       :value="item.value">
                     </el-option>
            </el-select>
-           <el-select v-model="v_car_type" filterable placeholder="车类型">
+           <el-select v-model="filters.v_car_type" filterable placeholder="车类型">
                     <el-option
                       v-for="item in car_type"
                       :key="item.value"
@@ -47,7 +47,7 @@
            <div class="dates block">
                     <span class="demonstration">入场时间从</span>
                     <el-date-picker
-                      v-model="start_value"
+                      v-model="filters.start_value"
                       type="datetime"
                       placeholder="选择日期时间">
                     </el-date-picker>
@@ -55,12 +55,12 @@
                    <div class="dates block">
                     <span class="demonstration">到</span>
                     <el-date-picker
-                      v-model="end_value"
+                      v-model="filters.end_value"
                       type="datetime"
                       placeholder="选择日期时间">
                     </el-date-picker>
            </div>
-           <el-select v-model="v_garage" filterable placeholder="所属车库">
+           <el-select v-model="filters.v_garage" filterable placeholder="所属车库">
                     <el-option
                       v-for="item in garage"
                       :key="item.value"
@@ -68,7 +68,7 @@
                       :value="item.value">
                     </el-option>
            </el-select>
-           <el-select v-model="v_isplate" filterable placeholder="是否有车牌">
+           <el-select v-model="filters.v_isplate" filterable placeholder="是否有车牌">
                     <el-option
                       v-for="item in isplate"
                       :key="item.value"
@@ -76,10 +76,22 @@
                       :value="item.value">
                     </el-option>
            </el-select>
-           <el-input   id="client" name="client" placeholder="点击选择" readonly="readonly">
+           <el-input  :value="filters.plate_value" id="plate_pool" name="plate_pool" placeholder="点击选择" readonly="readonly" v-on:click.native="dialogTableVisible = true">
                   <template slot="prepend">所属车位池</template>   
            </el-input>
-           <el-select v-model="v_plateRelia" filterable placeholder="车牌可信度">
+           <el-dialog title="选择所属车位池" :visible.sync="dialogTableVisible" width="550px" >
+                      <form class="plate_poolSearch">
+                        <el-input   id="plate_pool" name="plate_pool" placeholder="名称" value="" >
+                        <template slot="prepend">名称</template>   
+                        </el-input>
+                       
+                        <el-button size="medium" type="primary" icon="el-icon-search" >查询</el-button>
+                      </form>
+                      <el-table :data="clientData" @row-click="clientCheck" ref="clientTable">
+                        <el-table-column property="plate_name" label="" ></el-table-column>
+                      </el-table>
+           </el-dialog>
+           <el-select v-model="filters.v_plateRelia" filterable placeholder="车牌可信度">
                     <el-option
                       v-for="item in plateRelia"
                       :key="item.value"
@@ -142,8 +154,17 @@
 </template>
 
 <script>
+import {constantRouterMap} from '@/router'
 export default {
   methods: {
+    created(){
+      console.log('xlx')
+      let newRoutes=constantRouterMap.concat([{path:'/AttendCar',
+        component :resolve => require(["@/page/AttendCar.vue"], resolve )
+      }])
+      this.$router.addRoutes(newRoutes)
+      this.$router.push({path:'/AttendCar'})
+    },
     //显示编辑界面
     handleEdit: function(index, row) {
       this.editFormVisible = true;
@@ -204,17 +225,39 @@ export default {
       console.log(`当前页: ${val}`);
     },
     callbackSelTenant: function() {
-      var aa = document.getElementsByTagName("input");
-      console.log(aa);
-      for (var i = 0; i < aa.length; i++) {
-        if (aa[i].type == "text") {
-          aa[i].value = "";
-        }
+      // var aa = document.getElementsByTagName("input");
+      // console.log(aa);
+      // for (var i = 0; i < aa.length; i++) {
+      //   if (aa[i].type == "text") {
+      //     aa[i].value = "";
+      //   }
+      // }
+      for(var item in this.filters){
+        console.log(item);
+      if(typeof (this.filters[item]) =="object"){
+        this.filters[item]=[]
+          
+      }else{
+         this.filters[item]=""
+         
       }
+     
+      
+     
     }
+    },
+     clientCheck(row, column) {
+      this.dialogFormVisible = false;
+      this.dialogTableVisible = false;
+      console.log("zlz");
+      this.filters.plate_value = row.plate_name;
+      // console.log(column)
+    },
   },
   data() {
     return {
+     clientData: [{ plate_name: "车位一" }, { plate_name: "车位二" }],
+      dialogTableVisible: false,
       editFormRules: {
         name: [{ required: true, message: "请输入车牌号", trigger: "blur" }]
       },
@@ -248,9 +291,24 @@ export default {
       checked: false,
       currentDate: new Date(),
       park:configs.park,
-      v_park: "",
-      // 计费类型
-      v_price_type: "",
+      filters:{
+         plate_value:"",
+         v_park:"",
+         v_price_type: "",// 计费类型
+         //车类型
+         v_car_type: "",
+          start_value: "",
+          end_value: "",
+          //车库
+          v_garage: "",
+           v_isplate: "",
+          v_plateRelia: "",
+          car_no:"",
+          regist_no:""
+      },
+      
+      
+      
       price_type: [
         {
           value: "",
@@ -261,8 +319,7 @@ export default {
           label: "月票车"
         }
       ],
-      //车类型
-      v_car_type: "",
+     
       car_type: [
         {
           value: "",
@@ -273,10 +330,7 @@ export default {
           label: "小型车"
         }
       ],
-      start_value: "",
-      end_value: "",
-      //车库
-      v_garage: "",
+     
       garage: [
         {
           value: "",
@@ -293,8 +347,7 @@ export default {
           label: "是否有车牌"
         }
       ],
-      v_isplate: "",
-      v_plateRelia: "",
+     
       plateRelia: [
         {
           value: "",

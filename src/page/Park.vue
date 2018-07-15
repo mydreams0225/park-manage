@@ -35,6 +35,7 @@
                     <el-select v-model="filters.v_sys_type" id="types"  filterable placeholder="系统类型">
                         <el-option
                           v-for="item in types"
+                          
                           :key="item.value"
                           :label="item.label"
                           :value="item.value">

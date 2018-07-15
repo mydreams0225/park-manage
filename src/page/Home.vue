@@ -174,12 +174,12 @@ export default {
     //有兴趣的可以看一下源码，是为什么获取不到，但是却又有规则了
     //另外在开发的时候，可能由于是热部署，也会不断重复的给nodes添加元素，造成导航条有重复的，简单解决，可以设置一个开关
     let isLoadNodes = sessionStorage.getItem("isLoadNodes");
-    // if (!isLoadNodes) {
+    if (!isLoadNodes) {
     let data = JSON.parse(window.sessionStorage.getItem("userRole"));
     this.nodes.push(...data);
     console.log(this.nodes);
     sessionStorage.setItem("isLoadNodes", "true");
-    // }
+    }
   },
   mounted() {
     var user = sessionStorage.getItem("user");
@@ -209,8 +209,12 @@ html body {
   width: 100%;
   height: 100%;
 }
+.el-menu{
+      background: rgba(0,0,0,0.8);
+}
 .el-menu-item {
-  background-color: #222;
+  //background-color: #222;
+  background: rgba(0,0,0,0.8);
   color: #fff;
   text-align: left;
 }
@@ -218,13 +222,15 @@ html body {
   background-color: #333;
 }
 .is-active {
-  background-color: #09c;
+  //background-color: #09c;
+      background: #409EFF !important;
 }
 .is-active:hover {
   background-color: #09c;
 }
 
 .container {
+  
   position: absolute;
   top: 0px;
   bottom: 0px;

@@ -1,0 +1,56 @@
+
+{
+    "menus": [
+        {
+            "path": "/park",
+            "name": "停车场管理",
+            "leaf": false,
+            "parent_id": "0",
+            "iconCls": "el-icon-goods",
+            "children": [
+                {
+                    "path": "/parklist",
+                    "id": "1-1",
+                    "component": "Park",
+                    "leaf": true,
+                    "name": "停车场列表"
+                },
+                {
+                    "path": "/AttendCar",
+                    "id": "1-2",
+                    "component": "AttendCar",
+                    "leaf": true,
+                    "name": "在场车辆"
+                }
+            ]
+        },
+        
+        {
+            "path": "",
+            "parent_id": "0",
+            "leaf": false,
+            "name": "系统管理",
+            "iconCls": "el-icon-circle-plus",
+            "children": [
+                {
+                    "path": "/role",
+                    "component": "sysManage/role",
+                    "leaf": true,
+                    "name": "用户管理"
+                },
+                {
+                    "path": "/groups",
+                    "component": "sysManage/groups",
+                    "leaf": true,
+                    "name": "角色管理"
+                },
+                {
+                    "path": "/menu",
+                    "component": "sysManage/menu",
+                    "leaf": true,
+                    "name": "菜单管理"
+                }
+            ]
+        }
+    ]
+}

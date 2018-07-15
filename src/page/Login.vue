@@ -84,10 +84,11 @@ export default {
       document.cookie =
         name + "=" + escape(value) + ";expires=" + exp.toGMTString();
     },
+     
     login(datas) {
        sessionStorage.setItem("userRole", JSON.stringify(datas));
-      var parent_id=0;
-      MenuUtils(routers, datas,parent_id);
+      
+      MenuUtils(routers, datas,false);
     },
     handleSubmit2(ev) {
       window.sessionStorage.removeItem("user");

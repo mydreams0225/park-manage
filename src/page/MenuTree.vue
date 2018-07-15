@@ -22,7 +22,8 @@ export default {
     }
   },
   created(){
-   
+    console.log("路由路由")
+     console.log(this.nodes);
   },
   props: {
     nodes: {
@@ -33,5 +34,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.el-menu-item {
+  //background-color: #222;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+}
+.el-menu-item.is-active{
+  background: #4091ff;
+}
 </style>

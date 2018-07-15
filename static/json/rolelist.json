@@ -1,43 +1,134 @@
 {
-    "menus":[
+    "menus": [
         {
-            "path": "/park",      
+            "path": "/park",
             "name": "停车场管理",
-            "leaf":false,
-            "parent_id":"0",
+            "leaf": false,
             "iconCls": "el-icon-goods",
             "children": [
-                { "path": "/parklist","id":"1-1", "component": "Park", "leaf":true, "name": "停车场列表" },
-                { "path": "/AttendCar","id":"1-2", "component": "AttendCar",  "leaf":true, "name": "在场车辆" }                   
+                {
+                    "path": "/parklist",
+                    "component": "Park",
+                    "leaf": true,
+                    "name": "停车场列表"
+                },
+                {
+                    "path": "/AttendCar",
+                    "component": "AttendCar",
+                    "leaf": true,
+                    "name": "在场车辆"
+                }
             ]
-         },
-         {
-            "path": "",
-            "parent_id":"0",
-            "leaf":false,
+        },
+        {
+            "path": "/carmanage",
             "name": "车辆管理",
+            "leaf":false,
             "iconCls": "el-icon-tickets",
             "children": [
-                { "path": "",  "leaf":false,  "parent_id":"1",  "name": "车辆信息列表2",            
-                    "children": [
-                        { "path": "/carManage/carinfoList",  "component": "carManage/carinfoList",  "leaf":true, "name": "车辆信息列表"            
-                            
-                        }]
-                }               
+                {
+                    "path": "/carinfoList",
+                    "leaf": true,
+                    "component": "carManage/carinfoList",
+                    "name": "车辆信息列表"
+                },
+                {
+                    "path": "/newCarRegist",
+                    "leaf": true,
+                    "component": "carManage/newCarRegist",
+                    "name": "新车登记注册"
+                },
+                {
+                    "path": "/garageAuthorize",
+                    "leaf": true,
+                    "component": "carManage/garageAuthorize",
+                    "name": "车库授权"
+                },
+                {
+                    "path": "/carGroup",
+                    "leaf": true,
+                    "component": "carManage/carGroup",
+                    "name": "车辆分组"
+                },
+                {
+                    "path": "/carType",
+                    "leaf": true,
+                    "component": "carManage/carType",
+                    "name": "车辆类型"
+                },
+                {
+                    "path": "/blacklistCar",
+                    "leaf": true,
+                    "component": "carManage/blacklistCar",
+                    "name": "黑名单车"
+                },
+                {
+                    "path": "/sendcarManage",
+                    "leaf": true,
+                    "component": "carManage/sendcarManage",
+                    "name": "派车管理"
+                },
+                {
+                    "path": "/reservationvehicleList",
+                    "leaf": true,
+                    "component": "carManage/reservationvehicleList",
+                    "name": "预约车辆列表"
+                }
             ]
-         },
-         {
-            "path":"",
-             "parent_id":"0",
-             "leaf":false,
-            "name":"系统管理",
-            "iconCls":"el-icon-circle-plus",
-            "children":[
-                {"path":"/role", "component":"sysManage/role","leaf":true, "name":"用户管理"},
-                {"path":"/groups", "component":"sysManage/groups","leaf":true, "name":"角色管理"},
-                {"path":"/menu", "component":"sysManage/menu","leaf":true, "name":"菜单管理"}
+        },
+        {
+            "path": "/parkingManage",
+            "name": "车位管理",
+            "leaf":false,
+            "iconCls": "el-icon-star-on",
+            "children": [
+                {
+                    "path": "/parkPoolSetting",
+                    "leaf": true,
+                    "component": "parkingManage/parkPoolSetting",
+                    "name": "车位池设置"
+                    
+                },
+                {
+                    "path": "/parkPoolorParking",
+                    "leaf": true,
+                    "component": "parkingManage/parkPoolorParking",
+                    "name": "车位池-车位管理"
+                },
+                {
+                    "path": "/garageParkingInfo",
+                    "leaf": true,
+                    "component": "parkingManage/garageParkingInfo",
+                    "name": "车库车位信息"
+                }
             ]
-        }  
-         
+        },
+        
+        {
+            "path": "",
+            "leaf": false,
+            "name": "系统管理",
+            "iconCls": "el-icon-circle-plus",
+            "children": [
+                {
+                    "path": "/role",
+                    "component": "sysManage/role",
+                    "leaf": true,
+                    "name": "用户管理"
+                },
+                {
+                    "path": "/groups",
+                    "component": "sysManage/groups",
+                    "leaf": true,
+                    "name": "角色管理"
+                },
+                {
+                    "path": "/menu",
+                    "component": "sysManage/menu",
+                    "leaf": true,
+                    "name": "菜单管理"
+                }
+            ]
+        }
     ]
-  }
+}

@@ -67,7 +67,7 @@ export const getPermission = params => { console.log(params); return $axios.get(
 	 res.data); };
 
 
-   export const getRole = params => { console.log(params); return $axios.get(`../../static/json/role.json`,{ params: params }).then(res => res.data);};
+   export const getMenu = params => { console.log(params); return $axios.get(`../../static/json/role.json`,{ params: params }).then(res => res.data);};
 
 // export const requestFile = params => { console.log(params); return $axios.get(``,{ params: params }).then(res => res.data);};
 
