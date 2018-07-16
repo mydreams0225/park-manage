@@ -61,41 +61,41 @@
             </div>
              <!--  分页 -->
               <!--编辑界面-->
-              <el-dialog :visible.sync="editFormVisible" title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+              <el-dialog :visible.sync="editFormVisible" title="编辑" v-model="editFormVisible" :close-on-click-modal="false" width="400px">
                   <form  >
-             <el-row :gutter="20">
-              <div><label for=""><span style="color:red">*</span> 类型名称</label></div>
-            
-              <el-select style="display:block" v-model="v_car_type" placeholder="请选择">
-                <el-option
-                  v-for="item in car_type"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-              <div><label for=""><span style="color:red">*</span> 屏显名称</label></div>
-              <el-input v-model="v_px_name" placeholder="请输入内容"></el-input>
-              
-             </el-row>
-              <el-row :gutter="20">
-                <el-col :span="10"><div class="grid-content bg-purple">
-                  <div><label for="">排序</label></div>
-                     <el-input v-model="v_order" placeholder="请输入内容"></el-input>
-                  </div>
+                      <el-row :gutter="20">
+                        <div><label for=""><span style="color:red">*</span> 类型名称</label></div>
+                      
+                        <el-select style="display:block" v-model="v_car_type" placeholder="请选择">
+                          <el-option
+                            v-for="item in car_type"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                        <div><label for=""><span style="color:red">*</span> 屏显名称</label></div>
+                        <el-input v-model="v_px_name" placeholder="请输入内容"></el-input>
+                        
+                      </el-row>
+                        <el-row :gutter="20">
+                          <el-col :span="10"><div class="grid-content bg-purple">
+                            <div><label for="">排序</label></div>
+                              <el-input v-model="v_order" placeholder="请输入内容"></el-input>
+                            </div>
 
-                </el-col>
-                <el-col :span="10"><div class="grid-content bg-purple">
-                  <div><label for=""><span style="color:red">*</span> 启用状态</label></div>
-                  <el-input v-model="v_use_state" placeholder="请输入内容"></el-input>
-                  </div>
-                </el-col>
-              </el-row>
-          </form>
-                  <div slot="footer" class="dialog-footer">
-                    <el-button @click.native="editFormVisible = false">取消</el-button>
-                    <el-button type="primary" @click.native="editSubmit" :loading="editDialog.editLoading">提交</el-button>
-                  </div>
+                          </el-col>
+                          <el-col :span="10"><div class="grid-content bg-purple">
+                            <div><label for=""><span style="color:red">*</span> 启用状态</label></div>
+                            <el-input v-model="v_use_state" placeholder="请输入内容"></el-input>
+                            </div>
+                          </el-col>
+                        </el-row>
+                    </form>
+                            <div slot="footer" class="dialog-footer">
+                              <el-button @click.native="editFormVisible = false">取消</el-button>
+                              <el-button type="primary" @click.native="editSubmit" :loading="editDialog.editLoading">提交</el-button>
+                            </div>
               </el-dialog>
          <div>
 

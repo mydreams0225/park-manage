@@ -1,7 +1,7 @@
 <template>
   <div>
     <template v-for="(node,index) in nodes" v-if="!node.hidden">
-      <el-submenu :index="index+''" v-if="!node.leaf" :key="index">
+      <el-submenu :index="nodes[index].name+index+''" v-if="!node.leaf" :key="nodes[index].name+ index ">
         <template slot="title">
           <i :class="node.iconCls"></i>{{node.name}}</template>
         <menu-tree :nodes="node.children"></menu-tree>
@@ -24,6 +24,9 @@ export default {
   created(){
     console.log("路由路由")
      console.log(this.nodes);
+     for(var item in this.nodes){
+        console.log(this.nodes[item].name)
+     }
   },
   props: {
     nodes: {
@@ -40,6 +43,12 @@ export default {
   color: #fff;
 }
 .el-menu-item.is-active{
-  background: #4091ff;
+  background: #09c;
+}
+.el-menu-item.is-active:hover{
+    background: #09c;
+}
+ .el-menu-item:hover{
+  background: rgba(1,153,204,0.8);
 }
 </style>

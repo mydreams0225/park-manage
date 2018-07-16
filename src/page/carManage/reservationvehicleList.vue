@@ -4,7 +4,7 @@
 			<!-- 查询区 -->
 		<div class="margin-tops">
 			<form class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
-				<el-select v-model="v_park" filterable placeholder="所属停车场">
+				<el-select v-model="filters.v_park" filterable placeholder="所属停车场">
                     <el-option
                       v-for="item in park"
                       :key="item.value"
@@ -12,16 +12,16 @@
                       :value="item.value">
                     </el-option>
                 </el-select>
-                <el-input   id="car_no" name="car_no" placeholder="车牌号">
+                <el-input   id="car_no" name="car_no" placeholder="车牌号" v-model="filters.v_car_no">
                    <template slot="prepend">车牌号</template>   
                 </el-input>
-                <el-input   id="name" name="name" placeholder="姓名">
+                <el-input   id="name" name="name" placeholder="姓名" v-model="filters.v_name">
                    <template slot="prepend">姓名</template>   
                 </el-input>
-                <el-input   id="phone" name="phone" placeholder="手机号">
+                <el-input   id="phone" name="phone" placeholder="手机号" v-model="filters.v_phone">
                    <template slot="prepend">手机号</template>   
                 </el-input>
-                <el-select v-model="v_carStatus" filterable placeholder="车辆状态">
+                <el-select v-model="filters.v_carStatus" filterable placeholder="车辆状态">
                     <el-option
                       v-for="item in carStatus"
                       :key="item.value"
@@ -37,7 +37,7 @@
 		<div class="margin-tops">
               <template>
                     <el-table
-                      :data="tableData"
+                      :data="carListTable"
                       border
                       style="width: 100% ;">
                       <el-table-column
@@ -84,50 +84,69 @@
               </template>
         
         </div>
-			<!-- 分页区 -->
+			  <!-- 分页区 -->
 	    <div>
-	        <Paging v-bind:total="totals"></Paging>
+        <el-pagination
+             
+              @current-change="handleCurrentChange"
+              :current-page.sync="totals.currentPage"
+              :page-size.sync="totals.pageSize"
+              layout="total, prev, pager, next"
+              :total.sync="totals.totalNum">
+              
+        </el-pagination>
+	        <!-- <Paging v-bind:total="totals"></Paging> -->
 	    </div>
 		</div>
 	</section>
 </template>
 <script>
-	export default{
-        data(){
-        	return{
-               v_park:'',
-               park:[{}],
-               v_carStatus:'',
-               carStatus:[{}],
-               tableData:[],
-               totals:{
-               	  totalnum:3,
-               	  pagesize:1,
-               	  currentPage1:1
-               },
-        	}
-        },
-        methods:{
-       	callbackSelTenant:function(){
-          var aa=document.getElementsByTagName("input");  
-          console.log(aa);
-                for(var i=0;i<aa.length;i++){  
-                    if (aa[i].type=="text"){  
-                        aa[i].value = "";  
-                    }  
-                }  
-      }
-       },
+export default {
+  data() {
+    return {
+      totals: {
+        totalNum:16,
+        pageSize:10,
+        currentPage:1,
+      },
+     
+      park: [{}],
+      filters: {
+        v_park: "",
+        v_carStatus: "",
+        v_car_no: "",
+        v_name: "",
+        v_phone: ""
+      },
 
-	}
+      carStatus: [
+        { value: "all", label: "车辆状态" },
+        { value: "unentrance", label: "未入场" },
+        { value: "appearance", label: "已出场" }
+      ],
+      carListTable: [],
+     
+    };
+  },
+    methods: {
+       handleCurrentChange(val) {
+      // this.getPark();
+      console.log(`当前页: ${val}`);
+    },
+      callbackSelTenant: function() {
+        console.log(this.filters);
+        for (var item in this.filters) {
+          this.filters[item] = "";
+        }
+      }
+    }
+};
 </script>
 <style scoped>
- 
-  
-   .el-input-group{
-    width:200px;
-  }
-  .el-select{
-    width:130px;
-  }
+      .el-input-group {
+        width: 200px;
+      }
+      .el-select {
+        width: 130px;
+      }
 </style>

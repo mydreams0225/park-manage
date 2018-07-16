@@ -25,7 +25,7 @@
 
 		      handleCurrentChange(val) {
 		      	this.total.currentPage1=val
-     
+                
 		      	// this.page = val;
 		        console.log(`当前页: ${val}`);
 		      },

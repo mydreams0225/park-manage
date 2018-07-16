@@ -137,6 +137,7 @@ export default {
     },
     handleopen() {
       console.log("handleopen");
+     console.log( this.nodes)
     },
     handleclose() {
       console.log("handleclose");
@@ -175,10 +176,10 @@ export default {
     //另外在开发的时候，可能由于是热部署，也会不断重复的给nodes添加元素，造成导航条有重复的，简单解决，可以设置一个开关
     let isLoadNodes = sessionStorage.getItem("isLoadNodes");
     if (!isLoadNodes) {
-    let data = JSON.parse(window.sessionStorage.getItem("userRole"));
-    this.nodes.push(...data);
-    console.log(this.nodes);
-    sessionStorage.setItem("isLoadNodes", "true");
+      let data = JSON.parse(window.sessionStorage.getItem("userRole"));
+      this.nodes.push(...data);
+      console.log(this.nodes);
+      sessionStorage.setItem("isLoadNodes", "true");
     }
   },
   mounted() {
@@ -209,12 +210,12 @@ html body {
   width: 100%;
   height: 100%;
 }
-.el-menu{
-      background: rgba(0,0,0,0.8);
+.el-menu {
+  background: rgba(0, 0, 0, 0.8);
 }
 .el-menu-item {
   //background-color: #222;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0, 0, 0, 0.8);
   color: #fff;
   text-align: left;
 }
@@ -223,14 +224,13 @@ html body {
 }
 .is-active {
   //background-color: #09c;
-      background: #409EFF !important;
+  background: #09c !important;
 }
 .is-active:hover {
-  background-color: #09c;
+  background-color: #09c !important;
 }
 
 .container {
-  
   position: absolute;
   top: 0px;
   bottom: 0px;
