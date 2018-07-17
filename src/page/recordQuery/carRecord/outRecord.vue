@@ -5,7 +5,7 @@
 				<el-button type="danger" icon="el-icon-delete" size="medium">删除查询到的记录</el-button>
 			</div>
 			<div class="margin-tops querys" >
-				<el-select v-model="v_park" filterable placeholder="所属停车场">
+				<el-select v-model="filters.v_park" filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in park"
 	                      :key="item.value"
@@ -13,10 +13,10 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
-	            <el-input   id="plate_no" name="plate_no" placeholder="车牌号" >
+	            <el-input   id="plate_no" name="plate_no" placeholder="车牌号" v-model="filters.v_plate_no" >
                      <template slot="prepend">车牌号</template>   
                 </el-input>
-                <el-select v-model="v_passageway" filterable placeholder="通道">
+                <el-select v-model="filters.v_passageway" filterable placeholder="通道">
 	                    <el-option
 	                      v-for="item in passageway"
 	                      :key="item.value"
@@ -24,7 +24,7 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
-	            <el-select v-model="v_fee_type" filterable placeholder="计费类型">
+	            <el-select v-model="filters.v_fee_type" filterable placeholder="计费类型">
 	                    <el-option
 	                      v-for="item in fee_type"
 	                      :key="item.value"
@@ -35,7 +35,7 @@
 	            <div class="dates block">
 		                    <span class="demonstration">入场时间从</span>
 		                    <el-date-picker
-		                      v-model="start_date1"
+		                      v-model="filters.start_datefrom"
 		                      type="datetime"
 		                      placeholder="选择日期时间">
 		                    </el-date-picker>
@@ -43,16 +43,16 @@
 		                   <div class="dates block">
 		                    <span class="demonstration">到</span>
 		                    <el-date-picker
-		                      v-model="start_date2"
+		                      v-model="filters.start_dateto"
 		                      type="datetime"
 		                      placeholder="选择日期时间">
 		                    </el-date-picker>
 
                 </div>
-                <el-input   id="dutyMan" name="dutyMan" placeholder="值班员" >
+                <el-input   id="dutyMan" name="dutyMan" placeholder="值班员"  v-model="filters.v_dutyMan">
                      <template slot="prepend">值班员</template>   
                 </el-input>
-                <el-select v-model="v_releaseMethod" filterable placeholder="放行方式">
+                <el-select v-model="filters.v_releaseMethod" filterable placeholder="放行方式">
 	                    <el-option
 	                      v-for="item in releaseMethod"
 	                      :key="item.value"
@@ -60,7 +60,7 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
-	            <el-select v-model="v_parkingTime" filterable placeholder="停车时长">
+	            <el-select v-model="filters.v_parkingTime" filterable placeholder="停车时长">
 	                    <el-option
 	                      v-for="item in parkingTime"
 	                      :key="item.value"
@@ -68,10 +68,10 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
-	            <el-input   id="dutyMan" name="dutyMan" placeholder="请输入值" >
+	            <el-input  v-model="filters.value" placeholder="请输入值" >
 	            	 <template slot="prepend">请输入值</template>   
                 </el-input>
-                <el-select v-model="v_min" filterable placeholder="分钟">
+                <el-select v-model="filters.v_min" filterable placeholder="分钟">
 	                    <el-option
 	                      v-for="item in min"
 	                      :key="item.value"
@@ -141,62 +141,90 @@
                       <el-table-column          
                         label="操作"
                         width="250px">
-                         <template slot-scope="scope">                            
+                         <template slot-scope="scope">   
+													  <el-button type="primary" icon="el-icon-edit" circle size="mini"></el-button>
+                           <el-button type="danger" icon="el-icon-delete" circle size="mini"></el-button>                        
                         </template>
                       </el-table-column>
                     </el-table>
                  </template>
 			</div>
 			<div>
-		        <Paging v-bind:total="totals"></Paging>		        
+		        <!-- <Paging v-bind:total="totals"></Paging>		         -->
+						<el-pagination
+              
+              @current-change="handleCurrentChange"
+              :current-page.sync="totals.currentPage"
+              :page-size.sync="totals.pageSize"
+              layout="total, prev, pager, next"
+              :total.sync="totals.totalNum">
+            </el-pagination>
 		   </div>
 		</div>
 	</section>
 </template>
 <script>
-	export default{
-	data(){
-		return{
-			v_park:'',
-			park:[{}],
-			v_passageway:'',
-			passageway:[{}],
-			v_fee_type:'',
-			fee_type:[{}],
-			start_date1:'',
-			start_date2:'',
-			releaseMethod:[{}],
-			v_releaseMethod:'',
-             totals:{
-               	  totalnum:1,
-               	  pagesize:1,
-               	  currentPage1:1
-               },
-               tableData:[]
+export default {
+  data() {
+    return {
+      filters: {
+        v_park: "",
+        v_passageway: "",
+        v_fee_type: "",
+        v_releaseMethod: "",
+        v_plate_no: "",
+        v_fee_type: "",
+        start_datefrom: "",
+        start_dateto: "",
+        v_dutyMan: "",
+        v_parkingTime: "",
+        value: "",
+        v_min: ""
+      },
+      parkingTime: [],
+      min: [],
+      park: [{}],
+      passageway: [{}],
+      fee_type: [{}],
+      releaseMethod: [{}],
 
-		}
-	}
-
-	}
+      totals: {
+        totalNum: 1,
+        pageSize: 1,
+        currentPage: 1
+      },
+      tableData: [{}]
+    };
+  },
+  methods: {
+		callbackSelTenant(){
+			var filter=this.filters;
+       for(var item in filter){
+				 filter[item]="";
+			 }
+		},
+    handleCurrentChange(val) {}
+  }
+};
 </script>
 <style scoped>
- /*公共属性*/
-     .el-input-group{
-        width:200px;
-      }
-	  .el-select{
-	    width:130px;
-	  }
-  /*公共属性*/
-   .dates{
-   display:inline-block;
+/*公共属性*/
+.el-input-group {
+  width: 200px;
 }
-.querys{
-	position:relative;
+.el-select {
+  width: 130px;
 }
-.rights{
-	position:absolute;
-	top:90px;
-	right:0;
+/*公共属性*/
+.dates {
+  display: inline-block;
+}
+.querys {
+  position: relative;
+}
+.rights {
+  position: absolute;
+  top: 90px;
+  right: 0;
 }
 </style>

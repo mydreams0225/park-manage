@@ -119,3 +119,6 @@
   .el-card__body{
     position: relative;
   }
+  .el-radio__label{
+    font-size: 12px !important;
+  }

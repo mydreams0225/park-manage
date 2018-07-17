@@ -10,14 +10,14 @@
 				  	
 					  	 <div >是否启用固定车辆在线支付：
 					  	 	<template>
-							  <el-radio v-model="radio" label="1">启用</el-radio>
-							  <el-radio v-model="radio" label="2">不启用</el-radio>
+							  <el-radio v-model="show.used" label="启用"></el-radio>
+							  <el-radio v-model="show.used" label="不启用"></el-radio>
 							</template>
 						</div>
 						<div >
 							可延期的最大期限：
 							<el-date-picker
-						      v-model="maxDate"
+						      v-model="show.maxDate"
 						      type="date"
 						      placeholder="选择日期">
 						    </el-date-picker>
@@ -32,7 +32,7 @@
 						</div>
 						<div class="margin-tops">
 							<form class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
-                                <el-select v-model="v_park" filterable placeholder="所属停车场">
+                                <el-select v-model="filters.v_park" filterable placeholder="所属停车场">
 				                    <el-option
 				                      v-for="item in park"
 				                      :key="item.value"
@@ -79,9 +79,20 @@
 			                </el-table>
 	                     </template>
 						</div>
-						<div>
+						<!-- <div>
 						   <Paging v-bind:total="totals"></Paging>
+						</div> -->
+						<div>
+							<el-pagination
+              
+              @current-change="handleCurrentChange"
+              :current-page.sync="totals.currentPage"
+              :page-size.sync="totals.pageSize"
+              layout="total, prev, pager, next"
+              :total.sync="totals.totalNum">
+            </el-pagination>
 						</div>
+
 					</div>
 				  </el-tab-pane>
 				  <el-tab-pane label="缴费规则">
@@ -90,14 +101,14 @@
 				  	
 					  	 <div >是否启用固定车辆在线支付：
 					  	 	<template>
-							  <el-radio v-model="radio" label="1">启用</el-radio>
-							  <el-radio v-model="radio" label="2">不启用</el-radio>
+							  <el-radio v-model="show.used" label="启用"></el-radio>
+							  <el-radio v-model="show.used" label="不启用"></el-radio>
 							</template>
 						</div>
 						<div >
 							可延期的最大期限：
 							<el-date-picker
-						      v-model="maxDate"
+						      v-model="show.maxDate"
 						      type="date"
 						      placeholder="选择日期">
 						    </el-date-picker>
@@ -112,15 +123,15 @@
 						</div>
 						<div class="margin-tops">
 							<form class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
-                                <el-select v-model="v_park" filterable placeholder="所属停车场">
+                                <el-select v-model="filters.v_park" filterable placeholder="所属停车场">
 				                    <el-option
-				                      v-for="item in park"
+				                      v-for="item in filters.park"
 				                      :key="item.value"
 				                      :label="item.label"
 				                      :value="item.value">
 				                    </el-option>
 			                    </el-select>
-			                    <el-select v-model="v_pay_rule_group" filterable placeholder="缴费规则分组">
+			                    <el-select v-model="filters.v_pay_rule_group" filterable placeholder="缴费规则分组">
 				                    <el-option
 				                      v-for="item in pay_rule_group"
 				                      :key="item.value"
@@ -187,9 +198,17 @@
 			                </el-table>
 	                     </template>
 						</div>
-						<div>
+						<!-- <div>
 						   <Paging v-bind:total="total3"></Paging>
-						</div>
+						</div> -->
+						<el-pagination
+              
+              @current-change="handleCurrentChange"
+              :current-page.sync="totals.currentPage"
+              :page-size.sync="totals.pageSize"
+              layout="total, prev, pager, next"
+              :total.sync="totals.totalNum">
+            </el-pagination>
 					</div>
 				  </el-tab-pane>
 				  
@@ -199,33 +218,44 @@
 	</section>
 </template>
 <script>
-	export default{
-        data(){
-        	return{
-               radio:'1',
-               maxDate:'',
-               v_park:'',
-               park:[{}],
-			   total3:{
-               	  totalnum:2,
-               	  pagesize:1,
-               	  currentPage1:1
-               },
-               totals:{
-               	  totalnum:1,
-               	  pagesize:1,
-               	  currentPage1:1
-               },
-               tableData:[],
-               pay_rule_group:[],
-               v_pay_rule_group:'',
-               tablegroup:[],
-        	}
-        }
+export default {
+  data() {
+    return {
+      filters: {
+				v_park: "",
+				v_pay_rule_group: "",
+      },
+      show: {
+        used: "",
+        maxDate: ""
+      },
+      park: [{}],
+     
+      totals: {
+        totalNum: 1,
+        pageSize: 1,
+        currentPage: 1
+      },
+      tableData: [],
+      pay_rule_group: [],
+      
+      tablegroup: []
+    };
+	},
+	methods:{
+		handleCurrentChange(val){
+			console.log(`当前页${val}`)
+		},
+		callbackSelTenant(){
+			for(var item in this.filters){
+				this.filters[item]="";
+			}
+		}
 	}
+};
 </script>
 <style scoped="scoped">
- .font{
- 	font-size:12px;
- }
+.font {
+  font-size: 12px;
+}
 </style>

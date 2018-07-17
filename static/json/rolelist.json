@@ -228,19 +228,19 @@
                         {
                             "path": "/carRecord/manualSwitch",
                             "leaf": true,
-                            "component": "recordQuery/carRecord/outRecord",
+                            "component": "recordQuery/carRecord/manualSwitch",
                             "name": "手动开闸记录"
                         },
                         {
                             "path": "/carRecord/plateModify",
                             "leaf": true,
-                            "component": "recordQuery/carRecord/passRecord",
+                            "component": "recordQuery/carRecord/plateModify",
                             "name": "车牌修改记录"
                         },
                         {
                             "path": "/carRecord/carLock",
                             "leaf": true,
-                            "component": "recordQuery/carRecord/outRecord",
+                            "component": "recordQuery/carRecord/carLock",
                             "name": "车辆锁车记录"
                         }
                     ]

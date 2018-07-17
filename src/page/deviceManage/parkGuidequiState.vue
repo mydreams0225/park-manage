@@ -2,7 +2,7 @@
 	<section>
 		<div class="parent">
 			<div class="margin-tops">
-				<el-select v-model="v_park" filterable placeholder="所属停车场">
+				<el-select v-model="filters.v_park" filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in park"
 	                      :key="item.value"
@@ -10,7 +10,7 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
-	            <el-select v-model="v_deviceType" filterable placeholder="设备类型">
+	            <el-select v-model="filters.v_deviceType" filterable placeholder="设备类型">
 	                    <el-option
 	                      v-for="item in deviceType"
 	                      :key="item.value"
@@ -18,7 +18,7 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
-	            <el-select v-model="v_deviceStatus" filterable placeholder="设备状态">
+	            <el-select v-model="filters.v_deviceStatus" filterable placeholder="设备状态">
 	                    <el-option
 	                      v-for="item in deviceStatus"
 	                      :key="item.value"
@@ -68,30 +68,55 @@
               </template>
             </div>
             <!-- 分页	 -->
-            <div>
+            <!-- <div>
             	<Paging v-bind:total="totals"></Paging>
-            </div>
+            </div> -->
+            <div class="block">
+
+            <el-pagination
+              
+              @current-change="handleCurrentChange"
+              :current-page.sync="totals.currentPage"
+              :page-size.sync="totals.pageSize"
+              layout="total, prev, pager, next"
+              :total.sync="totals.totalNum">
+            </el-pagination>
+          </div>
 		</div> 
 	</section>
 </template>
 <script>
-	export default{
-          data(){
-          	return{
-          		v_park:'',
-          		park:[{}],
-                v_deviceType:'',
-                deviceType:[{}],
-                v_deviceStatus:'',
-                deviceStatus:[{}],
-                tableData:[],
-                 totals:{
-               	  totalnum:1,
-               	  pagesize:1,
-               	  currentPage1:1
-               },
-          	}
-          }
-	}
+export default {
+  data() {
+    return {
+      filters: {
+        v_park: "",
+        v_deviceType: "",
+        v_deviceStatus: ""
+      },
+      park: [{}],
+      deviceType: [{}],
+      deviceStatus: [{}],
+      tableData: [],
+      totals: {
+        totalNum: 1,
+        pageSize: 1,
+        currentPage: 1
+      }
+    };
+  },
+  methods: {
+    callbackSelTenant: function() {
+      console.log(this.filters);
+      for (var item in this.filters) {
+        this.filters[item] = "";
+      }
+    },
+    handleCurrentChange(val){
+      console.log(`当前页: ${val}`)
+    }
+    //end
+  }
+};
 </script>
 <style scoped="scoped"></style>
