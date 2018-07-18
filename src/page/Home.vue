@@ -103,6 +103,8 @@
 </template>
 
 <script>
+import { requestLogin ,requestMenu,requestLogin1 ,requestMenu1} from "@/api/api";
+// import MenuUtils from "@/utils/MenuUtils";
 import { getRole } from "../api/api";
 import parkFee from "@/page/financeReport/parkFee";
 import MenuTree from "@/page/MenuTree";
@@ -110,7 +112,7 @@ export default {
   data() {
     return {
       nodes: this.$router.options.routes,
-      sysName: "logo",
+      sysName: "logos",
       w:
         window.innerWidth ||
         document.documentElement.clientWidth ||
@@ -131,7 +133,31 @@ export default {
       }
     };
   },
+
+
   methods: {
+    //   login(datas) {
+    //    window.sessionStorage.setItem("userRole", JSON.stringify(datas));
+      
+    //   MenuUtils(routers, datas,false);
+    // },
+    // getMenu (){
+    //   console.log('zlzlll')
+    //   var jwt=window.sessionStorage.getItem("jwt");
+    //   let para = new URLSearchParams();
+    //             para.append("jwt", jwt);
+     
+    //   requestMenu(para).then(data => {
+    //               window.sessionStorage.setItem("user", JSON.stringify(data.userInfo));
+    //                 console.log('fdfdgfsdgfds')
+    //                 console.log(data);
+    //                 console.log('dddd')
+    //                 this.login(data.menus);
+    //                 console.log("routers");
+    //                 console.log(routers);
+    //                 this.$router.addRoutes(routers);
+    //               });
+    // },
     onSubmit() {
       console.log("submit!");
     },
@@ -151,6 +177,9 @@ export default {
       })
         .then(() => {
           sessionStorage.removeItem("user");
+          window.sessionStorage.removeItem("userRole")
+          window.sessionStorage.removeItem("userInfo")
+          
           _this.$router.push({ path: "/login" });
         })
         .catch(() => {});
@@ -181,8 +210,10 @@ export default {
       console.log(this.nodes);
       sessionStorage.setItem("isLoadNodes", "true");
     }
+  
   },
   mounted() {
+    // this.getMenu();
     var user = sessionStorage.getItem("user");
     if (user) {
       user = JSON.parse(user);
@@ -193,15 +224,6 @@ export default {
   components: {
     MenuTree
   }
-  // watch: {
-  //       myScreen (val, oldval) {
-  //         let w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-  //                if(w<400){
-  //                 this.collapsed=true;
-  // 		 }
-
-  //       }
-  //       }
 };
 </script>
 

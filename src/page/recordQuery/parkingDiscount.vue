@@ -179,10 +179,10 @@ export default {
         clientVisible: false,
         name: "",
         account: ""
-			},
-			clientData:[],
+      },
+      clientData: [],
       filters: {
-				v_plate_no:"",
+        v_plate_no: "",
         disc_datefrom: "",
         disc_dateto: "",
         v_dutyMan: "",
@@ -194,12 +194,12 @@ export default {
         clientValue: "",
         v_park: ""
       },
-      disctype:[],
-      park: [{}],  
-      passageway: [{}],    
+      disctype: [],
+      park: [{}],
+      passageway: [{}],
       fee_type: [{}],
       releaseMethod: [{}],
-     discMoney:[],
+      discMoney: [],
       totals: {
         totalNum: 1,
         pageSize: 1,
@@ -209,7 +209,12 @@ export default {
     };
   },
   methods: {
-		handleCurrentChange(){},
+    callbackSelTenant() {
+      for(var item in this.filters){
+        this.filters[item]="";
+      }
+    },
+    handleCurrentChange() {},
     clientCheck(row, column) {
       this.clientVisible = false;
       console.log("zlz");

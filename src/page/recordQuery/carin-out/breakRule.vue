@@ -1,11 +1,8 @@
 <template>
 	<section>
 		<div class="parent">
-			<div class="margin-tops">
-				<el-button type="danger" icon="el-icon-delete" size="medium">删除查询到的记录</el-button>
-			</div>
 			<div class="margin-tops querys" >
-				<el-select v-model="v_park" filterable placeholder="所属停车场">
+				<el-select v-model="filters.v_park" filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in park"
 	                      :key="item.value"
@@ -13,58 +10,40 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
-	            <el-input   id="plate_no" name="plate_no" placeholder="车牌号" >
+	            <el-input   id="plate_no" name="plate_no" placeholder="车牌号" v-model="filters.v_plate_no">
                      <template slot="prepend">车牌号</template>   
-                </el-input>
-                <el-select v-model="v_passageway" filterable placeholder="通道">
+              </el-input>
+							<el-input placeholder="车主" v-model="filters.v_carOwner">
+                     <template slot="prepend">车主</template>   
+              </el-input>
+               <el-input placeholder="手机号" v-model="filters.v_phone">
+                     <template slot="prepend">手机号</template>   
+              </el-input>
+							<el-input placeholder="违规行为" v-model="filters.v_Irregularities">
+                     <template slot="prepend">违规行为</template>   
+              </el-input>
+               
+                <el-select v-model="filters.v_disposeMethod" filterable placeholder="处理方式">
 	                    <el-option
-	                      v-for="item in passageway"
+	                      v-for="item in disposeMethod"
 	                      :key="item.value"
 	                      :label="item.label"
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
-	            <el-select v-model="v_fee_type" filterable placeholder="计费类型">
+							 <el-select v-model="filters.v_disposeStatus" filterable placeholder="处理状态" >
 	                    <el-option
-	                      v-for="item in fee_type"
+	                      v-for="item in disposeStatus"
 	                      :key="item.value"
 	                      :label="item.label"
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
-	            <div class="dates block">
-		                    <span class="demonstration">入场时间从</span>
-		                    <el-date-picker
-		                      v-model="start_date1"
-		                      type="datetime"
-		                      placeholder="选择日期时间">
-		                    </el-date-picker>
-		                  </div>
-		                   <div class="dates block">
-		                    <span class="demonstration">到</span>
-		                    <el-date-picker
-		                      v-model="start_date2"
-		                      type="datetime"
-		                      placeholder="选择日期时间">
-		                    </el-date-picker>
-
-                </div>
-                <el-input   id="dutyMan" name="dutyMan" placeholder="值班员" >
+                <el-input   id="dutyMan" name="dutyMan" placeholder="值班员" v-model="filters.v_dutyMan" >
                      <template slot="prepend">值班员</template>   
                 </el-input>
-                <el-select v-model="v_releaseMethod" filterable placeholder="放行方式">
-	                    <el-option
-	                      v-for="item in releaseMethod"
-	                      :key="item.value"
-	                      :label="item.label"
-	                      :value="item.value">
-	                    </el-option>
-	            </el-select>
 	             <el-button type="primary" icon="el-icon-search" size="medium">查询</el-button>
                  <el-button size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
-                 <div class="rights"> 
-                 	<el-button type="success" size="medium"><strong><i class="el-icon-upload"></i></strong > 导出EXCEL报表</el-button>	
-                 </div>
 			</div>
 			<div class="margin-tops">
 				 <template>
@@ -74,43 +53,39 @@
                       style="width: 100% ;"
                      >
                       <el-table-column
-		                  type="selection"
-		                  width="55">
-                      </el-table-column>
-                      <el-table-column
                         prop="seri_no"
                         label="序号"
                         >
                       </el-table-column>
                       <el-table-column
-                        prop="plate_no"
-                        label="车牌号"
+                        prop="deviceName"
+                        label="设备名称"
                         >
                       </el-table-column>
                       <el-table-column
-                        prop="fee_type"
-                        label="计费类型">
+                        prop="carOwner"
+                        label="值班员账号">
                       </el-table-column>
                       <el-table-column
-                        prop="car_group"
-                        label="车辆分组">
+                        prop="phone"
+                        label="手机号">
                       </el-table-column>               
                       <el-table-column
-                        prop="passageway"
-                        label="通道">
+                        prop="Irregularities"
+                        label="违规行为">
                       </el-table-column>
                       <el-table-column
-                        prop="start_date1"
-                        label="入场时间">
+                        prop="disposeMethod"
+                        label="处理方式">
                       </el-table-column>
 
                       <el-table-column
-                        prop="release_method"
-                        label="放行方式">
+                        prop="penaltyMoney"
+                        label="罚款金额">
                       </el-table-column>
                       <el-table-column
-                        prop="des"
-                        label="描述">
+                        prop="disposeStatus"
+                        label="处理状态">
                       </el-table-column>
                       <el-table-column
                         prop="duty_man"
@@ -126,55 +101,78 @@
                  </template>
 			</div>
 			<div>
-		        <Paging v-bind:total="totals"></Paging>		        
+
+		        <!-- <Paging v-bind:total="totals"></Paging>		         -->
+						<el-pagination
+              
+              @current-change="handleCurrentChange"
+              :current-page.sync="totals.currentPage"
+              :page-size.sync="totals.pageSize"
+              layout="total, prev, pager, next"
+              :total.sync="totals.totalNum">
+            </el-pagination>
 		   </div>
 		</div>
 	</section>
 </template>
 <script>
-	export default{
-	data(){
-		return{
-			v_park:'',
-			park:[{}],
-			v_passageway:'',
-			passageway:[{}],
-			v_fee_type:'',
-			fee_type:[{}],
-			start_date1:'',
-			start_date2:'',
-			releaseMethod:[{}],
-			v_releaseMethod:'',
-             totals:{
-               	  totalnum:1,
-               	  pagesize:1,
-               	  currentPage1:1
-               },
-               tableData:[]
-
-		}
-	}
-
-	}
+export default {
+  data() {
+    return {
+      filters: {
+        v_park: "",
+        v_plate_no: "",
+        v_carOwner: "",
+        v_phone: "",
+        v_Irregularities: "",
+        v_disposeMethod: "",
+        v_disposeStatus: "",
+        v_dutyMan: ""
+      },
+      park: [{}],
+      disposeMethod: [],
+      disposeStatus: [],
+      totals: {
+        totalNum: 1,
+        pageSize: 1,
+        currentPage: 1
+      },
+      tableData: []
+    };
+  },
+  methods: {
+		callbackSelTenant(){
+			for(var item in this.filters){
+				 this.filters[item]="";
+			}
+		},
+    handleCurrentChange() {},
+    callbackSelTenant() {
+      for (var item in this.filters) {
+        this.filters[item] = "";
+      }
+    }
+  }
+};
 </script>
 <style scoped>
- /*公共属性*/
-     .el-input-group{
-        width:200px;
-      }
-	  .el-select{
-	    width:130px;
-	  }
-  /*公共属性*/
-   .dates{
-   display:inline-block;
+/*公共属性*/
+.el-input-group {
+  width: 200px;
 }
-.querys{
-	position:relative;
+.el-select {
+  width: 130px;
 }
-.rights{
-	position:absolute;
-	top:45px;
-	right:0;
+/*公共属性*/
+.dates {
+  display: inline-block;
+}
+.querys {
+  position: relative;
+}
+.rights {
+  position: absolute;
+  top: 45px;
+  right: 0;
 }
 </style>

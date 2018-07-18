@@ -4,6 +4,7 @@ import router from './router'
 import Element from 'element-ui'
 
 import paging from './components'
+import has from '@/assets/js/btnPermission.js';
 //mock放到全局 感觉没用
 import '../mock/index'
 //新增

@@ -81,10 +81,23 @@
            </el-input>
            <el-dialog title="选择所属车位池" :visible.sync="dialogTableVisible" width="550px" >
                       <form class="plate_poolSearch">
-                        <el-input   id="plate_pool" name="plate_pool" placeholder="名称" value="" >
-                        <template slot="prepend">名称</template>   
-                        </el-input>
+                        <!-- <el-input   id="plate_pool" name="plate_pool" placeholder="名称" value="" >
+                          <template slot="prepend">名称</template>   
+                        </el-input> -->
+                       <el-row :gutter="24">
+                        <el-col :span="16">
+                          <div class="grid-content bg-purple">
+                             
+                          </div>
+                        </el-col>
+                        <el-col :span="8">
+                          <div class="grid-content bg-purple">
+
+                          </div>
+                        </el-col>
                        
+                      </el-row>
+
                         <el-button size="medium" type="primary" icon="el-icon-search" >查询</el-button>
                       </form>
                       <el-table :data="clientData" @row-click="clientCheck" ref="clientTable">
@@ -99,7 +112,7 @@
                       :value="item.value">
                     </el-option>
            </el-select>
-           <el-button type="primary" icon="el-icon-search" size="medium">查询</el-button>
+           <el-button type="primary" icon="el-icon-search" size="medium" v-on:click="getAttendCar" >查询</el-button>
            <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')" size="medium">清除</el-button>
          </form>
        </div>
@@ -108,7 +121,7 @@
           <el-row >
              <el-col :span="6" v-for="(item ,index) in carlist" :key=index>
                <el-card  class="fatherImg">
-                  <div><el-checkbox ></el-checkbox></div>
+                  <div><el-checkbox @click.native="selsChange(index,item)"></el-checkbox></div>
                   <div class="rf">
                     <a href="#" title="编辑" @click="handleEdit(index, item)"><i class="el-icon-edit"></i></a> 
                     <a href="#" title="删除" @click="handleDel(index, item)"><i class="el-icon-delete"></i></a>
@@ -125,23 +138,53 @@
        <!-- 展示区end -->
       <!--  分页 -->
       <div >
-
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page.sync="currentPage1"
-          :page-size="10"
+          :current-page.sync="totals.currentPage"
+          :page-size.sync="totals.pageSize"
           layout="total, prev, pager, next"
-          :total="12">
+          :total.sync="totals.totalNum">
         </el-pagination>
       </div>
       <!-- 分页end -->
       <!--编辑界面-->
-    <el-dialog title="纠正车牌号" v-model="editFormVisible" :close-on-click-modal="false" :visible="editFormVisible" >
+    <el-dialog class="diaCommon" title="纠正车牌号" v-model="editFormVisible" :close-on-click-modal="false" :visible="editFormVisible"  width="800px">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm" >
-        <el-form-item label="车牌号" prop="name">
-          <el-input v-model="editForm.car_no" auto-complete="off" ></el-input>
-        </el-form-item>
+          <el-row :gutter="24">
+            <el-col :span="14">
+              <div class="grid-content ">
+                  <div>
+                    <div>
+                      <div class="ts">点击图片查看大图</div>
+                      <div class="imgBox">
+                        <ul><li><a href="#"> <img  :src="editForm.url" /> </a></li></ul>
+                      </div>
+                      <div class="ts">提示：纠正车牌号之后，对之前车牌的车辆进出会有一定的影响，请谨慎使用</div>
+                    </div> 
+                  </div>
+              </div>
+            </el-col>
+            <el-col :span="10">
+              <div class="grid-content ">
+                <div>
+                  <div>
+                        <div>
+                            <div >当前车牌号：{{editForm.car_no}}</div>
+                            
+                        </div>
+                      <div class="jzcar_no"> 
+                          <div style="display:inline-block;width: 70%;">纠正车牌号：<el-input  v-model="editForm.editCar_no" >  
+                            </el-input></div>
+                          <div >
+                            
+                          </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -154,45 +197,99 @@
 </template>
 
 <script>
-import {constantRouterMap} from '@/router'
+// import { constantRouterMap } from "@/router";
+import { requestAttendCar1, requestAttendCar,requestAttendCarEdit1,requestAttendCarODelete1 } from "@/api/api";
 export default {
   methods: {
-    created(){
-      console.log('xlx')
-      let newRoutes=constantRouterMap.concat([{path:'/AttendCar',
-        component :resolve => require(["@/page/AttendCar.vue"], resolve )
-      }])
-      this.$router.addRoutes(newRoutes)
-      this.$router.push({path:'/AttendCar'})
+    selsChange: function (index,row) {
+         this.sels.push(row.url) ;
+        console.log(row);
+        console.log(this.sels);
+        var s = [];
+        //遍历数组
+        for(var i = 0,len=this.sels.length;i<len;i++){
+            if(s.indexOf(this.sels[i]) == -1){  //判断在s数组中是否存在，不存在则push到s数组中
+                s.push(this.sels[i]);
+            }
+        }
+        console.log(s);
+        return false
+			},
+    getAttendCar() {
+      console.log("getAttendCar");
+      let para = {
+        plate_value: this.filters.plate_value, //车位池
+        park: this.filters.v_park, //停车场
+        price_type: this.filters.v_price_type, // 计费类型
+        car_type: this.filters.v_car_type, //车类型
+        start_timeF: this.filters.start_value, //入场时间从
+        end_timeT: this.filters.end_value, //入场时间到
+        garage: this.filters.v_garage, //车库
+        isplate: this.filters.v_isplate, //是否有车牌
+        plateRelia: this.filters.v_plateRelia, //车牌可信度
+        car_no: this.filters.car_no, //车牌号
+        regist_no: this.filters.regist_no, //注册号
+        currentPage: this.totals.currentPage, //当前页
+        pageSize: this.totals.pageSize //每页显示条数
+      };
+      console.log("getend");
+      requestAttendCar1(para).then(res => {
+        // this.$axios.get('../../static/json/park.json',{ para: para }).then((res) => {
+        //本地写法
+        console.log(res);
+        this.carlist = eval(res).list;
+        this.totals.totalNum = eval(res).total;
+        //请求后端写法
+        // this.parkList = res;
+        //this.totalnum=(eval(res)).total;
+        console.log("fff" + res);
+        this.listLoading = false;
+        //NProgress.done();
+      });
     },
+    // created() {
+    //   console.log("xlx");
+    //   let newRoutes = constantRouterMap.concat([
+    //     {
+    //       path: "/AttendCar",
+    //       component: resolve => require(["@/page/AttendCar.vue"], resolve)
+    //     }
+    //   ]);
+    //   this.$router.addRoutes(newRoutes);
+    //   this.$router.push({ path: "/AttendCar" });
+    // },
     //显示编辑界面
     handleEdit: function(index, row) {
       this.editFormVisible = true;
       this.editForm = Object.assign({}, row);
+      console.log("显示编辑界面");
+      console.log(row);
     },
     //提交编辑
     editSubmit: function() {
+      
       this.$refs.editForm.validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.editLoading = true;
             //NProgress.start();
             let para = Object.assign({}, this.editForm);
-            para.birth =
-              !para.birth || para.birth == ""
-                ? ""
-                : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
-            // editUser(para).then((res) => {
-            //   this.editLoading = false;
-            //   //NProgress.done();
-            //   this.$message({
-            //     message: '提交成功',
-            //     type: 'success'
-            //   });
-            //   this.$refs['editForm'].resetFields();
-            //   this.editFormVisible = false;
-            //   this.getUsers();
-            // });
+            // para.birth =
+            //   !para.birth || para.birth == ""
+            //     ? ""
+            //     : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
+           
+            requestAttendCarEdit1(para).then((res) => {
+              this.editLoading = false;
+              //NProgress.done();
+              this.$message({
+                message: '提交成功',
+                type: 'success'
+              });
+              this.$refs['editForm'].resetFields();
+              this.editFormVisible = false;
+              this.getAttendCar();
+            });
           });
         }
       });
@@ -205,16 +302,18 @@ export default {
         .then(() => {
           this.listLoading = true;
           //NProgress.start();
-          let para = { id: row.id };
-          // removeUser(para).then((res) => {
-          //   this.listLoading = false;
-          //   //NProgress.done();
-          //   this.$message({
-          //     message: '删除成功',
-          //     type: 'success'
-          //   });
-          //   this.getUsers();
-          // });
+          // let para = { id: row.id };
+          let para = Object.assign({}, row);
+         
+          requestAttendCarODelete1(para).then((res) => {
+            this.listLoading = false;
+            //NProgress.done();
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            });
+            this.getAttendCar();
+          });
         })
         .catch(() => {});
     },
@@ -222,6 +321,8 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
+      this.totals.currentPage = val;
+      this.getAttendCar();
       console.log(`当前页: ${val}`);
     },
     callbackSelTenant: function() {
@@ -232,83 +333,90 @@ export default {
       //     aa[i].value = "";
       //   }
       // }
-      for(var item in this.filters){
+      for (var item in this.filters) {
         console.log(item);
-      if(typeof (this.filters[item]) =="object"){
-        this.filters[item]=[]
-          
-      }else{
-         this.filters[item]=""
-         
+        if (typeof this.filters[item] == "object") {
+          this.filters[item] = [];
+        } else {
+          this.filters[item] = "";
+        }
       }
-     
-      
-     
-    }
     },
-     clientCheck(row, column) {
+    clientCheck(row, column) {
       this.dialogFormVisible = false;
       this.dialogTableVisible = false;
       console.log("zlz");
       this.filters.plate_value = row.plate_name;
       // console.log(column)
-    },
+    }
+  },
+  mounted() {
+    this.getAttendCar();
   },
   data() {
     return {
-     clientData: [{ plate_name: "车位一" }, { plate_name: "车位二" }],
+      sels:[],
+      clientData: [{ plate_name: "车位一" }, { plate_name: "车位二" }],
       dialogTableVisible: false,
       editFormRules: {
         name: [{ required: true, message: "请输入车牌号", trigger: "blur" }]
       },
       //编辑界面数据
       editForm: {
-        name: "22"
+        desc: "22",
+        url: "",
+        car_no: "",
+        editCar_no:""
       },
+      //删除数据格式
+      deleteForm:{
+
+      },
+
       editLoading: false,
       editFormVisible: false,
       editForm: "",
       carlist: [
         {
-          url:
-            "../../static/img/car.jpg",
+          url: "../../static/img/car.jpg",
           car_no: "粤A9M33",
           desc: "2018--3-3 4：13:4停车·"
         },
         {
-          url:
-            "../../static/img/car.jpg",
+          url: "../../static/img/car.jpg",
           car_no: "赣A8888",
           desc: "2018--3-3 4：13:4停车·"
         },
         {
-          url:
-            "../../static/img/car.jpg",
+          url: "../../static/img/car.jpg",
           car_no: "赣F6666"
         }
       ],
-      currentPage1: 1,
+      totals: {
+        currentPage: 1,
+        pageSize: 10,
+        totalNum: 10
+      },
+
       checked: false,
       currentDate: new Date(),
-      park:configs.park,
-      filters:{
-         plate_value:"",
-         v_park:"",
-         v_price_type: "",// 计费类型
-         //车类型
-         v_car_type: "",
-          start_value: "",
-          end_value: "",
-          //车库
-          v_garage: "",
-           v_isplate: "",
-          v_plateRelia: "",
-          car_no:"",
-          regist_no:""
+      park: configs.park,
+      filters: {
+        plate_value: "",
+        v_park: "",
+        v_price_type: "", // 计费类型
+        //车类型
+        v_car_type: "",
+        start_value: "",
+        end_value: "",
+        //车库
+        v_garage: "",
+        v_isplate: "",
+        v_plateRelia: "",
+        car_no: "",
+        regist_no: ""
       },
-      
-      
-      
+
       price_type: [
         {
           value: "",
@@ -319,7 +427,7 @@ export default {
           label: "月票车"
         }
       ],
-     
+
       car_type: [
         {
           value: "",
@@ -330,7 +438,7 @@ export default {
           label: "小型车"
         }
       ],
-     
+
       garage: [
         {
           value: "",
@@ -347,7 +455,7 @@ export default {
           label: "是否有车牌"
         }
       ],
-     
+
       plateRelia: [
         {
           value: "",
@@ -360,6 +468,13 @@ export default {
 </script>
 
 <style scoped>
+ul > li {
+  list-style: none;
+}
+.ts {
+  font-size: 12px;
+  margin: 10px 0px;
+}
 .el-col {
   border-radius: 4px;
 }
@@ -455,7 +570,7 @@ export default {
 
 .info {
   width: 100%;
-  background-color:rgb(0,0,0,0.8);
+  background-color: rgb(0, 0, 0, 0.8);
   color: #fff;
   font-size: 12px;
   position: absolute;
@@ -470,9 +585,9 @@ export default {
   bottom: 0;
   right: 0;
 }
-.info .l{
+.info .l {
   position: absolute;
-  bottom:0;
+  bottom: 0;
   left: 0;
 }
 .el-card__body {

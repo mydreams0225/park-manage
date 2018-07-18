@@ -101,8 +101,8 @@
                         :value="item.value">
                       </el-option>
                     </el-select>
-                    <el-button size="medium" type="primary" icon="el-icon-search" v-on:click="getPark">查询</el-button>
-                    <el-button size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
+                    <el-button id="query" size="medium" type="primary" icon="el-icon-search" v-on:click="getPark" >查询</el-button>
+                    <el-button id="edit" size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')" >清除</el-button>
            </form>
         </div>
         <!-- gridview -->
@@ -193,10 +193,10 @@
             <el-pagination
               
               @current-change="handleCurrentChange"
-              :current-page.sync="currentPage1"
-              :page-size=3
+              :current-page.sync="totals.currentPage"
+              :page-size.sync="totals.pageSize"
               layout="total, prev, pager, next"
-              :total.sync="totalnum">
+              :total.sync="totals.totalNum">
             </el-pagination>
           </div>
              <!-- 分页end -->
@@ -205,7 +205,7 @@
       </template>
 
 <script>
-import { getParklist } from "../api/api";
+import { getParklist1 } from "@/api/api";
 export default {
   methods: {
     handleChange(value) {
@@ -232,17 +232,17 @@ export default {
         online_status: this.filters.online_status,
         clientValue: this.filters.clientValue,
         v_project_statu:this.filters.v_project_statu,
-        currentPage1: this.currentPage1
+        currentPage1: this.totals.currentPage
       };
       this.listLoading = true;
       //NProgress.start();
       console.log("para", para);
 
-      getParklist(para).then(res => {
+      getParklist1(para).then(res => {
         // this.$axios.get('../../static/json/park.json',{ para: para }).then((res) => {
         //本地写法
         this.parkList = eval(res).data;
-        this.totalnum = eval(res).total;
+        this.totals.totalNum = eval(res).total;
         //请求后端写法
         // this.parkList = res;
         //this.totalnum=(eval(res)).total;
@@ -256,31 +256,22 @@ export default {
     //   console.log(`每页 ${val} 条`);
     // },
     handleCurrentChange(val) {
+      
+      this.totals.currentPage=val;
       this.getPark();
       console.log(`当前页: ${val}`);
     },
     callbackSelTenant: function() {
-      console.log(this.filters);
-    for(var item in this.filters){
-      if(typeof (this.filters[item]) =="object"){
-        this.filters[item]=[]
+      var $filter=this.filters
+      
+    for(var item in $filter){
+      if(typeof ($filter[item]) =="object"){
+        $filter[item]=[]
           
       }else{
-         this.filters[item]=""
-      }
-      
-     
+        $filter[item]=""
+      }   
     }
-      // this.filters.name = "";
-      // this.filters.codes = "";
-      // this.filters.address = "";
-      // this.filters.online_status = "";
-      // this.filters.clientValue = "";
-      // this.filters.v_sys_type = "";
-      // this.filters.v_project_statu="";
-      
-
-      // this.v_area="";
     },
     getUrl() {
       for (item in $router.options.routes) {
@@ -303,7 +294,6 @@ export default {
       dialogTableVisible: false,
       dialogFormVisible: false,
       area: configs.options,
-      
       outerVisible: false,
       innerVisible: false,
       listLoading: false,
@@ -317,14 +307,14 @@ export default {
         v_sys_type: "",
         v_project_statu: ""
       },
-
-      totalnum: 15,
-      currentPage1: 2,
+      totals:{
+        totalNum: 15,
+        currentPage: 2,
+        pageSize:10,
+      },
       parkList: configs.parkList,
       types: configs.parksys,
-      
       online: configs.online,
-      
       project_status: configs.project_status,
       
     };

@@ -1,51 +1,350 @@
-
 {
     "menus": [
         {
             "path": "/park",
             "name": "停车场管理",
             "leaf": false,
-            "parent_id": "0",
             "iconCls": "el-icon-goods",
             "children": [
                 {
                     "path": "/parklist",
-                    "id": "1-1",
+                   
                     "component": "Park",
                     "leaf": true,
                     "name": "停车场列表"
                 },
                 {
                     "path": "/AttendCar",
-                    "id": "1-2",
+                
                     "component": "AttendCar",
                     "leaf": true,
                     "name": "在场车辆"
                 }
             ]
         },
-        
+        {
+            "path": "/carmanage",
+            "name": "车辆管理",
+            "leaf": false,
+            "iconCls": "el-icon-tickets",
+            "children": [
+                {
+                    "path": "/carinfoList",
+                    
+                    "leaf": true,
+                    "component": "carManage/carinfoList",
+                    "name": "车辆信息列表"
+                },
+                {
+                    "path": "/newCarRegist",
+                    
+                    "leaf": true,
+                    "component": "carManage/newCarRegist",
+                    "name": "新车登记注册"
+                },
+                {
+                    "path": "/garageAuthorize",
+                  
+                    "leaf": true,
+                    "component": "carManage/garageAuthorize",
+                    "name": "车库授权"
+                },
+                {
+                    "path": "/carGroup",
+                  
+                    "leaf": true,
+                    "component": "carManage/carGroup",
+                    "name": "车辆分组"
+                },
+                {
+                    "path": "/carType",
+                    
+                    "leaf": true,
+                    "component": "carManage/carType",
+                    "name": "车辆类型"
+                },
+                {
+                    "path": "/blacklistCar",
+                   
+                    "leaf": true,
+                    "component": "carManage/blacklistCar",
+                    "name": "黑名单车"
+                },
+                {
+                    "path": "/sendcarManage",
+                   
+                    "leaf": true,
+                    "component": "carManage/sendcarManage",
+                    "name": "派车管理"
+                },
+                {
+                    "path": "/reservationvehicleList",
+                   
+                    "leaf": true,
+                    "component": "carManage/reservationvehicleList",
+                    "name": "预约车辆列表"
+                }
+            ]
+        },
+        {
+            "path": "/parkingManage",
+            "name": "车位管理",
+            "leaf": false,
+            "iconCls": "el-icon-star-on",
+            "children": [
+                {
+                    "path": "/parkPoolSetting",
+                    "leaf": true,
+                
+                    "component": "parkingManage/parkPoolSetting",
+                    "name": "车位池设置"
+                },
+                {
+                    "path": "/parkPoolorParking",
+                    "leaf": true,
+                   
+                    "component": "parkingManage/parkPoolorParking",
+                    "name": "车位池-车位管理"
+                },
+                {
+                    "path": "/garageParkingInfo",
+                    "leaf": true,
+                   
+                    "component": "parkingManage/garageParkingInfo",
+                    "name": "车库车位信息"
+                }
+            ]
+        },
+        {
+            "path": "/deviceManage",
+            "leaf": false,
+            "name": "设备管理",
+            "iconCls": "el-icon-view",
+            "children": [
+                {
+                    "path": "/deviceManage/parkingandEntryequi",
+                    "leaf": true,
+                    
+                    "component": "deviceManage/parkingandEntryequi",
+                    "name": "停车出入设备"
+                },
+                {
+                    "path": "/parkGuidequiState",
+                    "leaf": true,
+                    "component": "deviceManage/parkGuidequiState",
+                    "name": "停车引导设备状态"
+                }
+            ]
+        },
+        {
+            "path": "/garageManage",
+            "leaf": false,
+            "name": "车库管理",
+            "iconCls": "el-icon-mobile-phone",
+            "children": [
+                {
+                    "path": "/garageList",
+                    "leaf": true,
+                    "component": "garageManage/garageList",
+                    "name": "车库列表"
+                },
+                {
+                    "path": "/garageFloorMap",
+                   
+                    "leaf": true,
+                    "component": "garageManage/garageFloorMap",
+                    "name": "车库楼层地图"
+                },
+                {
+                    "path": "/garageLocationInfo",
+                   
+                    "leaf": true,
+                    "component": "garageManage/garageLocationInfo",
+                    "name": "车库区位信息"
+                }
+            ]
+        },
+        {
+            "path": "/tariffManage",
+            "leaf": false,
+            "name": "费率管理",
+            "iconCls": "el-icon-check",
+            "children": [
+                {
+                    "path": "/parkingRate",
+                   
+                    "leaf": true,
+                    "component": "tariffManage/parkingRate",
+                    "name": "临停车费率"
+                },
+                {
+                    "path": "/holiday",
+                    "leaf": true,
+                    "component": "tariffManage/holiday",
+                    "name": "节假日"
+                },
+                {
+                    "path": "/fixedRate",
+                   
+                    "leaf": true,
+                    "component": "tariffManage/fixedRate",
+                    "name": "固定车费率"
+                }
+            ]
+        },
+        {
+            "path": "/recordQuery",
+            "leaf": false,
+           
+            "name": "记录查询",
+            
+            "iconCls": "el-icon-search",
+            "children": [
+                {
+                    "path": "carRecord", 
+                
+                    "leaf": false,
+                    
+                    "name": "车辆出入记录",
+                    "children": [
+                        {
+                            "path": "/carRecord/passRecord", 
+                            "leaf": true,
+                            "component": "recordQuery/carRecord/passRecord",
+                            "name": "入场记录"
+                        },
+                        {
+                            "path": "/carRecord/outRecord", 
+                            "leaf": true,
+                            "component": "recordQuery/carRecord/outRecord",
+                            "name": "出场记录"
+                        },
+                        {
+                            "path": "/carRecord/freeRelease", 
+                            "leaf": true,
+                            "component": "recordQuery/carRecord/freeRelease",
+                            "name": "免费放行记录"
+                        },
+                        {
+                            "path": "/carRecord/manualSwitch",
+                            "leaf": true,
+                            "component": "recordQuery/carRecord/manualSwitch",
+                            "name": "手动开闸记录"
+                        },
+                        {
+                            "path": "/carRecord/plateModify",
+                            "leaf": true,
+                            "component": "recordQuery/carRecord/plateModify",
+                            "name": "车牌修改记录"
+                        },
+                        {
+                            "path": "/carRecord/carLock",
+                            "leaf": true,
+                            "component": "recordQuery/carRecord/carLock",
+                            "name": "车辆锁车记录"
+                        }
+                    ]
+                },
+                {
+                    "path": "/parkingDiscount",
+                    "leaf": true,
+                    "component":"recordQuery/parkingDiscount",
+                    "name": "停车打折记录"
+                },
+                {
+                    "path": "carin-out",
+                  
+                    "leaf": false,
+                   
+                    "name": "车辆管理记录",
+                    "children": [
+                        {
+                            "path": "/carin-out/breakRule",
+                            "leaf": true,
+                            "component": "recordQuery/carin-out/breakRule",
+                            "name": "场内违章停车记录"
+                        },
+                        {
+                            "path": "/carin-out/carCheck",
+                            "leaf": true,
+                            "component": "recordQuery/carin-out/carCheck",
+                            "name": "车辆盘点操作记录"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/statisticsReport",
+            "leaf": false,
+           
+            "name": "统计报表",
+            "iconCls": "el-icon-more",
+            "children": [
+                {
+                    "path": "/trafficflowAnalysisReport",
+                    "leaf": true,
+                    "component":"statisticsReport/trafficflowAnalysisReport",
+                    "name": "车流量分析报表"
+                },
+                {
+                    "path": "/regionalAnalysisReport",
+                    "leaf": true,
+                    "component":"statisticsReport/regionalAnalysisReport",
+                    "name": "区域车流分析报表"
+                }
+            ]
+        },
+        {
+            "path": "/financeReport",
+            "leaf": false,
+           
+            "name": "财务报表",
+            "iconCls": "el-icon-circle-plus",
+            "children": [
+                {
+                    "path": "/parkFee",
+                    "leaf": true,
+                    "component":"financeReport/parkFee",
+                    "name": "停车收费汇总报表"
+                },
+                {
+                    "path": "/tempStop",
+                    "leaf": true,
+                    "component":"financeReport/tempStop",
+                    "name": "临停收费报表"
+                },
+                {
+                    "path": "/monthCar",
+                    "leaf": true,
+                    "component":"financeReport/monthCar",
+                    "name": "月结车消费汇总报表"
+                }
+            ]
+        },
         {
             "path": "",
-            "parent_id": "0",
             "leaf": false,
             "name": "系统管理",
             "iconCls": "el-icon-circle-plus",
             "children": [
                 {
                     "path": "/role",
+                   
                     "component": "sysManage/role",
                     "leaf": true,
                     "name": "用户管理"
                 },
                 {
                     "path": "/groups",
+                    
                     "component": "sysManage/groups",
                     "leaf": true,
                     "name": "角色管理"
                 },
                 {
                     "path": "/menu",
+                    
                     "component": "sysManage/menu",
                     "leaf": true,
                     "name": "菜单管理"

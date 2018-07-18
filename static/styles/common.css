@@ -1,3 +1,10 @@
+.diaCommon .el-dialog__header{
+  background: #FCFDFF;
+  
+}
+.jzcar_no .el-input{
+  width: 60%;
+}
 /*所有页面用到的样式*/
 .margin-tops{
   margin-top:15px !important;

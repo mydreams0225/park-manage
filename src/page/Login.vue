@@ -36,9 +36,8 @@
 </template>
 
 <script>
-import { requestLogin } from "../api/api";
-//getMenu
-// import { getMenu } from "../api/api";
+// import $ from '../../static/js/jquery-1.9.1.min.js'
+import { requestLogin ,requestMenu,requestLogin1 ,requestMenu1} from "@/api/api";
 import MenuUtils from "@/utils/MenuUtils";
 var routers = [];
 import axios from "axios";
@@ -86,12 +85,11 @@ export default {
     },
      
     login(datas) {
-       sessionStorage.setItem("userRole", JSON.stringify(datas));
+       window.sessionStorage.setItem("userRole", JSON.stringify(datas));
       
       MenuUtils(routers, datas,false);
     },
     handleSubmit2(ev) {
-      window.sessionStorage.removeItem("user");
       var _this = this;
       this.$refs.ruleForm2.validate(valid => {
         if (valid) {
@@ -112,38 +110,96 @@ export default {
             loginParams.append("username", this.ruleForm2.account);
             loginParams.append("password", this.ruleForm2.checkPass);
             // console.log(loginParams)
+///
 
-            requestLogin(loginParams).then(data => {
-              console.log(data);
+          // var jqxhr;
+          //     //设置ajax请求完成后运行的函数,
+          //     $.ajaxSetup({ 
+          //         complete:function(){
+          //             if("REDIRECT" == jqxhr.getResponseHeader("REDIRECT")){ //若HEADER中含有REDIRECT说明后端想重定向，
+          //                 var win = window;
+          //                 while(win != win.top){
+          //                     win = win.top;
+          //                 }
+                           
+          //                 win.location.href = jqxhr.getResponseHeader("CONTENTPATH");//将后端重定向的地址取出来,使用win.location.href去实现重定向的要求
+                         
+          //             }
+          //         }
+          //     });
+          //     jqxhr = axios({
+          //       url: 'http://192.168.43.116:8080/park/login',
+          //       method: 'post',
+          //       data: loginParams,
+          //       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+          //     }    //{headers:{'Access-Control-Allow-Origin': "*"}}
+          //     ).then(data => {
+             
+
+             requestLogin(loginParams).then(data => {
+              console.log("ggggg");
+             
               this.logining = false;
-              let { msg, code, user } = data;
-
-              console.log(code);
-              if (code !== 200) {
+              // let { msg, code, user } = data;
+             
+              
+            //  window.location.href = 'http://192.168.43.116:8080/park/index'
+              if (data.code !== 1) {
                 this.$message({
-                  message: msg,
+                  message: data.message,
                   type: "error"
                 });
               } else {
-                window.sessionStorage.setItem("user", JSON.stringify(data));
-                this.setCookie("Token", data.token); //登录成功后将token存储在cookie之中
+                console.log(data);
+                alert(data)
+                console.log("fdffffdfd")
+                var jwt=data.jwt || "";
+                 window.sessionStorage.setItem("jwt", JSON.stringify(data.jwt));
+                // this.setCookie("Token", data.token); //登录成功后将token存储在cookie之中
                 // sessionStorage.setItem("Token", data.token);
-                axios
-                  .get(`../../static/json/rolelist.json`, {
-                    params: { a: "1" }
-                  })
-                  .then(res => {
+                // axios
+                //   .get(`../../static/json/rolelist.json`, {
+                //     params: { a: "1" }
+                //   })
+                let para = new URLSearchParams();
+                para.append("jwt", jwt);
+
+                 console.log('parklistzzlzllz')
+                //  this.$router.push({ path: "/home" });
+                // requestMenu(para).then(data => {
+
+                  window.sessionStorage.setItem("user", JSON.stringify(data.userInfo));
+                //     console.log('fdfdgfsdgfds')
+                //     console.log(data);
+                //     console.log('dddd')
+                //     this.login(data.menus);
+                //     console.log("routers");
+                //     console.log(routers);
+                //     this.$router.addRoutes(routers);
+                   
+                //   });
+                this.$router.push({ path: "/parklist" });
+           //我的写法
+                requestMenu(para).then(data => {
+                  window.sessionStorage.setItem("user", JSON.stringify(data.userInfo));
                     console.log('fdfdgfsdgfds')
-                    console.log(res.data.menus);
+                    console.log(data);
                     console.log('dddd')
-                    this.login(res.data.menus);
-                    
+                    this.login(data.menus);
+                    console.log("routers");
+                    console.log(routers);
                     this.$router.addRoutes(routers);
                     this.$router.push({ path: "/parklist" });
                   });
-                //this.$router.push({ path: "/parklist" });
+               
+                
               }
             });
+
+
+
+
+
 
             //this.$router.push({ path: '/parklist' });
           } else {
@@ -156,6 +212,8 @@ export default {
         }
       });
     }
+
+    
   }
 };
 </script>
