@@ -1,12 +1,13 @@
 import $axios from 'axios';
 import qs from 'qs';
-let base = '';
+let base = '/apis';
+$axios.defaults.baseURL='apis'
 //  post登录
 export const requestLogin = params => {
   console.log(params);
   return $axios({
-    url: 'http://192.168.43.116:8080/park/login',
-    // url: '/api/park/login',
+    //  url: 'http://192.168.43.116:8080/park/login',
+    url: "/park/login",
     method: 'post',
     data: params,
     // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -60,7 +61,7 @@ export const requestMenu = params => {
 // });
 //export const requestMenu = params => { console.log(params); return $axios.get(`http://192.168.43.116:8080/park/indexinfo`, { params: params }).then(res => res.data); };
 //mock本地请求菜单
-export const requestMenu1 = params => { console.log(params); return $axios.get(`.../../static/json/rolelist.json`, { params: params }).then(res => res.data); };
+export const requestMenu1 = params => { console.log(params); return $axios.get(`../../static/json/rolelist.json`, { params: params }).then(res => res.data); };
 //mock本地请求 获取停车场
 export const getParklist1 = params => { console.log(params); return $axios.get(`../../static/json/park.json`, { params: params }).then(res => res.data); };
 
@@ -70,7 +71,7 @@ export const requestAttendCar1 = params => { console.log(params); return $axios.
 export const requestAttendCarEdit1 = params => { console.log(params); return $axios.get(`../../static/json/attendcar.json`, { params: params }).then(res => res.data); };
 
 //mock本地请求单行删除数据
-// export const requestAttendCar1 = params => { console.log(params); return $axios.get(`../../static/json/attendcar.json`, { params: params }).then(res => res.data); };
+ export const requestAttendCarODelete1 = params => { console.log(params); return $axios.get(`../../static/json/attendcar.json`, { params: params }).then(res => res.data); };
 
 
 

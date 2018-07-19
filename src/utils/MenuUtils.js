@@ -9,12 +9,13 @@ function generaMenu(routers, data, hasparent) {
   
   data.forEach((item) => {
     var menu = Object.assign({}, item);
-    !hasparent ? menu.component = lazyLoading("Home") : menu.children ? menu.component = lazyLoading("publish-center") : menu.component = lazyLoading(menu.component);
+    !hasparent ? menu.component = lazyLoading("/Home") : menu.hasChildren ? menu.component = lazyLoading("/publish-center") : menu.component = lazyLoading(menu.path);
    
-    if (item.children) {
+    if (item.hasChildren) {
       menu.children = []
-     
-     
+      
+      console.log("item.children")
+      console.log(item.children)
       generaMenu(menu.children, item.children, true)
     }
     routers.push(menu);

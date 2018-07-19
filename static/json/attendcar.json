@@ -3,16 +3,18 @@
         {
             "url": "../../static/img/car.jpg",
             "car_no": "粤A9M33",
-            "desc": "2018--3-3 4：13:4停车·"
+            "entry_time":"2018--3-3 4：13:4",
+            "desc": "停车·"
         },
         {
             "url": "../../static/img/car.jpg",
             "car_no": "赣A8888",
-            "desc": "2018--3-3 4：13:4停车·"
+            "desc": "停车·"
         },
         {
             "url": "../../static/img/car.jpg",
-            "car_no": "赣F6666"
+            "car_no": "赣F6666",
+            "car_type":"临时车"
         }
     ],
     "total": 3

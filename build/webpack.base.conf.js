@@ -36,6 +36,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       '@': resolve('src'),
+      'excel': path.resolve(__dirname, '../src/excel'),//新增加一行
     }
   },
   module: {

@@ -13,11 +13,10 @@ module.exports = {
     proxyTable: {
         //新增
         '/apis': {
-        // 
         target: 'http://192.168.43.116:8080',  // 接口域名
         changeOrigin: true,  //是否跨域
         pathRewrite: {
-            '^/apis': '/api'   //需要rewrite重写的,
+            '^/apis': ''   //需要rewrite重写的,
         }              
       }
     },
