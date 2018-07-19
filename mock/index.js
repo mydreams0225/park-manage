@@ -1,4 +1,4 @@
-import Mock from 'mockjs'
+import Mock from 'C:/Users/Administrator/AppData/Local/Microsoft/TypeScript/2.9/node_modules/@types/mockjs'
 import data from '../static/test.json'
 Mock.mock('/login/login', {
     code: 200,

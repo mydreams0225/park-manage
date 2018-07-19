@@ -14,7 +14,7 @@ const createLintingRule = () => ({
   enforce: 'pre',
   include: [resolve('src'), resolve('test')],
   options: {
-    formatter: require('eslint-friendly-formatter'),
+    formatter: require('../node_modules/_eslint-friendly-formatter@3.0.0@eslint-friendly-formatter'),
     emitWarning: !config.dev.showEslintErrorsInOverlay
   }
 })

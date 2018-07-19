@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from '../../node_modules/_vue@2.5.16@vue'
+import Router from '../../node_modules/_vue-router@3.0.1@vue-router'
 // import HelloWorld from '@/components/HelloWorld'
 import Login from '@/page/Login'
 import Home from '@/page/Home'
