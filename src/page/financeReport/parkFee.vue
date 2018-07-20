@@ -525,6 +525,37 @@ export default {
           //异常开闸
           manual: "333", //手动,
           computer: "45654" //电脑
+        },{
+          // date: "2016-05-03",
+          toll: "收费员1",
+          bill: "33", //应收车次
+          free: "44", //免费车次
+          fact: "55", //实收车次
+          dis_freq: "1", // 打折次数
+          bill_sum: "54", //应收金额
+          dis_sum: "4", //折扣金额
+          online_pay_sum: "1", //在线支付金额
+          unconfin_sum: "3", //未确认金额
+          fact_sum: "44", //实收金额
+          //临时车免费放行
+          free_release: "1", //免费放行
+          free_sum: "3", //免费金额,
+          //月票车
+          inout_flow1: "333", //进/出流量
+          delay_sum1: "333", //延期金额
+          //车位池车
+          inout_flow2: "333", //进/出流量
+          delay_sum2: "444", //延期金额
+          //储值票车
+          inout_flow3: "555", //进/出流量
+          charge: "444", //储值收费
+          recharge_amount: "12345", //充值金额
+          //月结车
+          inout_flow4: "666", //进/出流量
+          monetary: "453", //消费金额
+          //异常开闸
+          manual: "333", //手动,
+          computer: "45654" //电脑
         }
       ],
       mychart: {
@@ -543,7 +574,23 @@ export default {
 					alldelay_sum2:"",
 					allcharge:"",
 					allrecharge_amount:""
-        }
+				},
+				byToll:{
+          xaxisData: [], //date
+          fact_sum: [], //临时车实收金额
+          online_pay_sum: [], //在线支付金额
+          delay_sum1: [], //月票车延期金额
+          delay_sum2: [], //车位池车延期金额
+          charge: [], //储值票车实收金额
+          recharge_amount: [], //储值票车充值金额
+          allmoney: [], //总额
+          allfact_sum: "",
+          allonline_pay_sum: "",
+					alldelay_sum1: "",
+					alldelay_sum2:"",
+					allcharge:"",
+					allrecharge_amount:""
+				}
       }
     };
   },
@@ -554,7 +601,8 @@ export default {
     this.byFeePchart();
   },
   created() {
-    this.mychartByData(this.dtbyDate);
+		this.mycharts(this.dtbyDate,"byDate","date");
+		this.mycharts(this.dtbyFeeMan,"byToll","toll");
     //临时车实收金额
     this.mychart.byDate.allfact_sum = this.sum(this.mychart.byDate.fact_sum);
     // online_pay_sum: [], //在线支付金额
@@ -575,19 +623,46 @@ export default {
     );
 		// recharge_amount: [], //储值票车充值金额
 			 this.mychart.byDate.allrecharge_amount = this.sum(
-      this.mychart.byDate.recharge_amount
+			this.mychart.byDate.recharge_amount
+			
+		);
+		
+		//临时车实收金额
+    this.mychart.byToll.allfact_sum = this.sum(this.mychart.byToll.fact_sum);
+    // online_pay_sum: [], //在线支付金额
+    this.mychart.byToll.allonline_pay_sum = this.sum(
+      this.mychart.byToll.online_pay_sum
     );
+    // delay_sum1: [], //月票车延期金额
+    this.mychart.byToll.alldelay_sum1 = this.sum(
+      this.mychart.byToll.delay_sum1
+    );
+		// delay_sum2: [], //车位池车延期金额
+		 this.mychart.byToll.alldelay_sum2 = this.sum(
+      this.mychart.byToll.delay_sum2
+    );
+		// charge: [], //储值票车实收金额
+		 this.mychart.byToll.allcharge = this.sum(
+      this.mychart.byToll.charge
+    );
+		// recharge_amount: [], //储值票车充值金额
+			 this.mychart.byToll.allrecharge_amount = this.sum(
+			this.mychart.byToll.recharge_amount
+			
+		);
+
   },
   methods: {
-    mychartByData(dateData) {
-      dateData.forEach(item => {
-        this.mychart.byDate.xaxisData.push(item.date);
-        this.mychart.byDate.fact_sum.push(item.fact_sum);
-        this.mychart.byDate.online_pay_sum.push(item.online_pay_sum);
-        this.mychart.byDate.delay_sum1.push(item.delay_sum1);
-        this.mychart.byDate.delay_sum2.push(item.delay_sum2);
-        this.mychart.byDate.charge.push(item.charge);
-        this.mychart.byDate.recharge_amount.push(item.recharge_amount);
+    mycharts(Data,byType,dateOrToll) {
+			
+        Data.forEach(item => {
+        this.mychart[byType].xaxisData.push(item[dateOrToll]);
+        this.mychart[byType].fact_sum.push(item.fact_sum);
+        this.mychart[byType].online_pay_sum.push(item.online_pay_sum);
+        this.mychart[byType].delay_sum1.push(item.delay_sum1);
+        this.mychart[byType].delay_sum2.push(item.delay_sum2);
+        this.mychart[byType].charge.push(item.charge);
+        this.mychart[byType].recharge_amount.push(item.recharge_amount);
         var allmoney =
           item.fact_sum +
           item.online_pay_sum +
@@ -595,8 +670,11 @@ export default {
           item.delay_sum2 +
           item.charge +
           item.recharge_amount;
-        this.mychart.byDate.allmoney.push(allmoney);
+        this.mychart[byType].allmoney.push(allmoney);
       });
+			
+			
+      
     },
     //重复调用的方法算出饼图总额
     sum(val) {
@@ -794,19 +872,19 @@ export default {
             //         color: this.colors[1]
             //     }
             // },
-            data: ["6-1", "6-2", "6-3", "6-4", "6-5", "6-6", "6-7"],
+            data: this.mychart.byToll.xaxisData ,// ["6-1", "6-2", "6-3", "6-4", "6-5", "6-6", "6-7"],
             axisPointer: {
               label: {
                 formatter: function(params) {
                   console.log(params);
                   return (
                     "总收入  " +
-                    (params.seriesData[0].data +
-                      params.seriesData[1].data +
-                      params.seriesData[2].data +
-                      params.seriesData[3].data +
-                      params.seriesData[4].data +
-                      params.seriesData[5].data)
+                    (parseInt(params.seriesData[0].data) +
+                      parseInt(params.seriesData[1].data) +
+                      parseInt(params.seriesData[2].data) +
+                      parseInt(params.seriesData[3].data) +
+                      parseInt(params.seriesData[4].data) +
+                      parseInt(params.seriesData[5].data))
                   );
                 }
               }
@@ -819,47 +897,47 @@ export default {
           }
         ],
         series: [
-          {
-            name: "直接访问",
+         {
+            name: "临时车实收金额",
             type: "bar",
             stack: "广告",
             barWidth: 40,
-            data: [320, 332, 301, 334, 390, 330, 320]
+            data: this.mychart.byToll.fact_sum //[320, 332, 301, 334, 390, 330, 320]
           },
           {
-            name: "邮件营销",
+            name: "在线支付金额",
             type: "bar",
             stack: "广告",
             barWidth: 40,
-            data: [120, 132, 101, 134, 90, 230, 210]
+            data: this.mychart.byToll.online_pay_sum //[120, 132, 101, 134, 90, 230, 210]
           },
           {
-            name: "联盟广告",
+            name: "月票车延期金额",
             type: "bar",
             stack: "广告",
             barWidth: 40,
-            data: [220, 182, 191, 234, 290, 330, 310]
+            data: this.mychart.byToll.delay_sum1 //[220, 182, 191, 234, 290, 330, 310]
           },
           {
-            name: "视频广告",
+            name: "车位池车延期金额",
             type: "bar",
             stack: "广告",
             barWidth: 40,
-            data: [150, 232, 201, 154, 190, 330, 410]
+            data: this.mychart.byToll.delay_sum2 //[150, 232, 201, 154, 190, 330, 410]
           },
           {
-            name: "搜索引擎",
+            name: "储值票车实收金额",
             type: "bar",
             stack: "广告",
             barWidth: 40,
-            data: [862, 1018, 964, 1026, 1679, 1600, 1570]
+            data: this.mychart.byToll.charge // [862, 1018, 964, 1026, 1679, 1600, 1570]
           },
           {
-            name: "百度",
+            name: "储值票车充值金额",
             type: "bar",
             stack: "广告",
             barWidth: 40,
-            data: [620, 732, 701, 734, 1090, 1130, 1120]
+            data: this.mychart.byToll.recharge_amount // [620, 732, 701, 734, 1090, 1130, 1120]
           }
         ]
       });
@@ -884,8 +962,18 @@ export default {
             radius: "55%",
             center: ["50%", "60%"],
             data: [
-              { value: 335, name: "电子支付金额" },
-              { value: 310, name: "临时金额总额" }
+              {
+                value: this.mychart.byToll.allfact_sum,
+                name: "临时车实收金额"
+              },
+              {
+                value: this.mychart.byToll.allonline_pay_sum,
+                name: "在线支付金额"
+              },
+              { value: this.mychart.byToll.alldelay_sum1, name: "月票车延期金额" },
+							{ value: this.mychart.byToll.alldelay_sum2, name: "车位池车延期金额" },
+							{ value: this.mychart.byToll.charge, name: "储值票车实收金额" },
+							{ value: this.mychart.byToll.recharge_amount, name: "储值票车充值金额" },
             ],
             itemStyle: {
               emphasis: {
