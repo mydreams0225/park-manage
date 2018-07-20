@@ -1,0 +1,41 @@
+{
+    "list":[{
+        "car_no": "粤A33333",
+        "regist_no": "粤A88888",
+        "seat_no": "1518",
+        "price_type": "月票车",
+        "car_type": "小型车",
+        "car_group": "1",
+        "client": "2",
+        "phone": "2",
+        "address": "2",
+        "vld": "2",
+        "balance": "$1",
+        "role_park": "主车库",
+        "end_r_time": "2018-3-3",
+        "end_c_time": "2018-3-4",
+        "end_edit_person": "技术部",
+        "memo": "cs",
+        "status": "离场"
+      },{
+        "car_no": "粤A33333",
+        "regist_no": "粤A88888",
+        "seat_no": "1518",
+        "price_type": "月票车",
+        "car_type": "小型车",
+        "car_group": "1",
+        "client": "2",
+        "phone": "2",
+        "address": "2",
+        "vld": "2",
+        "balance": "$1",
+        "role_park": "主车库",
+        "end_r_time": "2018-3-3",
+        "end_c_time": "2018-3-4",
+        "end_edit_person": "技术部",
+        "memo": "cs",
+        "status": "离场"
+      }
+    ],
+    "total":44
+}

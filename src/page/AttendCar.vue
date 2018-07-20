@@ -7,7 +7,7 @@
          <el-button  type="danger" icon="el-icon-delete" size="medium" @click="handleDel()">删除查询到的记录</el-button>
          <el-button  icon="el-icon-circle-check-outline" size="medium">根据在场车辆数纠正空车位数</el-button>
          <div class="fr">
-           <el-button  icon="el-icon-upload2" type="primary" size="medium" >批量导入</el-button>
+           <el-button  icon="el-icon-upload2" type="primary" size="medium"  @click="imports()">批量导入</el-button>
            <el-button  icon="el-icon-upload" type="success" size="medium" @click="outExe()">导出EXCEL报表</el-button>
          </div>
        </div>
@@ -201,6 +201,9 @@
 import { requestAttendCar1, requestAttendCar,requestAttendCarEdit1,requestAttendCarODelete1 } from "@/api/api";
 export default {
   methods: {
+    imports(){
+      this.$router.push({ path: "/import" })
+    },
     // 导出excel
     outExe() {
                 this.$confirm('此操作将导出excel文件, 是否继续?', '提示', {

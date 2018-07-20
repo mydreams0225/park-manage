@@ -1,12 +1,12 @@
-import Vue from '../node_modules/_vue@2.5.16@vue'
+import Vue from 'vue'
 import App from './App'
 import router from './router'
-import Element from '../node_modules/_element-ui@2.4.3@element-ui'
+import Element from 'element-ui'
 
 import paging from './components'
 import has from '@/assets/js/btnPermission.js';
 //mock放到全局 感觉没用
-import '../mock'
+// import '../mock'
 //新增
 
 //  import axios from 'axios';
@@ -22,7 +22,7 @@ Vue.use(paging)
 
 import MenuUtils from "@/utils/MenuUtils";
 var routers = [];
-import axios from "../node_modules/_axios@0.18.0@axios";
+import axios from "axios";
 
 import { getPermission } from "@/api/api";
 import {constantRouterMap} from '@/router';
@@ -54,10 +54,6 @@ router.beforeEach((to, from, next) => {
     next({ path: '/login' })
   } else {
     console.log('111s');
-   
-     
-  
-
      next()
   }
 })

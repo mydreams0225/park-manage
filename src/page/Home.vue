@@ -231,6 +231,7 @@ export default {
 html body {
   width: 100%;
   height: 100%;
+  overflow:auto
 }
 .el-menu {
   background: rgba(0, 0, 0, 0.8);

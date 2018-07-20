@@ -14825,7 +14825,17 @@ const configs = {
           value: "停车场1",
           label: "停车场1"
         }
-      ]
+      ],
+    fee_type:[
+        {
+            value: "-1",
+            label: "计费类型"
+          },
+          {
+            value: "月票车",
+            label: "月票车"
+          }
+    ]
 
 
 }

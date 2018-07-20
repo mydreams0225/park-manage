@@ -58,6 +58,7 @@ import role from '@/page/sysManage/role'
 import groups from '@/page/sysManage/groups'
 import menu from '@/page/sysManage/menu'
 import test from '@/page/test.vue'
+import imports from '@/page/import.vue'
 Vue.use(Router)
 const commonRouter=[
 {
@@ -67,13 +68,18 @@ const commonRouter=[
        
     hidden:true
   },
-//   {
-//     path: '/home',
-//     name: 'home',
-//     component: Home,
-       
-//     // hidden:true
-//   }
+  {
+    path: '/',
+    component: Home,
+    name: '停车场管理',
+    id:'1',
+    iconCls: 'el-icon-goods',//图标样式class
+    children: [
+        { path: '/import',id:'1-1', component: imports, name: '在场车辆---导入' },
+                            
+    ],
+    hidden:true
+ }
   
 ]
 
