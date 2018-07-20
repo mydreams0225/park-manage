@@ -28,7 +28,7 @@
 		<el-col :xs="24" :sm="24" :md="24" :lg="24" class="main">
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'" >
 				<!--导航菜单-->
-        <el-menu :default-active="$route.path" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect" theme="dark" unique-opened router>
+        <el-menu :default-active="$route.path" class="el-menu-vertical-demo el-menus" @open="handleopen" @close="handleclose" @select="handleselect" theme="dark" unique-opened router>
 					<menu-tree :nodes="$router.options.routes"></menu-tree>
 				</el-menu>
 				<!-- <el-menu :default-active="$route.path" class="el-menu-vertical-demo el-menus" @open="handleopen" @close="handleclose" @select="handleselect"
@@ -332,7 +332,7 @@ html body {
         width: 230px;
         background-color: #222;
         color: #fff;
-        overflow-y: scroll;
+        overflow-y: auto;
       }
       .el-menu {
         height: 100%;

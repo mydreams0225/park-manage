@@ -523,60 +523,47 @@ export default {
     this.getWeekReport();
   },
   created() {
-    var data = this.weeksumData;
-    data.forEach(item => {
-      this.mychart.week.axxisData.push(item.date);
-      this.mychart.week.entrysData.push(item.entrSum);
-      this.mychart.week.outsData.push(item.outSum);
-    });
-    // return this.mychart.week.axxisData;
-    console.log(this.mychart.week.axxisData);
-    ///month
-    var monthData = this.monthsumData;
-    monthData.forEach(item => {
-      this.mychart.month.axxisData.push(item.date);
-      this.mychart.month.entrysData.push(item.entrSum);
-      this.mychart.month.outsData.push(item.outSum);
-    });
-    var yearData = this.yearsumData;
-    yearData.forEach(item => {
-      this.mychart.year.axxisData.push(item.date);
-      this.mychart.year.entrysData.push(item.entrSum);
-      this.mychart.year.outsData.push(item.outSum);
-    });
-    var dayData = this.daysumData;
-    dayData.forEach(item => {
-      var date = item.date.substring(0, 2);
-      this.mychart.day.axxisData.push(date + "h");
-      this.mychart.day.entrysData.push(item.entrSum);
-      this.mychart.day.outsData.push(item.outSum);
-    });
+    this.mychartData(this.weeksumData, "week");
+    this.mychartData(this.monthsumData, "month");
+    this.mychartData(this.yearsumData, "year");
+    this.mychartData(this.daysumData, "day");
   },
 
   methods: {
+    mychartData(arr, dateType) {
+      arr.forEach(item => {
+        if (dateType == "day") {
+          var date = item.date.substring(0, 2);
+          this.mychart[dateType].axxisData.push(date + "h");
+        } else {
+          this.mychart[dateType].axxisData.push(item.date);
+        }
+
+        this.mychart[dateType].entrysData.push(item.entrSum);
+        this.mychart[dateType].outsData.push(item.outSum);
+      });
+    },
     //清除
 
     callbackSelTenant() {
-		
-		var week=this.filters.week,
-			month=this.filters.month,
-			year=this.filters.year,
-			day=this.filters.day;
-		console.log(this.filters)
-	    for (var items in week){
-			week[items]="";
-		}
-		for (var items in month){
-			month[items]="";
-		}
-		for (var items in year){
-			year[items]="";
-		}
-		for (var items in day){
-			day[items]="";
-		}
-		
-	},
+      var week = this.filters.week,
+        month = this.filters.month,
+        year = this.filters.year,
+        day = this.filters.day;
+      console.log(this.filters);
+      for (var items in week) {
+        week[items] = "";
+      }
+      for (var items in month) {
+        month[items] = "";
+      }
+      for (var items in year) {
+        year[items] = "";
+      }
+      for (var items in day) {
+        day[items] = "";
+      }
+    },
     getweekvalue() {
       ///week
       var data = this.weeksumData;

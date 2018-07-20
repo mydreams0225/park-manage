@@ -174,82 +174,74 @@ export default {
   data() {
     return {
       colors: ["#5793f3", "#d14a61", "#675bba"],
-      activeName:"first",
+      activeName: "first",
       filters: {
-        park:"",
-		cartype:"",
-		sum_method:"",
-		provice:""
-	  },
+        park: "",
+        cartype: "",
+        sum_method: "",
+        provice: ""
+      },
       select: {
-        park:[{}],
-		cartype:[{}],
-		sum_method:[{}],
-		provice:[{}]
-	  },
-      areacolumn: [{
-		  citySimpleName:"粤A",
-			cityName :"广州市",
-			entrSum:7333,
-			 outSum:444
-	  },{
-		  citySimpleName:"粤b",
-			cityName :"广州市",
-			entrSum:7333,
-			 outSum:444
-	  },{
-		  citySimpleName:"粤c",
-			cityName :"广州市",
-			entrSum:200,
-			 outSum:1
-	  },{
-		  citySimpleName:"粤d",
-			cityName :"广州市",
-			entrSum:1,
-			 outSum:1
-	  }],
-    //   areapancakedata: [
-	// 	 {
-	// 	  citySimpleName:"粤A",
-	// 		cityName :"广州市",
-	// 		entrSum:"7333",
-	// 		 outSum:"444"
-	//   }
-	//   ],
-	  mychart:{
-		  legendData: ["入场统计", "出场统计"],
-		   axxisData: [
-            // "6-11周一",
-            // "6-12周二",
-            // "6-13周三",
-            // "6-14周四",
-            // "6-15周五",
-            // "6-16周六",
-            // "6-17周日"
-		  ],
-		  entrysData:[],
-		  outsData:[],
-		  pieaxxisData:[],
-		//   obj:{},
-	  }
+        park: [{}],
+        cartype: [{}],
+        sum_method: [{}],
+        provice: [{}]
+      },
+      areacolumn: [
+        {
+          citySimpleName: "粤A",
+          cityName: "广州市",
+          entrSum: 7333,
+          outSum: 444
+        },
+        {
+          citySimpleName: "粤b",
+          cityName: "广州市",
+          entrSum: 7333,
+          outSum: 444
+        },
+        {
+          citySimpleName: "粤c",
+          cityName: "广州市",
+          entrSum: 200,
+          outSum: 1
+        },
+        {
+          citySimpleName: "粤d",
+          cityName: "广州市",
+          entrSum: 1,
+          outSum: 1
+        }
+      ],
+      //   areapancakedata: [
+      // 	 {
+      // 	  citySimpleName:"粤A",
+      // 		cityName :"广州市",
+      // 		entrSum:"7333",
+      // 		 outSum:"444"
+      //   }
+      //   ],
+      mychart: {
+        legendData: ["入场统计", "出场统计"],
+        axxisData: [
+          // "6-11周一",
+          // "6-12周二",
+          // "6-13周三",
+          // "6-14周四",
+          // "6-15周五",
+          // "6-16周六",
+          // "6-17周日"
+        ],
+        entrysData: [],
+        outsData: [],
+        pieaxxisData: []
+        //   obj:{},
+      }
     };
   },
-  created(){
-	  var data = this.areacolumn;
-    data.forEach(item => {
-      this.mychart.axxisData.push(item.citySimpleName);
-      this.mychart.entrysData.push(item.entrSum);
-	  this.mychart.outsData.push(item.outSum);
-	//   this.mychart.pieaxxisData.push({value:(item.entrSum+item.outSum)+","+name+":"+item.citySimpleName})
-	var obj={}
-	obj.value=item.entrSum-0+item.outSum;
-	obj.name=item.citySimpleName;
-	console.log(obj);
-
-	this.mychart.pieaxxisData.push(obj)
-	  
-	});
-	// console.log(this.mychart.pieaxxisData)
+  created() {
+		var data = this.areacolumn;
+		this.myChartData(data);
   },
   mounted() {
     //this.drawLine_week();
@@ -257,6 +249,20 @@ export default {
     this.drawpancake_area();
   },
   methods: {
+    myChartData(data) {
+      data.forEach(item => {
+        this.mychart.axxisData.push(item.citySimpleName);
+        this.mychart.entrysData.push(item.entrSum);
+        this.mychart.outsData.push(item.outSum);
+        //   this.mychart.pieaxxisData.push({value:(item.entrSum+item.outSum)+","+name+":"+item.citySimpleName})
+        var obj = {};
+        obj.value = item.entrSum - 0 + item.outSum;
+        obj.name = item.citySimpleName;
+        console.log(obj);
+
+        this.mychart.pieaxxisData.push(obj);
+      });
+    },
     drawcolumn_area() {
       let myChart = echarts.init(document.getElementById("areacolumnChart"));
       myChart.setOption({
@@ -264,16 +270,17 @@ export default {
         color: this.colors,
 
         tooltip: {
-		  trigger: "axis",
-		 axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-            }
+          trigger: "axis",
+          axisPointer: {
+            // 坐标轴指示器，坐标轴触发有效
+            type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
+          }
           // axisPointer: {
           //     type: 'cross'
           // }
         },
         legend: {
-          data:this.mychart.legendData
+          data: this.mychart.legendData
         },
         grid: {
           top: 70,
@@ -300,7 +307,7 @@ export default {
             //         }
             //     }
             // },
-            data:this.mychart.axxisData
+            data: this.mychart.axxisData
           }
         ],
         yAxis: [
@@ -310,18 +317,18 @@ export default {
         ],
         series: [
           {
-            name: this.mychart.legendData[0],//"入场统计",
+            name: this.mychart.legendData[0], //"入场统计",
             type: "bar",
-			smooth: true,
-			barWidth : 30,//柱图宽度
-            data: this.mychart.entrysData//[666, 44, 0, 67, 90, 200, 400]
+            smooth: true,
+            barWidth: 30, //柱图宽度
+            data: this.mychart.entrysData //[666, 44, 0, 67, 90, 200, 400]
           },
           {
             name: this.mychart.legendData[1], //"出场统计",
             type: "bar",
-			smooth: true,
-			barWidth : 30,//柱图宽度
-            data:this.mychart.outsData//[777, 188, 200, 777, 60, 3, 600]
+            smooth: true,
+            barWidth: 30, //柱图宽度
+            data: this.mychart.outsData //[777, 188, 200, 777, 60, 3, 600]
           }
         ]
       });
@@ -345,7 +352,7 @@ export default {
             type: "pie",
             radius: "55%",
             // center: ["50%", "60%"],
-            data:  this.mychart.pieaxxisData,// [{ value: 1, name: "其他" }, { value: 2, name: "京P" }],
+            data: this.mychart.pieaxxisData, // [{ value: 1, name: "其他" }, { value: 2, name: "京P" }],
             itemStyle: {
               emphasis: {
                 shadowBlur: 10,
@@ -353,10 +360,8 @@ export default {
                 shadowColor: "rgba(0, 0, 0, 0.5)"
               }
             }
-		  },
-		  
+          }
         ]
-      
       });
     }
   }
