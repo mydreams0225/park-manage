@@ -3,7 +3,7 @@
         "car_no": "粤A33333",
         "regist_no": "粤A88888",
         "seat_no": "1518",
-        "price_type": "月票车",
+        "fee_type": "月票车",
         "car_type": "小型车",
         "car_group": "1",
         "client": "2",
@@ -21,7 +21,7 @@
         "car_no": "粤A33333",
         "regist_no": "粤A88888",
         "seat_no": "1518",
-        "price_type": "月票车",
+        "fee_type": "月票车",
         "car_type": "小型车",
         "car_group": "1",
         "client": "2",
@@ -37,5 +37,7 @@
         "status": "离场"
       }
     ],
-    "total":44
+    "total":44,
+    "plateName":[{ "plate_name": "车位一" }, { "plate_name": "车位二" }],
+    "ownerName":[{"owner_name":"业主一"}]
 }
