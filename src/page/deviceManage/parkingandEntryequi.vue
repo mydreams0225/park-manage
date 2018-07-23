@@ -167,7 +167,9 @@
          	obj.innerHTML=node.label;
       },
       renderContent(h, { node, data, store }) {
+        
         return (
+          
           <span class="custom-tree-node">
             <span>{node.label} </span>
             <span>

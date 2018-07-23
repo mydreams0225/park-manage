@@ -4,7 +4,7 @@
             <!-- 操作区 -->
               <div class="margin-tops">
                  
-                 <el-button type="danger" icon="el-icon-delete" >批量删除</el-button>
+                 <el-button type="danger" icon="el-icon-delete" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
                  <el-button type="success"  icon="el-icon-check">授权车库</el-button>
                  <el-button type="success"  icon="el-icon-check">设置分组</el-button>
                  <div class="menus" style="position:relative ;display:inline-block">
@@ -161,7 +161,7 @@
                       :data="dt"
                       border
                       tooltip-effect="dark"
-                      style="width: 100%">
+                      style="width: 100%" @selection-change="selsChange" >
                       <el-table-column
                         type="selection"
                         width="55">
@@ -540,10 +540,11 @@
 
 <script>
 import editdialog from "@/components/carInfo_editForm.vue";
-import { reqCarInfo, reqPlateName,reqEdit,reqOwnerName,reqdeleteOne} from "@/api/carManage";
+import { reqCarInfo, reqPlateName,reqEdit,reqOwnerName,reqdeleteOne,batchRemove} from "@/api/carManage";
 export default {
   data() {
     return {
+      sels:[],//选中列表
       totals: {
         currentPage: 1,
         pageSize: 10,
@@ -681,7 +682,33 @@ export default {
   },
 
   methods: {
+    selsChange:function(sels){
+      this.sels=sels;
+      console.log("slsl")
+      console.log(sels)
+    },
+   //批量删除
+   batchRemove: function () {
+        var ids = this.sels.map(item => item.car_no).toString();
+				this.$confirm('确认删除选中记录吗？', '提示', {
+					type: 'warning'
+				}).then(() => {
+					this.listLoading = true;
+					//NProgress.start();
+					let para = { ids: ids };
+					batchRemove(para).then((res) => {
+						this.listLoading = false;
+						//NProgress.done();
+						this.$message({
+							message: '删除成功',
+							type: 'success'
+						});
+						this.getCarinfo();
+					});
+				}).catch(() => {
 
+				});
+			},
     editSubmit(){
         this.$refs.editForm.validate((valid) => {
 					if (valid) {
@@ -730,8 +757,9 @@ export default {
     //单击选中业主信息
     ownerConfin(row, column){
         this.selects.ownerVisible=false;
-        this.selects.owner_value = row.owner_name;
-
+        console.log(row.owner_name)
+        this.editDialog.editForm.owner = row.owner_name;
+ console.log(this.selects.owner_value)
     },
     callbackSelTenant: function() {
       for (var item in this.filters) {

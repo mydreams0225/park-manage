@@ -8,3 +8,7 @@ export const reqPlateName = params => { console.log(params); return $axios.get(`
 export const reqEdit = params => { console.log(params); return $axios.get(`../../static/json/carManage/carInfolist.json`, { params: params }).then(res => res.data); };
 //请求点击选择业主信息的数据
 export const reqOwnerName = params => { console.log(params); return $axios.get(`../../static/json/carManage/carInfolist.json`, { params: params }).then(res => res.data); };
+//发送单行删除请求
+export const reqdeleteOne = params => { console.log(params); return $axios.get(`../../static/json/carManage/carInfolist.json`, { params: params }).then(res => res.data); };
+//多行删除 batchRemove
+export const batchRemove = params => { console.log(params); return $axios.get(`../../static/json/carManage/carInfolist.json`, { params: params }).then(res => res.data); };

@@ -26,7 +26,7 @@
               <el-col :span="6"><div class="grid-content bg-purple">
                 <template>
                      <!-- `checked` 为 true 或 false -->
-                  <el-checkbox v-model="read_card">开启读卡操作</el-checkbox>
+                  <el-checkbox v-model="tab1.read_card" :checked="tab1.read_card">开启读卡操作</el-checkbox>
                 </template>
               </div>
             </el-col>
@@ -41,7 +41,7 @@
                
               </div>
               <div class="sq_body">
-                <el-checkbox checked="checked">主车库</el-checkbox>
+                <el-checkbox checked="checked" >主车库</el-checkbox>
               </div>
             </el-card>
            </div>
@@ -57,7 +57,8 @@
                     <div class="grid-content bg-purple">
                      <span style="color:red;">*</span>
                      <span>车牌号码：</span>
-                     <el-input v-model="tab1.car_no" placeholder="请输入内容" ></el-input>
+                      <span v-show="valid.car_no"><font style="color:red"> 注册号和车牌号必须输入一个</font></span>
+                     <el-input v-model="tab1.car_no" placeholder="请输入车牌号" ></el-input>
                   </div>
                 </el-col>
                   <el-col :span="6">
@@ -283,7 +284,7 @@
                     </el-row>
                </div>
                <div class="submit">
-                    <el-button type="primary">保存</el-button> 
+                    <el-button type="primary" @click.native="addSubmit" >保存</el-button> 
                </div>
             </el-card>
            </div>
@@ -296,6 +297,7 @@
                   <div class="grid-content bg-purple">
                   <span style="color:red">*</span>
                   <span >所属停车场：</span>
+                 
                   <template>
                     <el-select v-model="v_tab2_park" placeholder="请选择">
                       <el-option
@@ -334,11 +336,15 @@ export default {
     return {
       clientData: [{ plate_name: "车位一" }, { plate_name: "车位二" }],
       dialogTableVisible: false,
-      carOwnerVisible:false,
+      carOwnerVisible: false,
       carOwnerData: [{ carOwner_name: "业主1" }, { carOwner_name: "业主2" }],
+      valid:{
+        car_no:false
+      },
       tab1: {
-         v_park: "",
-         car_no:"",
+        read_card: false,
+        v_park: "",
+        car_no: "",
         end_date: "",
         start_date: "",
         v_price_type: "",
@@ -347,34 +353,36 @@ export default {
         v_plate_color: "",
         v_seat_type: "",
         v_car_group: "",
-        v_error_car:"",
-        plate_no:"",
-        id:"",
-        car_logo:"",
-        car_color:"",
-        fee:"",
-        carOwner_value:"",
+        v_error_car: "",
+        plate_no: "",
+        id: "",
+        car_logo: "",
+        car_color: "",
+        fee: "",
+        carOwner_value: "",
 
-        memo:"",
-        plate_value:""
+        memo: "",
+        plate_value: ""
       },
 
       tabPosition: "top",
 
-      price_type: [{}],
+      price_type: [ {
+            value: "月票车",
+            label: "月票车"
+          }],
       car_type: [{}],
 
       pay_rule_group: [{}],
-     
-      park: [{}],
-      read_card: false,
+
+      park:configs.park,
 
       plate_color: [{}],
 
       seat_type: [{}],
-     file:{
-       name:""
-     },
+      file: {
+        name: ""
+      },
       car_group: [{}],
       v_tab2_park: "",
       tab2_park: [
@@ -386,30 +394,56 @@ export default {
     };
   },
   methods: {
-    go(){
-      var upLoad=document.getElementById('upLoad');
+    valids(){
+      var tab1=this.tab1;
+      if(tab1.car_no===""){
+         this.valid.car_no=true;
+         return false;
+      }else{
+        alert('dd')
+        return true;
+      }
+    },
+    addSubmit(){
+        if(this.valids()){      
+      	this.$confirm('确认提交吗？', '提示', {}).then(() => {
+							this.editLoading = true;
+							//NProgress.start();
+							let para = Object.assign({}, this.tab1);
+							// para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
+							reqEdit(para).then((res) => {
+								this.editLoading = false;
+								//NProgress.done();
+								this.$message({
+									message: '提交成功',
+									type: 'success'
+								});
+								this.$refs['editForm'].resetFields();
+								this.editFormVisible = false;
+                this.getCarinfo();
+							});
+						});
+    }
+    },
+    go() {
+      var upLoad = document.getElementById("upLoad");
       upLoad.click();
-   
     },
 
-
-    fn(){
-       this.file = event.target.files[0];
+    fn() {
+      this.file = event.target.files[0];
       console.log(this.file);
-    if(event.type=="change"){
-        var req=/xlsx|.xls$/g;
-      if( this.file.name && !req.exec(this.file.name)){
-         
-         alert('请上传xlsx或xls后缀的Excel')
-        
+      if (event.type == "change") {
+        var req = /xlsx|.xls$/g;
+        if (this.file.name && !req.exec(this.file.name)) {
+          alert("请上传xlsx或xls后缀的Excel");
+        }
       }
-    }
+
       //   var req=/xlsx|.xls$/g;
       // if( this.file.name && !req.exec(this.file.name)){
       //    alert('请上传xlsx或xls后缀的Excel')
       // }
-      
-      
     },
 
     clientCheck(row, column) {
@@ -419,7 +453,7 @@ export default {
       this.tab1.plate_value = row.plate_name;
       // console.log(column)
     },
-      carOwnerCheck(row, column) {
+    carOwnerCheck(row, column) {
       this.dialogFormVisible = false;
       this.carOwnerVisible = false;
       console.log("zlz");
@@ -429,7 +463,6 @@ export default {
     getFile(event) {
       this.file = event.target.files[0];
       console.log(this.file);
-     
     },
     submitForm(event) {
       event.preventDefault();
