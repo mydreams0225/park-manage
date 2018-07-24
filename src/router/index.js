@@ -84,7 +84,9 @@ const commonRouter=[
 ]
 
 export default new Router({
-  mode:'history',
+//   base: '/history',
+    mode:'history',
+    // base: '/parkManage/',  //添加的地方
   routes: commonRouter
      }
 )
