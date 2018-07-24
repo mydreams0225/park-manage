@@ -1,11 +1,11 @@
 <template>
 	<section>
 		<div class="parent">
-			<div class="margin-tops">
+			<!-- <div class="margin-tops">
 				<el-button type="danger" icon="el-icon-delete" size="medium">删除查询到的记录</el-button>
-			</div>
+			</div> -->
 			<div class="margin-tops querys" >
-				<el-select v-model="filters.v_park" filterable placeholder="所属停车场">
+				<el-select v-model="filters.parkNo" filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in park"
 	                      :key="item.value"
@@ -13,10 +13,10 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
-	            <el-input   id="plate_no" name="plate_no" placeholder="车牌号" v-model="filters.v_plate_no" >
+	            <el-input   id="plate_no" name="plate_no" placeholder="车牌号" v-model="filters.licensePlate" >
                      <template slot="prepend">车牌号</template>   
                 </el-input>
-                <el-select v-model="filters.v_passageway" filterable placeholder="通道" >
+                <el-select v-model="filters.entrancePassageway" filterable placeholder="通道" >
 	                    <el-option
 	                      v-for="item in passageway"
 	                      :key="item.value"
@@ -24,7 +24,7 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
-	            <el-select v-model="filters.v_fee_type" filterable placeholder="计费类型" >
+	            <el-select v-model="filters.chargeType" filterable placeholder="计费类型" >
 	                    <el-option
 	                      v-for="item in fee_type"
 	                      :key="item.value"
@@ -49,10 +49,10 @@
 		                    </el-date-picker>
 
                 </div>
-                <el-input   id="dutyMan" name="dutyMan" placeholder="值班员"  v-model="filters.v_dutyMan">
+                <el-input   id="dutyMan" name="dutyMan" placeholder="值班员"  v-model="filters.admissionWatch">
                      <template slot="prepend">值班员</template>   
                 </el-input>
-                <el-select v-model="filters.v_releaseMethod" filterable placeholder="放行方式">
+                <el-select v-model="filters.admissionReleaseType" filterable placeholder="放行方式">
 	                    <el-option
 	                      v-for="item in releaseMethod"
 	                      :key="item.value"
@@ -60,35 +60,39 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
-	             <el-button type="primary" icon="el-icon-search" size="medium">查询</el-button>
+	             <el-button  type="primary" icon="el-icon-search" size="medium" @click="getEntryRecord">查询</el-button>
                  <el-button size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
                  <div class="rights"> 
-                 	<el-button type="success" size="medium"><strong><i class="el-icon-upload"></i></strong > 导出EXCEL报表</el-button>	
+                 	<el-button type="success" size="medium" @click="outExe()"><strong><i class="el-icon-upload"></i></strong > 导出EXCEL报表</el-button>	
                  </div>
 			</div>
 			<div class="margin-tops">
 				 <template>
                     <el-table
-                      :data="tableData"
+                      :data="list"
                       border
-                      style="width: 100% ;"
-                      >
-                      <el-table-column
-		                  type="selection"
-		                  width="55">
-                      </el-table-column>
+                     
+                      v-loading="listLoading">
+                    
                       <el-table-column
                         prop="seri_no"
                         label="序号"
                         >
                       </el-table-column>
                       <el-table-column
-                        prop="plate_no"
+                        prop="flowId"
+                        label=""
+                       display="none"
+                       v-if="noshow"
+                        >
+                      </el-table-column>
+                      <el-table-column
+                        prop="licensePlate"
                         label="车牌号"
                         >
                       </el-table-column>
                       <el-table-column
-                        prop="fee_type"
+                        prop="chargeType"
                         label="计费类型">
                       </el-table-column>
                       <el-table-column
@@ -96,16 +100,16 @@
                         label="车辆分组">
                       </el-table-column>               
                       <el-table-column
-                        prop="passageway"
+                        prop="entrancePassageway"
                         label="通道">
                       </el-table-column>
                       <el-table-column
-                        prop="start_date1"
+                        prop="enterDate"
                         label="入场时间">
                       </el-table-column>
 
                       <el-table-column
-                        prop="release_method"
+                        prop="admissionReleaseType"
                         label="放行方式">
                       </el-table-column>
                       <el-table-column
@@ -113,23 +117,194 @@
                         label="描述">
                       </el-table-column>
                       <el-table-column
-                        prop="duty_man"
+                        prop="admissionWatch"
                         label="值班员">
                       </el-table-column>
                       <el-table-column          
                         label="操作"
-                        width="250px">
-                         <template slot-scope="scope">        
-													 <el-button type="primary" icon="el-icon-edit" circle size="mini"></el-button>
-                           <el-button type="danger" icon="el-icon-delete" circle size="mini"></el-button>               
-                        </template>
+                        type="expand">
+                          <template slot-scope="props">
+                              <div>
+                                <el-button>车牌照片</el-button>
+                                <el-button>辅助照片</el-button>
+                                 <el-button>证件照片</el-button>
+                              </div>
+                              <div class="main">
+                                 <el-row :gutter="20">
+                                       <el-col :span="12">
+                                          <div class="panel">
+                                                
+                                              <p class="title">入场记录信息</p>
+                                              <div class="imgBox">
+                                                <ul>
+                                                  <li> <img src="" alt="无图片"></li>
+                                                  <!-- <li></li>
+                                                  <li></li> -->
+                                                </ul>  
+                                              </div>
+                                              <div class="wenziBox">
+                                                      <el-row :gutter="20">
+                                                          <el-col :span="8">
+                                                              车牌号：
+                                                          </el-col>
+                                                          <el-col :span="8">
+                                                            {{props.row.licensePlate}}
+                                                          </el-col>
+                                                      </el-row>
+                                                      <el-row :gutter="20">
+                                                          <el-col :span="8">
+                                                              注册号：
+                                                          </el-col>
+                                                          <el-col :span="8">
+                                                            {{props.row.licensePlate}}
+                                                          </el-col>
+                                                      </el-row>
+                                                      <el-row :gutter="20">
+                                                          <el-col :span="8">
+                                                              入场时间：
+                                                          </el-col>
+                                                          <el-col :span="8">
+                                                            {{props.row.enterDate}}
+                                                          </el-col>
+                                                      </el-row>
+                                                      <el-row :gutter="20">
+                                                          <el-col :span="8">
+                                                              入场控制器：
+                                                          </el-col>
+                                                          <el-col :span="8">
+                                                          
+                                                          </el-col>
+                                                      </el-row>
+                                                      <el-row :gutter="20">
+                                                          <el-col :span="8">
+                                                              入场通道：
+                                                          </el-col>
+                                                          <el-col :span="8">
+                                                        
+                                                            {{props.row.entrancePassageway}}
+                                                          </el-col>
+                                                      </el-row>
+                                                      <el-row :gutter="20">
+                                                          <el-col :span="8">
+                                                              计费类型：
+                                                          </el-col>
+                                                          <el-col :span="8">
+                                                        
+                                                            {{props.row.chargeType}}
+                                                          </el-col>
+                                                      </el-row>
+                                                      <el-row :gutter="20">
+                                                          <el-col :span="8">
+                                                              车类型
+                                                          </el-col>
+                                                          <el-col :span="8">
+                                                        
+                                                            
+                                                          </el-col>
+                                                      </el-row>
+                                              </div>
+                                          </div>
+                                      </el-col>
+
+                                      <el-col :span="12">
+                                          <div class="panel">
+                                         <p class="title">出场记录信息</p>
+                                          <div class="imgBox">
+                                                <ul>
+                                                  <li> <img src="" alt="无图片"></li>
+                                                  <!-- <li></li>
+                                                  <li></li> -->
+                                                </ul>  
+                                          </div>
+                                          <div class="wenziBox">
+                                                      <el-row :gutter="20">
+                                                          <el-col :span="8">
+                                                              车牌号：
+                                                          </el-col>
+                                                          <el-col :span="8">
+                                                            {{props.row.licensePlate}}
+                                                          </el-col>
+                                                      </el-row>
+                                                      <el-row :gutter="20">
+                                                          <el-col :span="8">
+                                                              注册号：
+                                                          </el-col>
+                                                          <el-col :span="8">
+                                                            {{props.row.licensePlate}}
+                                                          </el-col>
+                                                      </el-row>
+                                                      <el-row :gutter="20">
+                                                          <el-col :span="8">
+                                                              出场时间：
+                                                          </el-col>
+                                                          <el-col :span="8">
+                                                            {{props.row.enterDate}}
+                                                          </el-col>
+                                                      </el-row>
+                                                      <el-row :gutter="20">
+                                                          <el-col :span="8">
+                                                              出场控制器：
+                                                          </el-col>
+                                                          <el-col :span="8">
+                                                          
+                                                          </el-col>
+                                                      </el-row>
+                                                      <el-row :gutter="20">
+                                                          <el-col :span="8">
+                                                              出场通道：
+                                                          </el-col>
+                                                          <el-col :span="8">
+                                                        
+                                                            {{props.row.entrancePassageway}}
+                                                          </el-col>
+                                                      </el-row>
+                                                      <el-row :gutter="20">
+                                                          <el-col :span="8">
+                                                              计费类型：
+                                                          </el-col>
+                                                          <el-col :span="8">
+                                                        
+                                                            {{props.row.chargeType}}
+                                                          </el-col>
+                                                      </el-row>
+                                                      <el-row :gutter="20">
+                                                          <el-col :span="8">
+                                                              车类型
+                                                          </el-col>
+                                                          <el-col :span="8">
+                                                        
+                                                            
+                                                          </el-col>
+                                                      </el-row>
+                                              </div>
+                                      </div>
+                                      </el-col>
+                                 </el-row>
+                                 <el-row :gutter="20">
+                                     <el-col :span="12">
+                                          <div class="panel">  
+                                              <p class="title">访客信息</p>   
+                                              <el-row :gutter="20">
+                                                  <el-col :span="12">
+                                                      访客名称：
+                                                  </el-col>
+                                              </el-row>
+                                              <el-row :gutter="20">
+                                                  <el-col :span="12">
+                                                      身份证：
+                                                  </el-col>
+                                              </el-row>
+                                          </div>
+                                     </el-col>
+                                 </el-row>
+                                </div>
+                              
+                          </template>
                       </el-table-column>
                     </el-table>
                  </template>
 			</div>
-			<!-- <div>
-		        <Paging v-bind:total="totals"></Paging>		        
-		   </div> -->
+      
 			 <div>
 
 				 <el-pagination
@@ -145,46 +320,109 @@
 	</section>
 </template>
 <script>
+//reqEntryRecord
+import { reqEntryRecord } from "@/api/recordQuery";
 export default {
   data() {
     return {
-			 totals: {
+      noshow: false,
+      listLoading: false,
+      totals: {
         totalNum: 1,
         pageSize: 1,
         currentPage: 1
       },
       filters: {
-        v_park: "",
-        v_passageway: "",
-        v_fee_type: "",
-        v_releaseMethod: "",
-        v_plate_no: "",
-        v_fee_type: "",
+        parkNo: "",
+        entrancePassageway: "",
+        chargeType: "",
+        admissionReleaseType: "",
+        licensePlate: "",
         start_datefrom: "",
         start_dateto: "",
-        v_dutyMan: ""
+        admissionWatch: ""
       },
-
       park: [{}],
       passageway: [{}],
-      fee_type: [{}],
-      releaseMethod: [{}],
-
-     
-      tableData: []
+      fee_type: configs.chargeType,
+      releaseMethod: configs.admissionreleasetype,
+      list: [{ licensePlate: "粤A33333" }]
     };
-	},
-	methods:{
-		handleCurrentChange(val){
-       console.log(`当前页${val}`)
-		},
-		callbackSelTenant(){
-			var filter=this.filters
-			for(var item in filter){
-				filter[item]=""
-			}
-		}
-	}
+  },
+
+  methods: {
+    getEntryRecord() {
+      let para = Object.assign({}, this.filters);
+        para.currentPage=this.totals.currentPage; //当前页
+        
+      // let para = {
+      
+      // this.listLoading = true;
+      // reqEntryRecord(para).then(res=>{
+      //   if(res.code===1){
+      //     console.log(res);
+      //    this.totalNum = res.total;
+      //    this.list=res.admissionRecords;
+         
+      //   }else{
+           
+      //   }
+        
+      // 	//  this.listLoading = false;
+      // })
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页${val}`),
+      this.totals.currentPage=val;
+       this.getEntryRecord();
+    },
+
+    callbackSelTenant() {
+      var filter = this.filters;
+      for (var item in filter) {
+        filter[item] = "";
+      }
+    }
+    ,
+      // 导出excel
+    outExe() {
+                this.$confirm('此操作将导出excel文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.excelData = this.dataList //你要导出的数据list。
+                    this.export2Excel()
+                }).catch(() => {
+                
+                });
+            },
+            export2Excel() {
+                var that = this;
+                require.ensure([], () => {
+                    const { export_json_to_excel } = require('@/excel/Export2Excel.js'); //这里必须使用绝对路径
+                    const tHeader = ["车牌号",	"注册号",	"计费类型",	"车类型",	"入场时间",	"所属车位池",	"车库名称",]; // 导出的表头名
+                    const filterVal = ['licensePlate','car_no','fee_type', 'car_type','entry_time','plate_pool','garage_name']; // 导出的表头字段名
+                    const list = that.list;
+                    const data = that.formatJson(filterVal, list);
+                    // let time1,time2 = '';
+                    // if(this.start !== '') {
+                    //     time1 = that.moment(that.start).format('YYYY-MM-DD')
+                    // }
+                    // if(this.end !== '') {
+                    //     time2 = that.moment(that.end).format('YYYY-MM-DD')
+                    // }
+                    console.log(export_json_to_excel);
+                    export_json_to_excel(tHeader, data, `入场信息${that.totals.totalNum}条`);// 导出的表格名称，根据需要自己命名
+                })
+            },
+            formatJson(filterVal, jsonData) {
+                return jsonData.map(v => filterVal.map(j => v[j]))
+            },
+  },
+    mounted() {
+    this.getEntryRecord();
+  },
 };
 </script>
 <style scoped>
@@ -206,5 +444,33 @@ export default {
   position: absolute;
   top: 45px;
   right: 0;
+}
+.main {
+  overflow: auto;
+}
+.panel {
+  border: 1px solid #ddd;
+  margin: 15px 10px;
+  /* height: 350px; */
+  border-radius: 5px;
+}
+.wenziBox {
+  margin: 10px;
+}
+.panel .title {
+  margin-bottom: 10px;
+  text-align: left;
+  font-weight: bold;
+  padding: 10px;
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+}
+.panel .title .imgBox {
+  height: 100px;
+  border: 1px solid red;
+}
+.panel ul li {
+  height: 100px;
+  list-style: none;
 }
 </style>

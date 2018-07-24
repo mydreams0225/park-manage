@@ -12,3 +12,6 @@ export const reqOwnerName = params => { console.log(params); return $axios.get(`
 export const reqdeleteOne = params => { console.log(params); return $axios.get(`../../static/json/carManage/carInfolist.json`, { params: params }).then(res => res.data); };
 //多行删除 batchRemove
 export const batchRemove = params => { console.log(params); return $axios.get(`../../static/json/carManage/carInfolist.json`, { params: params }).then(res => res.data); };
+
+
+export const reqEntryRecord = params => { console.log(params); return $axios.get(`../../static/json/recordQuery/incar.json`, { params: params }).then(res => res.data); };

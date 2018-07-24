@@ -160,7 +160,7 @@
                          <template slot-scope="scope">
                           <div style="display:inline-block;vertical-align:top ">
                              <a href="#" class="el-icon-upload operate green"></a>
-                             <a href="#" class="el-icon-setting operate blue" @click="$router.push('/parkingandEntryequi')">设备管理</a>
+                             <a href="#" class="el-icon-setting operate blue" @click="$router.push('/deviceManage/parkingandEntryequi')">设备管理</a>
                           </div >
                          
                           <div style="display:inline-block;position:relative">

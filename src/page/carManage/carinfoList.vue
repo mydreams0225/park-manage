@@ -793,12 +793,15 @@ export default {
     },
     //获取数据
     getCarinfo() {
-      let para = {
-        plate_value: this.filters.plate_value, //车位池
-        park: this.filters.v_park, //停车场
-        currentPage: this.totals.currentPage, //当前页
-        pageSize: this.totals.pageSize //每页显示条数
-      };
+        let para = Object.assign({}, this.filters);
+        para.currentPage=this.totals.currentPage, //当前页
+        
+      // let para = {
+      //   plate_value: this.filters.plate_value, //车位池
+      //   park: this.filters.v_park, //停车场
+      //   currentPage: this.totals.currentPage, //当前页
+      //   pageSize: this.totals.pageSize //每页显示条数
+      // };
       reqCarInfo(para)
         .then(res => {
           this.dt = eval(res).list;

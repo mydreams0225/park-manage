@@ -14793,6 +14793,7 @@ const configs = {
         value: '停车场管理系统（网页版',
         label: '停车场管理系统（网页版）'
     }],
+     //在线状态
     online: [{
         value: "在线",
         label: '在线'
@@ -14816,6 +14817,7 @@ const configs = {
         online: '在线2小时',
 
     }],
+    //停车场
     park:[
         {
           value: "-1",
@@ -14826,15 +14828,39 @@ const configs = {
           label: "停车场1"
         }
       ],
-    fee_type:[
+      //计费类型
+      chargeType:[
         {
-            value: "-1",
-            label: "计费类型"
+            value: "1",
+            label: "临时车"
           },
           {
-            value: "月票车",
+            value: "2",
             label: "月票车"
-          }
+          },
+          {
+            value: "3",
+            label: "免费车"
+          },
+          {
+            value: "4",
+            label: "贵宾车"
+          },
+          {
+            value: "5",
+            label: "政务车"
+          },
+    ],
+    //放行方式
+    admissionreleasetype:[
+        {
+            value: "1",
+            label: "自动放行"
+          },
+          {
+            value: "2",
+            label: "手动放行"
+          },
     ]
 
 

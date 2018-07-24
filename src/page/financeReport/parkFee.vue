@@ -445,8 +445,8 @@
 export default {
   data() {
     return {
-      colors: ["#67c23a"],
-      colors1: ["#5793f3"],
+      colors:  ["#67c23a", "#5793f3", "orange","#B0E2FF","#F08080","#FFBBFF"],
+      colors1: ["#67c23a", "#5793f3", "orange","#B0E2FF","#F08080","#FFBBFF"],
 
       activeName: "first",
       filters: {

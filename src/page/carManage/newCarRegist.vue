@@ -151,7 +151,7 @@
                       </el-col>
                       <el-col :span="4">
                         <div class="grid-content bg-purple">
-                        <span style="color:red;">*</span>
+                        
                          <span>车辆分组：</span>
                          <el-select v-model="tab1.v_car_group" placeholder="请选择">
                           <el-option
@@ -165,14 +165,14 @@
                       </el-col>
                       <el-col :span="4">
                         <div class="grid-content bg-purple">
-                        <span style="color:red;">*</span>
+                        
                          <span>车位号：</span>
                          <el-input  v-model="tab1.plate_no"></el-input>
                         </div>
                       </el-col>
                       <el-col :span="4">
                         <div class="grid-content bg-purple">
-                        <span style="color:red;">*</span>
+                       
                          <span>编号</span>
                          <el-input v-model="tab1.id" ></el-input>
                         </div>
