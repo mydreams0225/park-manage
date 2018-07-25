@@ -1,9 +1,7 @@
 <template>
 	<section>
 		<div class="parent">
-			<div class="margin-tops">
-				<el-button type="danger" icon="el-icon-delete" size="medium">删除查询到的记录</el-button>
-			</div>
+		
 			<div class="margin-tops querys" >
 				      <el-select v-model="filters.v_park" filterable placeholder="所属停车场">
 	                    <el-option
@@ -46,7 +44,7 @@
                 <el-input v-model="filters.dutyMan"  id="dutyMan" name="dutyMan" placeholder="值班员"  >
                      <template slot="prepend">值班员</template>   
                 </el-input>
-	             <el-button type="primary" icon="el-icon-search" size="medium">查询</el-button>
+	             <el-button type="primary" icon="el-icon-search" size="medium" @click="getPlateModify">查询</el-button>
                  <el-button size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
                  <div class="rights"> 
                  	<el-button type="success" size="medium"><strong><i class="el-icon-upload"></i></strong > 导出EXCEL报表</el-button>	
@@ -112,6 +110,7 @@
 	</section>
 </template>
 <script>
+import {reqPlateModify } from '@/api/recordQuery'
 export default {
   data() {
     return {
@@ -134,7 +133,21 @@ export default {
       tableData: [{}]
     };
   },
+  mounted(){
+    this.getPlateModify();
+  },
   methods: {
+    getPlateModify(){
+      let para ={
+
+      }
+      reqPlateModify(para).then(res=>{
+          if(res.code===1){
+            this.totals.totalNum=res.total;
+            this.tableData=res.list;
+          }
+      })
+    },
     callbackSelTenant() {
       for (var item in this.filters) {
         this.filters[item] = "";

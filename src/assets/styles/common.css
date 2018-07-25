@@ -1,0 +1,132 @@
+.diaCommon .el-dialog__header{
+  background: #FCFDFF;
+  
+}
+.jzcar_no .el-input{
+  width: 60%;
+}
+/*所有页面用到的样式*/
+.margin-tops{
+  margin-top:15px !important;
+}
+.parent{
+  text-align:left !important;
+}
+/*所有页面用到的样式end*/
+.aside{
+	width:230px; background-color:#394555 !important;
+}
+.el-submenu__title{
+	color:#fff !important;
+	background-color:#333 !important;
+	
+	text-align: left;
+}
+.el-submenu__title i {
+     color: #fff; 
+}
+/*.el-submenu__title  .el-icon-arrow-down::before {
+	    content: ">";
+
+}*/
+.el-input {
+	margin:5px 0px;
+}
+  .el-input__inner{
+     height:34px !important;  
+     line-height: 32px; 
+  }
+  /*|#client:hover{
+  	cursor: pointer !important;
+  }*/
+  .el-input-group__append, .el-input-group__prepend{
+  	background-color:#eee !important;
+  }
+  .ff{
+  	background-color:#eee;
+  }
+#tenantName2{
+  background-color: #eee !important;
+}
+.fatherImg .el-card__body{
+    padding:0px !important;
+  }
+
+   .newCar.el-table_1_column_18 .el-tooltip{
+    background-color:red !important;
+  }
+  .newCar .el-card__header{
+  padding:10px 20px !important;
+  background-color:#eee !important;
+}
+ .newCar .el-card{
+	width: 740px !important;
+	margin:20px 0px !important;
+}
+.newCar .el-input{
+	width: 100px;
+}
+.blacklistCar .el-input{
+	width: 200px;
+}
+.add .el-input{
+	width: 150px;
+}
+.newCar .newcardate .el-input{
+  width: 160px;
+}
+.memo .el-input:hover{
+  cursor:pointer !important;
+ 
+}
+ .sshy .el-input__inner:hover{
+    cursor:pointer !important;
+ }
+ .tab1_group{
+ 	margin-top:15px;
+ }
+ .tab1_group .el-card{
+ 	width: 900px !important;
+ 	font-size:13px;
+
+ }
+ .tab1_group .el-card .el-card__header{
+ 	background-color:#eee ;
+ 	font-weight: bold ;
+ 	padding:10px 20px ;
+ }
+  .el-table .cell, .el-table th div{
+    overflow:visible !important;
+ }
+
+.record .el-tabs__item{
+   background-color:#EAEDF1 !important;
+}
+.record .el-tabs__item.is-active{
+  background-color:#fff !important;
+}
+.el-submenu .el-menu-item{
+    min-width:200px !important;
+  }
+  .el-menu-item-group__title{
+    padding:0 0 0 40px !important;
+  }
+  /*home里面的新增三级菜单样式*/
+  .xz .el-submenu__title{
+    padding-left: 40px !important;
+    background-color:#F4F6F8 !important;
+    color:#000 !important;
+    
+  }
+  .el-cascader__label{
+    
+    top:5px !important;
+  }
+  /* 在场车辆 */
+  .el-card__body{
+    position: relative;
+  }
+  .el-radio__label{
+    font-size: 12px !important;
+  }
+

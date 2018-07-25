@@ -33,7 +33,7 @@
 	                    </el-option>
 	            </el-select>
 	            <div class="dates block">
-		                    <span class="demonstration">入场时间从</span>
+		                    <span class="demonstration">出场时间从</span>
 		                    <el-date-picker
 		                      v-model="filters.start_datefrom"
 		                      type="datetime"
@@ -69,12 +69,9 @@
                       border
                       style="width: 100% ;"
                       >
+                    
                       <el-table-column
-		                  type="selection"
-		                  width="55">
-                      </el-table-column>
-                      <el-table-column
-                        prop="seri_no"
+                        type="index"
                         label="序号"
                         >
                       </el-table-column>
@@ -88,25 +85,25 @@
                         label="计费类型">
                       </el-table-column>
                       <el-table-column
-                        prop="car_group"
-                        label="车辆分组">
+                        prop="free_money"
+                        label="免费金额">
                       </el-table-column>               
                       <el-table-column
-                        prop="passageway"
-                        label="通道">
+                        prop="fee_computer"
+                        label="收费电脑">
                       </el-table-column>
                       <el-table-column
-                        prop="start_date1"
+                        prop="enter_date"
                         label="入场时间">
                       </el-table-column>
-
                       <el-table-column
-                        prop="release_method"
-                        label="放行方式">
+                        prop="out_date"
+                        label="出场时间">
                       </el-table-column>
+                 
                       <el-table-column
                         prop="des"
-                        label="描述">
+                        label="备注">
                       </el-table-column>
                       <el-table-column
                         prop="duty_man"
@@ -114,9 +111,74 @@
                       </el-table-column>
                       <el-table-column          
                         label="操作"
-                        width="250px">
-                         <template slot-scope="scope">      
-													 <el-button type="primary" icon="el-icon-document" circle size="mini"></el-button>                      
+                        width="250px"
+                         type="expand">
+                         <template slot-scope="props">      
+													    <div class="imgBox">
+                                                <ul>
+                                                  <li > <img src="" alt="无车牌照片"></li>
+                                                  <!-- <li v-show="auxiliaryImgs"><img src="" alt="无辅助照片"></li>
+                                                  <li v-show="CertificatesImgs"> <img src="" alt="无证件照片"></li> -->
+                                                </ul>  
+                             </div>          
+                            <div class="wenziBox">
+                              <el-row :gutter="20">
+                                  <el-col :span="8">
+                                      车牌号：
+                                  </el-col>
+                                  <el-col :span="8">
+                                    {{props.row.plate_no}}
+                                  </el-col>
+                              </el-row>
+                              <el-row :gutter="20">
+                                  <el-col :span="8">
+                                      注册号：
+                                  </el-col>
+                                  <el-col :span="8">
+                                    {{props.row.plate_no}}
+                                  </el-col>
+                              </el-row>
+                              <el-row :gutter="20">
+                                  <el-col :span="8">
+                                      出场时间：
+                                  </el-col>
+                                  <el-col :span="8">
+                                    {{props.row.out_date}}
+                                  </el-col>
+                              </el-row>
+                               <el-row :gutter="20">
+                                  <el-col :span="8">
+                                      收费电脑:
+                                  </el-col>
+                                  <el-col :span="8">
+                                    {{props.row.fee_computer}}
+                                  </el-col>
+                              </el-row>
+                              <el-row :gutter="20">
+                                  <el-col :span="8">
+                                      免费金额：
+                                  </el-col>
+                                  <el-col :span="8">
+                                    {{props.row.free_money}}
+                                  </el-col>
+                              </el-row>
+                              <el-row :gutter="20">
+                                  <el-col :span="8">
+                                      值班员：
+                                  </el-col>
+                                  <el-col :span="8">
+                                    {{props.row.duty_man}}
+                                  </el-col>
+                              </el-row>
+                              <el-row :gutter="20">
+                                  <el-col :span="8">
+                                      备注：
+                                  </el-col>
+                                  <el-col :span="8">
+                                    {{props.row.desc}}
+                                  </el-col>
+                              </el-row>
+                            </div>
                         </template>
                       </el-table-column>
                     </el-table>
@@ -196,5 +258,19 @@ export default {
   position: absolute;
   top: 45px;
   right: 0;
+}
+.imgBox {
+  height: 100px;
+ 
+}
+ ul li {
+  height: 100px;
+  list-style: none;
+}
+.wenziBox {
+  margin: 10px;
+}
+.wenziBox .el-row {
+  margin-top:10px;
 }
 </style>

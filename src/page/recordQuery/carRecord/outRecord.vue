@@ -3,7 +3,9 @@
 		<div class="parent">
 		
 			<div class="margin-tops querys" >
+        <span> 所属停车场</span>
 				<el-select v-model="filters.v_park" filterable placeholder="所属停车场">
+                     
 	                    <el-option
 	                      v-for="item in park"
 	                      :key="item.value"
@@ -14,6 +16,7 @@
 	            <el-input id="plate_no" name="plate_no" placeholder="车牌号" v-model="filters.v_plate_no" >
                      <template slot="prepend">车牌号</template>   
               </el-input>
+              <span>通道</span>
               <el-select v-model="filters.v_passageway" filterable placeholder="通道">
 	                    <el-option
 	                      v-for="item in passageway"
@@ -22,6 +25,7 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
+              <span>计费类型</span>
 	            <el-select v-model="filters.v_fee_type" filterable placeholder="计费类型">
 	                    <el-option
 	                      v-for="item in fee_type"
@@ -31,7 +35,7 @@
 	                    </el-option>
 	            </el-select>
 	            <div class="dates block">
-		                    <span class="demonstration">入场时间从</span>
+		                    <span class="demonstration">出场时间从</span>
 		                    <el-date-picker
 		                      v-model="filters.start_datefrom"
 		                      type="datetime"
@@ -50,6 +54,7 @@
                 <el-input   id="dutyMan" name="dutyMan" placeholder="值班员"  v-model="filters.v_dutyMan">
                      <template slot="prepend">值班员</template>   
                 </el-input>
+                <span>放行方式</span>
                 <el-select v-model="filters.v_releaseMethod" filterable placeholder="放行方式">
 	                    <el-option
 	                      v-for="item in releaseMethod"
@@ -58,6 +63,7 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
+              <span>停车时长</span>
 	            <el-select v-model="filters.v_parkingTime" filterable placeholder="停车时长">
 	                    <el-option
 	                      v-for="item in parkingTime"
@@ -91,7 +97,7 @@
                       style="width: 100% ;"
                       >
                      <el-table-column
-                        prop="seri_no"
+                        type="index"
                         label="序号"
                         >
                       </el-table-column>
@@ -124,7 +130,10 @@
                         prop="enterDate"
                         label="入场时间">
                       </el-table-column>
-
+                      <el-table-column
+                        prop="outDate"
+                        label="出场时间">
+                      </el-table-column>
                       <el-table-column
                         prop="admissionReleaseType"
                         label="放行方式">
@@ -306,10 +315,80 @@
                                                       <el-col :span="12">
                                                           停车应缴金额：
                                                       </el-col>
+                                                      <el-col :span="12">
+                                                        
+                                                      </el-col>
                                                   </el-row>
                                                   <el-row :gutter="20">
                                                       <el-col :span="12">
                                                          折扣金额：
+                                                      </el-col>
+                                                      <el-col :span="12">
+                                                        
+                                                      </el-col>
+                                                  </el-row>
+                                                   <el-row :gutter="20">
+                                                      <el-col :span="12">
+                                                         值班员实收：
+                                                      </el-col>
+                                                      <el-col :span="12">
+                                                        
+                                                      </el-col>
+                                                  </el-row>
+                                                  <el-row :gutter="20">
+                                                      <el-col :span="12">
+                                                         在线支付金额：
+                                                      </el-col>
+                                                      <el-col :span="12">
+                                                        
+                                                      </el-col>
+                                                  </el-row>
+                                                   <el-row :gutter="20">
+                                                      <el-col :span="12">
+                                                         停车时长：
+                                                      </el-col>
+                                                      <el-col :span="12">
+                                                        
+                                                      </el-col>
+                                                  </el-row>
+                                                  <el-row :gutter="20">
+                                                      <el-col :span="12">
+                                                         缴费方式：
+                                                      </el-col>
+                                                      <el-col :span="12">
+                                                        
+                                                      </el-col>
+                                                  </el-row>
+                                                  <el-row :gutter="20">
+                                                      <el-col :span="12">
+                                                         收费电脑：
+                                                      </el-col>
+                                                      <el-col :span="12">
+                                                        
+                                                      </el-col>
+                                                  </el-row>
+                                                  <el-row :gutter="20">
+                                                      <el-col :span="12">
+                                                         收费人：
+                                                      </el-col>
+                                                      <el-col :span="12">
+                                                        
+                                                      </el-col>
+                                                  </el-row>
+                                                   <el-row :gutter="20">
+                                                      <el-col :span="12">
+                                                         收费时间：
+                                                      </el-col>
+                                                      <el-col :span="12">
+                                                        
+                                                      </el-col>
+                                                  </el-row>
+                                                  <el-row :gutter="20">
+                                                      <el-col :span="12">
+                                                         备注：
+                                                      </el-col>
+                                                      <el-col :span="12">
+                                                        
                                                       </el-col>
                                                   </el-row>
                                           </div>
@@ -352,6 +431,8 @@
 	</section>
 </template>
 <script>
+//reqOutRecord
+import { reqOutRecord } from "@/api/recordQuery";
 export default {
   data() {
     return {
@@ -378,18 +459,31 @@ export default {
       releaseMethod: [{}],
 
       totals: {
-              totalNum: 1,
+              totalNum: 4,
               pageSize: 1,
               currentPage: 1
       },
-      list: [{}]
+      list: [{},{},{},{},{},{}]
     };
+  },
+  mounted(){
+    this.getOutRecord();
   },
   methods: {
     getOutRecord(){
       var para={
-            
+            park:this.filters.v_park
       }
+      reqOutRecord(para).then(res=>{
+        if(res.code===1){
+                console.log(res);
+                this.totalNum = res.total;
+                this.list=res.admissionRecords;
+         
+        }else{
+           
+        }
+      })
     },
 		callbackSelTenant(){
 			var filter=this.filters;
@@ -398,7 +492,8 @@ export default {
 			 }
 		},
     handleCurrentChange(val) {
-        
+        this.totals.currentPage=val;
+        this.getOutRecord();
     }
   }
 };
@@ -450,5 +545,9 @@ export default {
 .panel ul li {
   height: 100px;
   list-style: none;
+}
+.querys span{
+  font-size: 12px;
+
 }
 </style>

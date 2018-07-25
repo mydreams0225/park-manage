@@ -2,6 +2,7 @@
 	<section>
 		<div class="parent">
 			<div class="margin-tops querys" >
+        <span>所属停车场</span>
 				<el-select v-model="filters.v_park" filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in park"
@@ -22,7 +23,7 @@
 							<el-input placeholder="违规行为" v-model="filters.v_Irregularities">
                      <template slot="prepend">违规行为</template>   
               </el-input>
-               
+               <span>处理方式</span>
                 <el-select v-model="filters.v_disposeMethod" filterable placeholder="处理方式">
 	                    <el-option
 	                      v-for="item in disposeMethod"
@@ -31,6 +32,7 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
+              <span>处理状态</span>
 							 <el-select v-model="filters.v_disposeStatus" filterable placeholder="处理状态" >
 	                    <el-option
 	                      v-for="item in disposeStatus"
@@ -42,7 +44,7 @@
                 <el-input   id="dutyMan" name="dutyMan" placeholder="值班员" v-model="filters.v_dutyMan" >
                      <template slot="prepend">值班员</template>   
                 </el-input>
-	             <el-button type="primary" icon="el-icon-search" size="medium">查询</el-button>
+	             <el-button type="primary" icon="el-icon-search" size="medium" @click="getBreakRule" >查询</el-button>
                  <el-button size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
 			</div>
 			<div class="margin-tops">
@@ -53,19 +55,25 @@
                       style="width: 100% ;"
                      >
                       <el-table-column
-                        prop="seri_no"
+                        type="index"
                         label="序号"
                         >
                       </el-table-column>
                       <el-table-column
-                        prop="deviceName"
-                        label="设备名称"
+                        prop="car_no"
+                        label="车牌号"
+                        >
+                      </el-table-column>
+                      <el-table-column
+                        prop="car_type"
+                        label="车类型"
                         >
                       </el-table-column>
                       <el-table-column
                         prop="carOwner"
-                        label="值班员账号">
-                      </el-table-column>
+                        label="车主"
+                        >
+                      </el-table-column>                    
                       <el-table-column
                         prop="phone"
                         label="手机号">
@@ -116,6 +124,8 @@
 	</section>
 </template>
 <script>
+//reqBreakRule\
+import {reqBreakRule} from '@/api/recordQuery'
 export default {
   data() {
     return {
@@ -140,13 +150,28 @@ export default {
       tableData: []
     };
   },
+  mounted(){
+    this.getBreakRule();
+  },
   methods: {
+    getBreakRule(){
+      let para={};
+      reqBreakRule(para).then(res=>{
+         if(res.code===1){
+             this.totals.totalNum=res.total;
+             this.tableData=res.list;
+         }
+      })
+    },
 		callbackSelTenant(){
 			for(var item in this.filters){
 				 this.filters[item]="";
 			}
 		},
-    handleCurrentChange() {},
+    handleCurrentChange(val) {
+      this.totals.currentPage=val;
+      this.getBreakRule();
+    },
     callbackSelTenant() {
       for (var item in this.filters) {
         this.filters[item] = "";
@@ -174,5 +199,8 @@ export default {
   position: absolute;
   top: 45px;
   right: 0;
+}
+.querys span{
+  font-size: 12px;
 }
 </style>

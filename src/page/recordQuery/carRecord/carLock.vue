@@ -1,9 +1,9 @@
 <template>
 	<section>
 		<div class="parent">
-			<div class="margin-tops">
+			<!-- <div class="margin-tops">
 				<el-button type="danger" icon="el-icon-delete" size="medium">删除查询到的记录</el-button>
-			</div>
+			</div> -->
 			<div class="margin-tops querys" >
 				      <el-select v-model="filters.v_park" filterable placeholder="所属停车场">
 	                    <el-option
@@ -48,11 +48,11 @@
 		                      placeholder="选择日期时间">
 		                    </el-date-picker>
                 </div>
-	             <el-button type="primary" icon="el-icon-search" size="medium">查询</el-button>
+	             <el-button type="primary" icon="el-icon-search" size="medium" @click="getcarLock">查询</el-button>
                  <el-button size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
-                 <div class="rights"> 
+                 <!-- <div class="rights"> 
                  	<el-button type="success" size="medium"><strong><i class="el-icon-upload"></i></strong > 导出EXCEL报表</el-button>	
-                 </div>
+                 </div> -->
 			</div>
 			<div class="margin-tops">
 				 <template>
@@ -114,6 +114,9 @@
 	</section>
 </template>
 <script>
+//reqCarLock
+import {reqCarLock} from '@/api/recordQuery'
+
 export default {
   data() {
     return {
@@ -138,13 +141,30 @@ export default {
       tableData: [{}]
     };
   },
+  mounted(){
+    this.getcarLock();
+  },
   methods: {
+    getcarLock(){
+      let para={
+
+      }
+      reqCarLock(para).then(res=>{
+         if(res.code===1){
+           this.totals.totalNum=res.total;
+           this.tableData=res.list;
+         }
+      })
+    },
     callbackSelTenant() {
       for (var item in this.filters) {
         this.filters[item] = "";
       }
     },
-    handleCurrentChange() {}
+    handleCurrentChange(val) {
+      this.totals.currentPage=val;
+      this.getcarLock();
+    }
   }
 };
 </script>

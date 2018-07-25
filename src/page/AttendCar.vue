@@ -3,8 +3,8 @@
      <div class="parent">
         <!-- 操作区 -->
        <div class="margin-tops">
-         <el-button  type="danger" icon="el-icon-delete" size="medium" @click="handleDel()">删除</el-button>
-         <el-button  type="danger" icon="el-icon-delete" size="medium" @click="handleDel()">删除查询到的记录</el-button>
+         <!-- <el-button  type="danger" icon="el-icon-delete" size="medium" @click="handleDel()">删除</el-button>
+         <el-button  type="danger" icon="el-icon-delete" size="medium" @click="handleDel()">删除查询到的记录</el-button> -->
          <el-button  icon="el-icon-circle-check-outline" size="medium">根据在场车辆数纠正空车位数</el-button>
          <div class="fr">
            <el-button  icon="el-icon-upload2" type="primary" size="medium"  @click="imports()">批量导入</el-button>
@@ -81,22 +81,10 @@
            </el-input>
            <el-dialog title="选择所属车位池" :visible.sync="dialogTableVisible" width="550px" >
                       <form class="plate_poolSearch">
-                        <!-- <el-input   id="plate_pool" name="plate_pool" placeholder="名称" value="" >
+                        <el-input   id="plate_pool" name="plate_pool" placeholder="名称" value="" >
                           <template slot="prepend">名称</template>   
-                        </el-input> -->
-                       <el-row :gutter="24">
-                        <el-col :span="16">
-                          <div class="grid-content bg-purple">
-                             
-                          </div>
-                        </el-col>
-                        <el-col :span="8">
-                          <div class="grid-content bg-purple">
-
-                          </div>
-                        </el-col>
+                        </el-input>
                        
-                      </el-row>
 
                         <el-button size="medium" type="primary" icon="el-icon-search" >查询</el-button>
                       </form>
@@ -124,7 +112,7 @@
                   <div><el-checkbox @click.native="selsChange(index,item)"></el-checkbox></div>
                   <div class="rf">
                     <a href="#" title="编辑" @click="handleEdit(index, item)"><i class="el-icon-edit"></i></a> 
-                    <a href="#" title="删除" @click="handleDel(index, item)"><i class="el-icon-delete"></i></a>
+                    <!-- <a href="#" title="删除" @click="handleDel(index, item)"><i class="el-icon-delete"></i></a> -->
                   </div>
                   <img :src="item.url" class="image" alt="拍照失败">
                   <div class="info">
@@ -211,34 +199,13 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.excelData = this.dataList //你要导出的数据list。
-                    this.export2Excel()
+                    // this.excelData = this.dataList //你要导出的数据list。
+                    
                 }).catch(() => {
                 
                 });
             },
-            export2Excel() {
-                var that = this;
-                require.ensure([], () => {
-                    const { export_json_to_excel } = require('../excel/Export2Excel.js'); //这里必须使用绝对路径
-                    const tHeader = ["车牌号",	"注册号",	"计费类型",	"车类型",	"入场时间",	"所属车位池",	"车库名称",]; // 导出的表头名
-                    const filterVal = ['car_no','car_no','fee_type', 'car_type','entry_time','plate_pool','garage_name']; // 导出的表头字段名
-                    const list = that.carlist;
-                    const data = that.formatJson(filterVal, list);
-                    // let time1,time2 = '';
-                    // if(this.start !== '') {
-                    //     time1 = that.moment(that.start).format('YYYY-MM-DD')
-                    // }
-                    // if(this.end !== '') {
-                    //     time2 = that.moment(that.end).format('YYYY-MM-DD')
-                    // }
-                    console.log(export_json_to_excel);
-                    export_json_to_excel(tHeader, data, `车辆管理在场车辆信息${that.totals.totalNum}条`);// 导出的表格名称，根据需要自己命名
-                })
-            },
-            formatJson(filterVal, jsonData) {
-                return jsonData.map(v => filterVal.map(j => v[j]))
-            },
+            
     selsChange: function (index,row) {
          this.sels.push(row.url) ;
         console.log(row);
@@ -256,7 +223,7 @@ export default {
     getAttendCar() {
       console.log("getAttendCar");
       let para = {
-        plate_value: this.filters.plate_value, //车位池
+        // plate_value: this.filters.plate_value, //车位池
         park: this.filters.v_park, //停车场
         price_type: this.filters.v_price_type, // 计费类型
         car_type: this.filters.v_car_type, //车类型
@@ -285,17 +252,6 @@ export default {
         //NProgress.done();
       });
     },
-    // created() {
-    //   console.log("xlx");
-    //   let newRoutes = constantRouterMap.concat([
-    //     {
-    //       path: "/AttendCar",
-    //       component: resolve => require(["@/page/AttendCar.vue"], resolve)
-    //     }
-    //   ]);
-    //   this.$router.addRoutes(newRoutes);
-    //   this.$router.push({ path: "/AttendCar" });
-    // },
     //显示编辑界面
     handleEdit: function(index, row) {
       this.editFormVisible = true;
@@ -333,28 +289,28 @@ export default {
       });
     },
     //删除
-    handleDel: function(index, row) {
-      this.$confirm("确认删除该记录吗?", "提示", {
-        type: "warning"
-      })
-        .then(() => {
-          this.listLoading = true;
-          //NProgress.start();
-          // let para = { id: row.id };
-          let para = Object.assign({}, row);
+    // handleDel: function(index, row) {
+    //   this.$confirm("确认删除该记录吗?", "提示", {
+    //     type: "warning"
+    //   })
+    //     .then(() => {
+    //       this.listLoading = true;
+    //       //NProgress.start();
+    //       // let para = { id: row.id };
+    //       let para = Object.assign({}, row);
          
-          requestAttendCarODelete1(para).then((res) => {
-            this.listLoading = false;
-            //NProgress.done();
-            this.$message({
-              message: '删除成功',
-              type: 'success'
-            });
-            this.getAttendCar();
-          });
-        })
-        .catch(() => {});
-    },
+    //       requestAttendCarODelete1(para).then((res) => {
+    //         this.listLoading = false;
+    //         //NProgress.done();
+    //         this.$message({
+    //           message: '删除成功',
+    //           type: 'success'
+    //         });
+    //         this.getAttendCar();
+    //       });
+    //     })
+    //     .catch(() => {});
+    // },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
@@ -390,6 +346,15 @@ export default {
   },
   mounted() {
     this.getAttendCar();
+  },
+  created(){
+    let data = JSON.parse(window.localStorage.getItem("user"));
+    var arr=data.userParkInfos;
+
+    // arr.forEach(item => {
+    //   //  this.park.value
+     
+    // });
   },
   data() {
     return {

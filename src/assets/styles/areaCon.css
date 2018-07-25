@@ -1,0 +1,130 @@
+
+        /* .wrap-area{
+
+        } */
+
+        .wrap-area input {
+            margin-top :20px;
+            float: left;
+            width: 400px;
+            padding: 10px;
+            /* margin: 10px; */
+            outline-color: gold;
+        }
+        
+        
+            .pick-area {
+            display: inline-block;
+            }
+        
+            .pick-area {
+            display: block;
+            position: relative;
+            font-size: 14px;
+            background: #fff;
+            text-decoration: none;
+            cursor: default;
+        }
+          /* div */
+        .pick-show {
+            position: relative;
+            padding: 0 8px;
+            height: 36px;
+            line-height: 36px;
+            border: 1px solid #dedede;
+            border-radius: 3px;
+        }
+        
+        .pick-area {
+            display: inline-block;
+        }
+        .pick-area {
+            display: block;
+            position: relative;
+            font-size: 14px;
+            background: #fff;
+            text-decoration: none;
+            cursor: default;
+        }
+        
+        /* 活跃按钮*/
+        .pick-show span.pressActive {
+            background: #7894D4;
+            color: #fff!important;
+            border-radius: 3px;
+        }
+        
+        /* 按钮  */
+        .pick-show span {
+            float: left;
+            display: inline-block;
+            max-width: 100px;
+            height: 24px;
+            line-height: 24px;
+            padding: 0 3px;
+            margin-top: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color:  rgb(67, 90, 189);
+            cursor: pointer;
+           
+        }
+        
+        .pick-show span:hover{
+        background-color: rgb(67,90,189);
+        color: #fff;
+        border-radius: 3px;
+        }
+        
+        /*斜杠*/
+        .pick-show i {
+            float: left;
+            display: inline-block;
+            padding: 0 3px;
+            color: #333;
+            font-style: normal;
+        }
+        
+        /* 下三角*/
+        .pick-show em.pick-arrow {
+            position: absolute;
+            top: 14px;
+            right: 8px;
+            display: block;
+            border: 8px solid #999;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+        
+        /*下拉 ul */
+        
+        .pick-list {
+            display: none;
+            position: absolute;
+            line-height: 36px;
+            margin: 0;
+            padding: 0;
+            background: #fff;
+            z-index: 999999999;
+            overflow-y: auto;
+            overflow-x: hidden;
+            border: 1px solid #dedede;
+            border-top: none;
+        }
+        
+        /* 下拉 li*/
+        .pick-list li {
+            margin: 0;
+            padding-left: 11px;
+            list-style: none;
+            color: #888;
+            background: rgb(255, 255, 255);
+        }
+        .pick-list li:hover {
+            color : #FFF;
+            font-weight: bold;
+           background-color: rgb(67,90,189);
+        }
+            

@@ -1,6 +1,7 @@
 import $axios from 'axios';
 import qs from 'qs';
-let base = '/apis';
+// let base = '/apis';
+let base=configs.base;
 $axios.defaults.baseURL='apis'
 //  post登录
 export const requestLogin = params => {
@@ -67,6 +68,9 @@ export const getParklist1 = params => { console.log(params); return $axios.get(`
 
 //mock本地请求获取在场车辆
 export const requestAttendCar1 = params => { console.log(params); return $axios.get(`../../static/json/attendcar.json`, { params: params }).then(res => res.data); };
+export const requestAttendCar = params => { console.log(params); return $axios.get(`${base}`, { params: params }).then(res => res.data); };
+
+
 //mock本地请求编辑数据
 export const requestAttendCarEdit1 = params => { console.log(params); return $axios.get(`../../static/json/attendcar.json`, { params: params }).then(res => res.data); };
 

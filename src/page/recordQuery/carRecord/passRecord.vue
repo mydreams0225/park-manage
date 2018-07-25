@@ -71,16 +71,24 @@
                     <el-table
                       :data="list"
                       border
-                     
                       v-loading="listLoading">
                     
                       <el-table-column
-                        prop="seri_no"
+                        type="index"
                         label="序号"
                         >
                       </el-table-column>
+
                       <el-table-column
                         prop="flowId"
+                        label=""
+                       display="none"
+                       v-if="noshow"
+                        >
+                      </el-table-column>
+                      <!-- admissionPhotoPath -->
+                      <el-table-column
+                        prop="admissionPhotoPath"
                         label=""
                        display="none"
                        v-if="noshow"
@@ -125,9 +133,9 @@
                         type="expand">
                           <template slot-scope="props">
                               <div>
-                                <el-button>车牌照片</el-button>
-                                <el-button>辅助照片</el-button>
-                                 <el-button>证件照片</el-button>
+                                <el-button @click="parkImg()">车牌照片</el-button>
+                                <el-button  @click="auxiliaryImg()">辅助照片</el-button>
+                                 <el-button @click="CertificatesImg()">证件照片</el-button>
                               </div>
                               <div class="main">
                                  <el-row :gutter="20">
@@ -137,9 +145,9 @@
                                               <p class="title">入场记录信息</p>
                                               <div class="imgBox">
                                                 <ul>
-                                                  <li> <img src="" alt="无图片"></li>
-                                                  <!-- <li></li>
-                                                  <li></li> -->
+                                                  <li v-show="parkImgs"> <img :src="props.row.admissionPhotoPath" alt="无车牌照片"></li>
+                                                  <li v-show="auxiliaryImgs"><img src="" alt="无辅助照片"></li>
+                                                  <li v-show="CertificatesImgs"> <img src="" alt="无证件照片"></li>
                                                 </ul>  
                                               </div>
                                               <div class="wenziBox">
@@ -172,7 +180,7 @@
                                                               入场控制器：
                                                           </el-col>
                                                           <el-col :span="8">
-                                                          
+                                                              
                                                           </el-col>
                                                       </el-row>
                                                       <el-row :gutter="20">
@@ -206,14 +214,12 @@
                                           </div>
                                       </el-col>
 
-                                      <el-col :span="12">
+                                      <!-- <el-col :span="12">
                                           <div class="panel">
                                          <p class="title">出场记录信息</p>
                                           <div class="imgBox">
                                                 <ul>
                                                   <li> <img src="" alt="无图片"></li>
-                                                  <!-- <li></li>
-                                                  <li></li> -->
                                                 </ul>  
                                           </div>
                                           <div class="wenziBox">
@@ -222,7 +228,7 @@
                                                               车牌号：
                                                           </el-col>
                                                           <el-col :span="8">
-                                                            {{props.row.licensePlate}}
+                                                           
                                                           </el-col>
                                                       </el-row>
                                                       <el-row :gutter="20">
@@ -230,7 +236,7 @@
                                                               注册号：
                                                           </el-col>
                                                           <el-col :span="8">
-                                                            {{props.row.licensePlate}}
+                                                            
                                                           </el-col>
                                                       </el-row>
                                                       <el-row :gutter="20">
@@ -238,7 +244,7 @@
                                                               出场时间：
                                                           </el-col>
                                                           <el-col :span="8">
-                                                            {{props.row.enterDate}}
+                                                            
                                                           </el-col>
                                                       </el-row>
                                                       <el-row :gutter="20">
@@ -255,7 +261,7 @@
                                                           </el-col>
                                                           <el-col :span="8">
                                                         
-                                                            {{props.row.entrancePassageway}}
+                                                            
                                                           </el-col>
                                                       </el-row>
                                                       <el-row :gutter="20">
@@ -264,7 +270,7 @@
                                                           </el-col>
                                                           <el-col :span="8">
                                                         
-                                                            {{props.row.chargeType}}
+                                                            
                                                           </el-col>
                                                       </el-row>
                                                       <el-row :gutter="20">
@@ -277,8 +283,9 @@
                                                           </el-col>
                                                       </el-row>
                                               </div>
-                                      </div>
-                                      </el-col>
+                                       </div>
+                                      </el-col> -->
+
                                  </el-row>
                                  <el-row :gutter="20">
                                      <el-col :span="12">
@@ -329,48 +336,79 @@ export default {
       listLoading: false,
       totals: {
         totalNum: 1,
-        pageSize: 1,
+        pageSize: 15,
         currentPage: 1
       },
       filters: {
         parkNo: "",
         entrancePassageway: "",
-        chargeType: "",
+        chargeType: "",//计费类型
         admissionReleaseType: "",
         licensePlate: "",
-        start_datefrom: "",
-        start_dateto: "",
+        start_datefrom: new Date(),
+        start_dateto: new Date(),
         admissionWatch: ""
       },
       park: [{}],
       passageway: [{}],
       fee_type: configs.chargeType,
       releaseMethod: configs.admissionreleasetype,
-      list: [{ licensePlate: "粤A33333" }]
+      list: [
+            {flowId:"11111", 
+            licensePlate: "粤A33333", 
+            licensePlate:"车牌号",
+            chargeType:"",//计费类型
+            car_group:"",
+            entrancePassageway:"",//入口通道
+            enterDate:"",//入场时间
+            admissionReleaseType:"",//放行方式
+            des:"",//
+            admissionWatch:""//入场值班员
+            }
+        ],
+      parkImgs:true,
+      auxiliaryImgs:false,
+      CertificatesImgs:false
+
     };
   },
 
   methods: {
-    getEntryRecord() {
+        getEntryRecord() {
       let para = Object.assign({}, this.filters);
         para.currentPage=this.totals.currentPage; //当前页
-        
-      // let para = {
-      
-      // this.listLoading = true;
-      // reqEntryRecord(para).then(res=>{
-      //   if(res.code===1){
-      //     console.log(res);
-      //    this.totalNum = res.total;
-      //    this.list=res.admissionRecords;
+        para.pageSize=this.totals.pageSize;
+      this.listLoading = true;
+      reqEntryRecord(para).then(res=>{
+        if(res.code===1){
+          console.log(res);
+         this.totals.totalNum = res.total;
+         this.list=res.entryRecords;
          
-      //   }else{
+        }else{
            
-      //   }
+        }
         
-      // 	//  this.listLoading = false;
-      // })
+      	  this.listLoading = false;
+      })
     },
+    parkImg(){
+      this.parkImgs=true;
+      this.auxiliaryImgs=false;
+      this.CertificatesImgs=false;
+    },
+    auxiliaryImg(){
+      this.parkImgs=false;
+      this.auxiliaryImgs=true;
+      this.CertificatesImgs=false;
+    },
+    CertificatesImg(){
+       this.parkImgs=false;
+      this.auxiliaryImgs=false;
+      this.CertificatesImgs=true;
+    },
+    
+
     handleCurrentChange(val) {
       console.log(`当前页${val}`),
       this.totals.currentPage=val;
@@ -391,34 +429,13 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.excelData = this.dataList //你要导出的数据list。
-                    this.export2Excel()
+                   // this.excelData = this.entryRecords //你要导出的数据list。
+                   
                 }).catch(() => {
                 
                 });
             },
-            export2Excel() {
-                var that = this;
-                require.ensure([], () => {
-                    const { export_json_to_excel } = require('@/excel/Export2Excel.js'); //这里必须使用绝对路径
-                    const tHeader = ["车牌号",	"注册号",	"计费类型",	"车类型",	"入场时间",	"所属车位池",	"车库名称",]; // 导出的表头名
-                    const filterVal = ['licensePlate','car_no','fee_type', 'car_type','entry_time','plate_pool','garage_name']; // 导出的表头字段名
-                    const list = that.list;
-                    const data = that.formatJson(filterVal, list);
-                    // let time1,time2 = '';
-                    // if(this.start !== '') {
-                    //     time1 = that.moment(that.start).format('YYYY-MM-DD')
-                    // }
-                    // if(this.end !== '') {
-                    //     time2 = that.moment(that.end).format('YYYY-MM-DD')
-                    // }
-                    console.log(export_json_to_excel);
-                    export_json_to_excel(tHeader, data, `入场信息${that.totals.totalNum}条`);// 导出的表格名称，根据需要自己命名
-                })
-            },
-            formatJson(filterVal, jsonData) {
-                return jsonData.map(v => filterVal.map(j => v[j]))
-            },
+           
   },
     mounted() {
     this.getEntryRecord();

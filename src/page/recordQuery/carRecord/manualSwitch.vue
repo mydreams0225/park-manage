@@ -48,7 +48,7 @@
                 <el-input v-model="filters.dutyMan"  id="dutyMan" name="dutyMan" placeholder="值班员" >
                      <template slot="prepend">值班员</template>   
                 </el-input>
-	             <el-button type="primary" icon="el-icon-search" size="medium">查询</el-button>
+	             <el-button type="primary" icon="el-icon-search" size="medium" @click="getManualSwitch">查询</el-button>
                  <el-button size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
                  <div class="rights"> 
                  	<el-button type="success" size="medium"><strong><i class="el-icon-upload"></i></strong > 导出EXCEL报表</el-button>	
@@ -61,44 +61,28 @@
                       border
                       style="width: 100% ;"
                       >
+                
                       <el-table-column
-		                  type="selection"
-		                  width="55">
-                      </el-table-column>
-                      <el-table-column
-                        prop="seri_no"
+                        type="index"
                         label="序号"
                         >
                       </el-table-column>
                       <el-table-column
-                        prop="plate_no"
-                        label="车牌号"
+                        prop="entrance_gate"
+                        label="出入场闸口"
                         >
                       </el-table-column>
                       <el-table-column
-                        prop="fee_type"
-                        label="计费类型">
+                        prop="fee_computer"
+                        label="收费电脑">
                       </el-table-column>
                       <el-table-column
-                        prop="car_group"
-                        label="车辆分组">
+                        prop="opening_time"
+                        label="开闸时间">
                       </el-table-column>               
                       <el-table-column
-                        prop="passageway"
-                        label="通道">
-                      </el-table-column>
-                      <el-table-column
-                        prop="start_date1"
-                        label="入场时间">
-                      </el-table-column>
-
-                      <el-table-column
-                        prop="release_method"
-                        label="放行方式">
-                      </el-table-column>
-                      <el-table-column
-                        prop="des"
-                        label="描述">
+                        prop="opening_type"
+                        label="开闸类型">
                       </el-table-column>
                       <el-table-column
                         prop="duty_man"
@@ -106,9 +90,67 @@
                       </el-table-column>
                       <el-table-column          
                         label="操作"
-                        width="250px">
-                         <template slot-scope="scope">    
-													        <el-button type="primary" icon="el-icon-document" circle size="mini"></el-button>                   
+                        width="250px"
+                        type="expand">
+                         <template slot-scope="props">    
+													      <div class="imgBox">
+                                                <ul>
+                                                  <li > <img src="" alt="无车牌照片"></li>
+                                                  <!-- <li v-show="auxiliaryImgs"><img src="" alt="无辅助照片"></li>
+                                                  <li v-show="CertificatesImgs"> <img src="" alt="无证件照片"></li> -->
+                                                </ul>  
+                             </div>          
+                            <div class="wenziBox">
+                              <el-row :gutter="20">
+                                  <el-col :span="8">
+                                      出入场闸口：
+                                  </el-col>
+                                  <el-col :span="8">
+                                    {{props.row.entrance_gate}}
+                                  </el-col>
+                              </el-row>
+                              <el-row :gutter="20">
+                                  <el-col :span="8">
+                                     开闸时间：
+                                  </el-col>
+                                  <el-col :span="8">
+                                    {{props.row.opening_time}}
+                                  </el-col>
+                              </el-row>
+                              <el-row :gutter="20">
+                                  <el-col :span="8">
+                                      收费电脑：
+                                  </el-col>
+                                  <el-col :span="8">
+                                    {{props.row.fee_computer}}
+                                  </el-col>
+                              </el-row>
+                               <el-row :gutter="20">
+                                  <el-col :span="8">
+                                      出入口控制器：
+                                  </el-col>
+                                  <el-col :span="8">
+                                  
+                                  </el-col>
+                              </el-row>
+                              <el-row :gutter="20">
+                                  <el-col :span="8">
+                                      开闸类型：
+                                  </el-col>
+                                  <el-col :span="8">
+                                    {{props.row.opening_type}}
+                                  </el-col>
+                              </el-row>
+                              <el-row :gutter="20">
+                                  <el-col :span="8">
+                                      值班员：
+                                  </el-col>
+                                  <el-col :span="8">
+                                    {{props.row.duty_man}}
+                                  </el-col>
+                              </el-row>
+                              
+                            </div> 
                         </template>
                       </el-table-column>
                     </el-table>
@@ -128,6 +170,8 @@
 	</section>
 </template>
 <script>
+//reqManualSwitch
+import {reqManualSwitch} from '@/api/recordQuery'
 export default {
   data() {
     return {
@@ -156,14 +200,35 @@ export default {
       },
       tableData: [{}]
     };
-	},
+  },
+  mounted(){
+    this.getManualSwitch();
+  },
 	methods:{
+
+    getManualSwitch(){
+      let para={
+
+      }
+      reqManualSwitch(para).then(res=>{
+          if(res.code===1){
+                console.log(res);
+                this.totals.totalNum = res.total;
+                this.list=res.admissionRecords;
+         
+        }else{
+           
+        }
+      })
+    },
 		callbackSelTenant(){
        for(var item in this.filters){
 				 this.filters[item]="";
 			 }
 		},
-		handleCurrentChange(){
+		handleCurrentChange(val){
+      this.totals.currentPage=val;
+      this.getManualSwitch();
 
 		}
 	}
@@ -188,5 +253,19 @@ export default {
   position: absolute;
   top: 45px;
   right: 0;
+}
+.imgBox {
+  height: 100px;
+ 
+}
+ ul li {
+  height: 100px;
+  list-style: none;
+}
+.wenziBox {
+  margin: 10px;
+}
+.wenziBox .el-row {
+  margin-top:10px;
 }
 </style>

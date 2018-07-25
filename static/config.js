@@ -7,6 +7,7 @@
 
 */
 const configs = {
+    base:"",
     test: 'bilili',
     //地区
     options: [
@@ -14817,6 +14818,7 @@ const configs = {
         online: '在线2小时',
 
     }],
+    
     //停车场
     park:[
         {

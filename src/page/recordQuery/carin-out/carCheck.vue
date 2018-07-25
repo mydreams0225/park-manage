@@ -2,6 +2,7 @@
 	<section>
 		<div class="parent">
 			<div class="margin-tops querys" >
+				<span>所属停车场</span>
 				<el-select v-model="filters.v_park" filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in park"
@@ -10,6 +11,7 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
+							
 	            <el-input v-model="filters.v_dutyAccount"   placeholder="值班员账号" >
                      <template slot="prepend">值班员账号</template>   
                 </el-input>
@@ -29,7 +31,6 @@
 		                      type="datetime"
 		                      placeholder="选择日期时间">
 		                    </el-date-picker>
-
                 </div>
 								<div class="dates block">
 		                    <span class="demonstration">盘点结束时间从</span>
@@ -48,6 +49,7 @@
 		                    </el-date-picker>
 
                 </div>
+								<span>盘点状态</span>
 								<el-select v-model="filters.v_checkStatus" filterable placeholder="盘点状态">
 	                    <el-option
 	                      v-for="item in checkStatus"
@@ -56,7 +58,7 @@
 	                      :value="item.value">
 	                    </el-option>
 	              </el-select>
-	             <el-button type="primary" icon="el-icon-search" size="medium">查询</el-button>
+	             <el-button type="primary" icon="el-icon-search" size="medium" class="getCarCheck">查询</el-button>
                  <el-button size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
 			</div>
 			<div class="margin-tops">
@@ -116,6 +118,8 @@
 	</section>
 </template>
 <script>
+//reqCarCheck
+import reqCarCheck from '@/api/recordQuery'
 export default {
   data() {
     return {
@@ -139,6 +143,15 @@ export default {
     };
 	},
 	methods:{
+		getCarCheck(){
+			let para={};
+			reqCarCheck(para).then(res=>{
+				if(res.code===1){
+					this.totals.totalNum=res.total;
+					this.tableData=res.list;
+				}
+			})
+		},
 		handleCurrentChange(){
 			
 		},

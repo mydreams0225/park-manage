@@ -1,6 +1,8 @@
 import $axios from 'axios';
+let base=configs.base;
 //请求页面车辆信息
 export const reqCarInfo = params => { console.log(params); return $axios.get(`../../static/json/carManage/carInfolist.json`, { params: params }).then(res => res.data); };
+//base
 //请求点击选择里的车位池数据
 export const reqPlateName = params => { console.log(params); return $axios.get(`../../static/json/carManage/carInfolist.json`, { params: params }).then(res => res.data); };
 
