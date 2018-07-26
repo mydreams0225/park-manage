@@ -10,7 +10,7 @@ export const requestLogin = params => {
     //  url: 'http://192.168.43.116:8080/park/login',
     url: "/park/login",
     method: 'post',
-    data: params,
+    data: {},
     // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
   }    //{headers:{'Access-Control-Allow-Origin': "*"}}
   ).then(res =>

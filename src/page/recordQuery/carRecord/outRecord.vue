@@ -95,6 +95,7 @@
                       :data="list"
                       border
                       style="width: 100% ;"
+                      v-loading="listLoading"
                       >
                      <el-table-column
                         type="index"
@@ -436,6 +437,7 @@ import { reqOutRecord } from "@/api/recordQuery";
 export default {
   data() {
     return {
+      listLoading:false,
       noshow:false,
       filters: {
               v_park: "",
@@ -463,7 +465,7 @@ export default {
               pageSize: 1,
               currentPage: 1
       },
-      list: [{},{},{},{},{},{}]
+      list: []
     };
   },
   mounted(){
@@ -471,18 +473,25 @@ export default {
   },
   methods: {
     getOutRecord(){
-      var para={
-            park:this.filters.v_park
-      }
+      var _this=this;
+     let para = {}
+       para.jwt= window.localStorage.getItem("jwt");
+       para.currentPage=this.totals.currentPage; //当前页
+        para.pageSize=this.totals.pageSize;
+        this.listLoading = true;
       reqOutRecord(para).then(res=>{
         if(res.code===1){
                 console.log(res);
-                this.totalNum = res.total;
-                this.list=res.admissionRecords;
+                this.totals.totalNum = res.totalNum;
+                this.list=res.outRecords;
          
         }else{
-           
+             _this.$message({
+							message: '请求数据失败',
+							type: 'error'
+						});
         }
+         this.listLoading = false;
       })
     },
 		callbackSelTenant(){

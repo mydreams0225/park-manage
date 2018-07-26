@@ -5,109 +5,17 @@
 	    		<el-button @click="add.addVisible=true" type="primary" size="medium"><i class="el-icon-plus" ></i>新增</el-button>
 	    		<el-button type="danger" size="medium"><i class="el-icon-delete"></i>删除</el-button>
 	    	</div>
-				 <!-- 添加 -->
-         <el-dialog 
-				  title="添加费率"
-				  :visible.sync="add.addVisible"
-				  width="30%"
-					@change="addChange">
-				   <div class="add">
-						  <el-row :gutter="24">
-		              <el-col :span="11">
-		                <div class="grid-content bg-purple">
-		                <span style="color:red">*</span>
-		                <span >选择车库：</span>
-		              </div>
-		             </el-col>
-							   <el-col :span="11">
-		                <div class="grid-content bg-purple">
-		                <span style="color:red">*</span>
-		                <span >计费类型：</span>
-		              </div>
-		             </el-col>		              
-		          </el-row>
-								<el-row :gutter="24">
-		              <el-col :span="11">
-		                <div class="grid-content bg-purple">
-		                <el-select v-model="add.v_park" filterable  >
-                      <el-option
-                        v-for="item in add.park"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                  </el-select>	        
-		              </div>
-		             </el-col>	
-								 <el-col :span="11">
-		                <div class="grid-content bg-purple">
-		                <el-select v-model="add.v_feetype" filterable  >
-                      <el-option
-                        v-for="item in add.feetype"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                  </el-select>	        
-		              </div>
-		             </el-col>			              
-		       </el-row>	
-					 <el-row :gutter="24">
-		              <el-col :span="11">
-		                <div class="grid-content bg-purple">
-		                <span style="color:red">*</span>
-		                <span >车类型：</span>
-		              </div>
-		             </el-col>
-							   <el-col :span="11">
-		                <div class="grid-content bg-purple">
-		                <span style="color:red">*</span>
-		                <span >收费类型：</span>
-		              </div>
-		             </el-col>		              
-		          </el-row>
-							<el-row :gutter="24">
-		              <el-col :span="11">
-		                <div class="grid-content bg-purple">
-		                <el-select v-model="add.v_carType" filterable  >
-                      <el-option
-                        v-for="item in add.carType"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                  </el-select>	        
-		              </div>
-		             </el-col>	
-								 <el-col :span="11">
-		                <div class="grid-content bg-purple">
-		                <el-select v-model="add.v_collectFee" filterable  >
-                      <el-option
-                        v-for="item in add.collectFee"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                  </el-select>	        
-		              </div>
-		             </el-col>			              
-		       </el-row>
-					 </div>
-				  <span slot="footer" class="dialog-footer">
-				    <el-button @click="add.addVisible = false">取 消</el-button>
-				    <el-button type="primary" @click="add.addVisible = false">保 存</el-button>
-				  </span>
-				</el-dialog>
+				
 	    	<div class="margin-tops">
 	    		<el-select v-model="filters.v_park" filterable placeholder="所属停车场">
 	                    <el-option
-	                      v-for="item in park"
+	                      v-for="item in sels.park"
 	                      :key="item.value"
 	                      :label="item.label"
 	                      :value="item.value">
 	                    </el-option>
 		        </el-select>
-		        <el-button type="primary" icon="el-icon-search" size="medium">查询</el-button>
+		        <el-button type="primary" icon="el-icon-search" size="medium" @click="getParkingRate">查询</el-button>
 	            <el-button  size="medium" icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
 	    	</div>
 	         <!-- 展示区 -->
@@ -117,14 +25,22 @@
 	                  :data="tableData"
 	                  border
 	                  style="width: 100% ;"
+										@selection-change="selsChange"
 	                  >
 	                  <el-table-column
 		                  type="selection"
 		                  width="55">
 	                  </el-table-column>
+
 	                  <el-table-column
-	                    prop="seri_no"
+	                   type="index"
 	                    label="序号"
+	                    >
+	                  </el-table-column>
+										<el-table-column
+	                    prop="parkNo"
+	                    label=""
+											v-if="noshow"
 	                    >
 	                  </el-table-column>
 	                  <el-table-column
@@ -133,15 +49,15 @@
 	                    >
 	                  </el-table-column>
 	                  <el-table-column
-	                    prop="fee_type"
+	                    prop="chargeType"
 	                    label="计费类型">
 	                  </el-table-column>
 	                  <el-table-column
-	                    prop="car_type"
+	                    prop="vehicleType"
 	                    label="车类型">
 	                  </el-table-column>               
 	                  <el-table-column
-	                    prop="charge_type"
+	                    prop="algorithmType"
 	                    label="收费类型">
 	                   
 	                     
@@ -163,7 +79,7 @@
 	                    label="测试"
 											>
 											 <template slot-scope="scope">
-													<el-button   size="mini"> <span>$</span> 设置费率</el-button>
+													<el-button   size="mini" @click="rateTest(scope.$index,scope.row)"> <span>$</span> 费率测试</el-button>
 													</template>
 	                  </el-table-column>
 
@@ -172,13 +88,116 @@
 	                    label="操作"
 	                    width="130px">
 	                     <template slot-scope="scope">
-	                        <el-button type="primary" icon="el-icon-edit" circle size="mini" ></el-button>
-                          <el-button type="danger" icon="el-icon-delete" circle size="mini"></el-button>
+	                        <el-button type="primary" icon="el-icon-edit" circle size="mini" @click="editRate(scope.$index,scope.row)"></el-button>
+                          <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="handleDel(scope.$index, scope.row)"></el-button>
 	                    </template>
 	                  </el-table-column>
 	                </el-table>
 	               </template>
 			</div>
+			<!-- 费率测试界面 -->
+			  <el-dialog 
+				  title="费率测试"
+				  :visible.sync="test.testVisible"
+				  width="30%"
+				>
+				   <div class="add">
+						  <el-row :gutter="20">
+		              <el-col :span="12">
+		                <div class="grid-content bg-purple">
+		               
+		                <span ><strong>当前算法：</strong> </span>
+		              </div>
+		             </el-col>
+							   		              
+		          </el-row>
+								<el-row :gutter="20">
+		              <el-col :span="12">
+		                <div class="grid-content bg-purple">
+		               
+		                <span ><strong>当前计费类型：{{test.testObj.fee_type}} </strong> </span>
+		              </div>
+		             </el-col>
+								 <el-col :span="12">
+		                <div class="grid-content bg-purple">
+		               
+		                <span ><strong>当前车类型：{{test.testObj.car_type}} </strong> </span>
+		              </div>
+		             </el-col>           
+		       </el-row>	
+					 <el-row :gutter="20">
+		              <el-col :span="12">
+		                <div class="grid-content bg-purple">
+		                <span > <strong>子库是否启用: </strong>	 </span>
+		              </div>
+		             </el-col>      
+		          </el-row>
+							<el-row :gutter="20">
+		              <el-col :span="12">
+		                <div class="grid-content bg-purple">
+		                <span >主库开始时间：</span>
+		              </div>
+		             </el-col>
+								<el-col :span="12">
+		                <div class="grid-content bg-purple">
+		                <span >主库结束时间：</span>
+		              </div>
+		             </el-col>              
+		       </el-row>
+							<el-row :gutter="20">
+		              <el-col :span="12">
+		                <div class="grid-content bg-purple">
+		                <span >
+											<el-date-picker
+											v-model="test.start_date"
+											type="datetime"
+											placeholder="选择日期时间">
+										</el-date-picker>
+										</span>
+		              </div>
+		             </el-col>
+								<el-col :span="12">
+		                <div class="grid-content bg-purple">
+		                <span >	<el-date-picker
+											v-model="test.end_date"
+											type="datetime"
+											placeholder="选择日期时间">
+										</el-date-picker></span>
+		              </div>
+		             </el-col>              
+		       </el-row>
+					 <el-row :gutter="20">
+		              <el-col :span="6">
+		                <div >
+		                <span >
+										 <strong>测试结果：</strong>
+										</span>
+		              </div>
+		             </el-col>
+							    <el-col :span="18">
+		                <div >
+		                <span style="color:red; font-size:18px;" >
+										   应付金额
+										</span>
+		              </div>
+									<div >
+		                <span style="color:red; font-size:18px; " >
+										   折扣金额
+										</span>
+		              </div>
+									<div >
+		                <span style="color:red; font-size:18px; " >
+										   折后金额
+										</span>
+		              </div>
+		             </el-col>    
+		       </el-row>
+					 </div>
+				  <span slot="footer" class="dialog-footer">
+				    
+				    <el-button type="primary" >计算</el-button>
+				  </span>
+	</el-dialog>
 			<!-- 设置费率 dialog界面-->
          <el-dialog 
 				  title="设置费率"
@@ -186,9 +205,9 @@
 					<div class="rateMain">
            <div class="leftd">
 						 <p><strong>切换收费算法：</strong></p>
-						 <el-select v-model="setting.v_selSuanfa" placeholder="请选择" @change="changelSuanfa">
+						 <el-select v-model="setting.leftobj.charge_type" placeholder="请选择" @change="changelSuanfa">
 								<el-option
-									v-for="item in setting.selSuanfa"
+									v-for="item in sels.selSuanfa"
 									:key="item.value"
 									:label="item.label"
 									:value="item.value">
@@ -211,7 +230,7 @@
 										<el-form-item label="折扣类型：">
 											<el-select v-model="setting.oneForm.disc_type" filterable >
 	                    <el-option
-	                      v-for="item in park"
+	                      v-for="item in sels.disc_type"
 	                      :key="item.value"
 	                      :label="item.label"
 	                      :value="item.value">
@@ -223,7 +242,7 @@
 										</el-form-item>
 									 </el-form>
                    <el-tabs >
-												<el-tab-pane label="按小时收费" >
+												<el-tab-pane label="按小时收费" class="chargeJson">
                             <el-row :gutter="20" >
 															<el-col :span="6"><div class="grid-content bg-purple">0~1小时收费：</div></el-col>
 															<el-col :span="6"><div class="grid-content "><el-input ></el-input></div></el-col>
@@ -302,132 +321,132 @@
 												<el-tab-pane label="按半小时收费">
                             <el-row :gutter="20" >
 															<el-col :span="3"><div class="bg-purple">0~0.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t1"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">6~6.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t13"></el-input></div></el-col>
 																<el-col :span="3"><div class="grid-content bg-purple">12~12.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t25"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">18~18.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t37"></el-input></div></el-col>
 														</el-row>
 														 <el-row :gutter="20" >
 															<el-col :span="3"><div class="bg-purple">0.5~1小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t2"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">6.5~7小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t14"></el-input></div></el-col>
 																<el-col :span="3"><div class="grid-content bg-purple">12.5~13小时收费</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t26"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">18.5~19小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t38"></el-input></div></el-col>
 														</el-row>
 														<el-row :gutter="20" >
 															<el-col :span="3"><div class="bg-purple">1~1.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t3"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">7~7.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t15"></el-input></div></el-col>
 																<el-col :span="3"><div class="grid-content bg-purple">13~13.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t27"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">19~19.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t39"></el-input></div></el-col>
 														</el-row>
 
 														 <el-row :gutter="20" >
 															<el-col :span="3"><div class="bg-purple">1.5~2小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input  v-model="setting.chargeJson.t4"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">7.5~8小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t16"></el-input></div></el-col>
 																<el-col :span="3"><div class="grid-content bg-purple">13.5~14小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t28"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">19.5~20小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t40"></el-input></div></el-col>
 														</el-row>
 														 <el-row :gutter="20" >
 															<el-col :span="3"><div class="bg-purple">2~2.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t5" ></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">8~8.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t17"></el-input></div></el-col>
 																<el-col :span="3"><div class="grid-content bg-purple">14~14.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t29"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">20~20.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t41"></el-input></div></el-col>
 														</el-row>
 														<el-row :gutter="20" >
 															<el-col :span="3"><div class="bg-purple">2.5~3小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input  v-model="setting.chargeJson.t6"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">8.5~9小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t18"></el-input></div></el-col>
 																<el-col :span="3"><div class="grid-content bg-purple">14.5~15小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t30"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">20.5~21小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t42"></el-input></div></el-col>
 														</el-row>
 
 														 <el-row :gutter="20" >
 															<el-col :span="3"><div class="bg-purple">3~3.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t7"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">9~9.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t19"></el-input></div></el-col>
 																<el-col :span="3"><div class="grid-content bg-purple">15~15.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t31"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">21~21.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t43"></el-input></div></el-col>
 														</el-row>
 														 <el-row :gutter="20" >
 															<el-col :span="3"><div class="bg-purple">3.5~4小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content " ><el-input v-model="setting.chargeJson.t8"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">9.5~10小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t20"></el-input></div></el-col>
 																<el-col :span="3"><div class="grid-content bg-purple">15.5~16小时收费</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t32"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">21.5~22小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t44"></el-input></div></el-col>
 														</el-row>
 														<el-row :gutter="20" >
 															<el-col :span="3"><div class="bg-purple">4~4.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t9"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">10~10.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t21"></el-input></div></el-col>
 																<el-col :span="3"><div class="grid-content bg-purple">16~16.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t33"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">22~22.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t45"></el-input></div></el-col>
 														</el-row>
 
 														<el-row :gutter="20" >
 															<el-col :span="3"><div class="bg-purple">4.5~5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t10"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">10.5~11小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t22"></el-input></div></el-col>
 																<el-col :span="3"><div class="grid-content bg-purple">16.5~17小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t34"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">22.5~23小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t46"></el-input></div></el-col>
 														</el-row>
 														 <el-row :gutter="20" >
 															<el-col :span="3"><div class="bg-purple">5~5.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t11"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">11~11.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t23"></el-input></div></el-col>
 																<el-col :span="3"><div class="grid-content bg-purple">17~17.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t35"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">23~23.5小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t47"></el-input></div></el-col>
 														</el-row>
 														<el-row :gutter="20" >
 															<el-col :span="3"><div class="bg-purple">5.5~6小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t12"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">11.5~12小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t24"></el-input></div></el-col>
 																<el-col :span="3"><div class="grid-content bg-purple">17.5~18小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t36"></el-input></div></el-col>
 															<el-col :span="3"><div class="grid-content bg-purple">23.5~24小时收费：</div></el-col>
-															<el-col :span="3"><div class="grid-content "><el-input ></el-input></div></el-col>
+															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t48"></el-input></div></el-col>
 														</el-row>
 												</el-tab-pane>
 												
 										</el-tabs>
 										<div class="footerBtn">
-                            <el-button @click="add.addVisible=true" type="primary" size="medium"><i class="el-icon-plus" ></i>新增</el-button>
+                            <el-button  type="primary" size="medium" @click="settingRateSaves"><i class="el-icon-plus" ></i>保存</el-button>
 	    	                  	<el-button  size="medium"><i class="el-icon-delete"></i>取消</el-button>
 										</div>
 
@@ -453,34 +472,236 @@
         </el-pagination>
 
 			</div>
-			
-	    </div>
+			 <!-- 添加 -->
+         <el-dialog 
+				  title="添加费率"
+				  :visible.sync="add.addVisible"
+				  width="30%"
+					@change="addChange">
+				   <div class="add">
+						  <el-row :gutter="24">
+		              <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <span style="color:red">*</span>
+		                <span >选择车库：</span>
+		              </div>
+		             </el-col>
+							   <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <span style="color:red">*</span>
+		                <span >计费类型：</span>
+		              </div>
+		             </el-col>		              
+		          </el-row>
+								<el-row :gutter="24">
+		              <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <el-select v-model="add.v_park" filterable  >
+                      <el-option
+                        v-for="item in sels.park"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                  </el-select>	        
+		              </div>
+		             </el-col>	
+								 <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <el-select v-model="add.v_feetype" filterable  >
+                      <el-option
+                        v-for="item in sels.feetype"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                  </el-select>	        
+		              </div>
+		             </el-col>			              
+		       </el-row>	
+					 <el-row :gutter="24">
+		              <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <span style="color:red">*</span>
+		                <span >车类型：</span>
+		              </div>
+		             </el-col>
+							   <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <span style="color:red">*</span>
+		                <span >收费类型：</span>
+		              </div>
+		             </el-col>		              
+		          </el-row>
+							<el-row :gutter="24">
+		              <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <el-select v-model="add.v_carType" filterable  >
+                      <el-option
+                        v-for="item in sels.car_type"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                  </el-select>	        
+		              </div>
+		             </el-col>	
+								 <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <el-select v-model="add.v_collectFee" filterable  >
+                      <el-option
+                        v-for="item in sels.selSuanfa"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                  </el-select>	        
+		              </div>
+		             </el-col>			              
+		       </el-row>
+					 </div>
+				  <span slot="footer" class="dialog-footer">
+				    <el-button @click="add.addVisible = false">取 消</el-button>
+				    <el-button type="primary" @click="AddParkRate">保 存</el-button>
+				  </span>
+				</el-dialog>
+					 <!-- 编辑 -->
+         <el-dialog 
+				  title="修改费率"
+				  :visible.sync="edit.editVisible"
+				  width="30%"
+					>
+				   <div class="add">
+						  <el-row :gutter="24">
+		              <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <span style="color:red">*</span>
+		                <span >选择车库：</span>
+		              </div>
+		             </el-col>
+							   <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <span style="color:red">*</span>
+		                <span >计费类型：</span>
+		              </div>
+		             </el-col>		              
+		          </el-row>
+								<el-row :gutter="24">
+		              <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <el-select v-model="edit.editObj.garage_name" filterable  >
+                      <el-option
+                        v-for="item in sels.park"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                  </el-select>	        
+		              </div>
+		             </el-col>	
+								 <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <el-select v-model="edit.editObj.fee_type" filterable  >
+                      <el-option
+                        v-for="item in sels.feetype"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                  </el-select>	        
+		              </div>
+		             </el-col>			              
+		       </el-row>	
+					 <el-row :gutter="24">
+		              <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <span style="color:red">*</span>
+		                <span >车类型：</span>
+		              </div>
+		             </el-col>
+							   <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <span style="color:red">*</span>
+		                <span >收费类型：</span>
+		              </div>
+		             </el-col>		              
+		          </el-row>
+							<el-row :gutter="24">
+		              <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <el-select v-model="edit.editObj.car_type" filterable  >
+                      <el-option
+                        v-for="item in sels.car_type"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                  </el-select>	        
+		              </div>
+		             </el-col>	
+								 <el-col :span="11">
+		                <div class="grid-content bg-purple">
+		                <el-select v-model="edit.editObj.charge_type" filterable  >
+                      <el-option
+                        v-for="item in sels.selSuanfa"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                  </el-select>	        
+		              </div>
+		             </el-col>			              
+		       </el-row>
+					 </div>
+				  <span slot="footer" class="dialog-footer">
+				    <el-button @click="add.addVisible = false">取 消</el-button>
+				    <el-button type="primary" @click="add.addVisible = false">保 存</el-button>
+				  </span>
+				</el-dialog>
+</div>
 	</section>
 </template>
 <script>
+//reqSettingRate
+import {reqSettingRate,reqDeleteOne,batchDeleteMore,reqParkRate,reqAddRate} from '@/api/rateManage'
 export default {
   data() {
     return {
+		noshow:false,
+			edit:{
+				editVisible: false,
+				editObj:{
+         v_park: "",
+         v_feetype: "",     
+         v_carType: "",   
+         v_collectFee: "",
+				},
+        
+        
+			},
       add: {
         addVisible: false,
         v_park: "",
-        park: "",
         v_feetype: "",
-        feetype: "",
         v_carType: "",
-        carType: "",
         v_collectFee: "",
-        collectFee: ""
-      },
+			},
+			test:{
+				testVisible:false,
+				testObj:{
+				},
+				start_date:new Date(new Date().getTime() - 1 * 60 * 60 * 1000),
+				end_date:new Date()
+			},
       setting: {
         settingVisible: false,
         v_selSuanfa: "",
         isOne: true,
-        isTwo: false,
-        selSuanfa: [
-          { value: "按24小时累计时收费", label: "按24小时累计时收费" },
-          { value: "按连续累计时收费", label: "按连续累计时收费" }
-        ],
+				isTwo: false,
+				chargeJson:{
+
+				},
+        
         leftobj: {
           garage_name: "",
           fee_type: "",
@@ -497,26 +718,138 @@ export default {
         {
           garage_name: "1",
           fee_type: "3",
-          car_type: "car"
+					car_type: "car",
+				charge_type:	"按24小时累计时收费"
         }
       ],
       filters: {
         v_park: ""
-      },
-      park: [{}],
+			},
+			sels:{
+				car_type:[{value:"3",label:"e"}],
+			  	park: [{value:"停车场1",label:"停车场1"}],
+				 feetype: [{value:"1",label:"月"}],
+				 disc_type:[{value:"1",label:"1"}],
+				 carType: [{value:"1",label:"1"}],
+				 selSuanfa: [
+          { value: "按24小时累计时收费", label: "按24小时累计时收费" },
+          { value: "按连续累计时收费", label: "按连续累计时收费" }
+        ],
+			},
+      
       totals: {
         totalNum: 1,
         pageSize: 1,
         currentPage: 1
-      }
+			},
+			checkBoxs:[],
     };
-  },
+	},
+mounted(){
+	this.getParkingRate();
+},
   methods: {
+		AddParkRate(){
+			this.add.addVisible=false;
+			let para =Object.assign({}, this.add);
+
+       para.jwt= window.localStorage.getItem("jwt");
+       console.log("local")
+			 console.log(window.localStorage.getItem("jwt"));
+			 
+			reqAddRate(para).then(res=>{
+        if(res.code===1){
+					alert("添加成功")
+				}
+					this.getParkingRate();
+			})
+
+		},
+		getParkingRate(){
+			let para = {}
+       para.jwt= window.localStorage.getItem("jwt");
+       console.log("local")
+       console.log(window.localStorage.getItem("jwt"));
+      // Object.assign({}, this.filters);
+        para.currentPage=this.totals.currentPage; //当前页
+        para.pageSize=this.totals.pageSize;
+			  reqParkRate(para).then(res=>{
+         if(res.code===1){
+				
+					 this.tableData=res.parkRateInfos;
+					 console.log(res.parkRateInfos);
+					 this.totals.totalNum=res.totalNum
+
+				 }
+			}).catch(()=>{
+				  
+			})
+		},
+		selsChange: function (sels) {
+			console.log(sels);
+				this.checkBoxs = sels;
+			},
+		//批量删除
+		//批量删除
+			batchRemove: function () {
+				//能判断的唯一值
+				var ids = this.checkBoxs.map(item => item.id).toString();
+				this.$confirm('确认删除选中记录吗？', '提示', {
+					type: 'warning'
+				}).then(() => {
+					this.listLoading = true;
+					//NProgress.start();
+					let para = { ids: ids };
+					batchDeleteMore(para).then((res) => {
+						this.listLoading = false;
+						//NProgress.done();
+						this.$message({
+							message: '删除成功',
+							type: 'success'
+						});
+						this.getParkingRate();
+					});
+				}).catch(() => {
+
+				});
+			},
+		//单行删除
+		//删除
+			handleDel: function (index, row) {
+				this.$confirm('确认删除该记录吗?', '提示', {
+					type: 'warning'
+				}).then(() => {
+					this.listLoading = true;
+					//NProgress.start();
+					let para = { id: row.id };
+					reqDeleteOne(para).then((res) => {
+						this.listLoading = false;
+						//NProgress.done();
+						this.$message({
+							message: '删除成功',
+							type: 'success'
+						});
+						this.getParkingRate();
+					});
+				}).catch(() => {
+
+				});
+			},
+		//设置费率
     handleSetting(index, row) {
       this.setting.settingVisible = true;
       this.setting.leftobj = Object.assign({}, row);
-    },
-
+		},
+		//费率测试
+			rateTest(index, row){
+				this.test.testVisible=true;
+        this.test.testObj = Object.assign({}, row);
+			},
+			//修改费率
+			editRate(index, row){
+				this.edit.editVisible=true;
+				 this.edit.editObj = Object.assign({}, row);
+			},
     changelSuanfa(val) {
       alert(val);
       var rightd = document.getElementsByClassName("rightd")[0];
@@ -527,7 +860,27 @@ export default {
         this.setting.isOne = false;
         this.setting.isTwo = true;
       }
-    },
+		},
+		//设置费率保存请求
+		settingRateSaves(){
+			// let para={
+			// 		chargeJson:this.setting.chargeJson,
+			// 		freeParkTime:this.setting.oneForm.freeparkMin,
+			// 		chargeType:this.leftobj.charge_type,
+			// 		vehicleType:this.leftobj.car_type,
+			// 		discountType:this.oneForm.disc_type,
+			// 		discountValue:this.oneForm.disc_value,
+			// }
+			 this.$message({
+          message: '恭喜你，这是一条成功消息',
+          type: 'success'
+        });
+			// reqSettingRate(para).then(res=>{
+      //      if(res.code===1){
+						  
+			// 		 }
+			// })
+		},
     callbackSelTenant() {
       for (var item in this.filters) {
         this.filters[item] = "";
@@ -600,5 +953,8 @@ export default {
 			 border-top:1px dashed #ccc;
 			 margin-top:15px;
 			 padding-top: 15px;
+		 }
+		 .add .el-row{
+			     margin-bottom: 10px;
 		 }
 </style>

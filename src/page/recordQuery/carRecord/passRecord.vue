@@ -375,21 +375,34 @@ export default {
 
   methods: {
         getEntryRecord() {
-      let para = Object.assign({}, this.filters);
+         var _this=this;
+          // let para = new URLSearchParams();
+       let para = {}
+       para.jwt= window.localStorage.getItem("jwt");
+       console.log("local")
+       console.log(window.localStorage.getItem("jwt"));
+      // Object.assign({}, this.filters);
         para.currentPage=this.totals.currentPage; //当前页
         para.pageSize=this.totals.pageSize;
+        // para.jwt=window.localStorage.getItem("jwt");
       this.listLoading = true;
       reqEntryRecord(para).then(res=>{
         if(res.code===1){
           console.log(res);
-         this.totals.totalNum = res.total;
+         this.totals.totalNum = res.totalNum;
          this.list=res.entryRecords;
          
         }else{
+          _this.$message({
+							message: '请求数据失败',
+							type: 'error'
+						});
            
         }
         
       	  this.listLoading = false;
+      }).catch({
+           
       })
     },
     parkImg(){

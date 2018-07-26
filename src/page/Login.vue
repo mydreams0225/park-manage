@@ -51,7 +51,7 @@ export default {
     return {
       logining: false,
       ruleForm2: {
-        account: "admin",
+        account: "test2",
         checkPass: "123456",
         yzm: ""
       },
@@ -108,25 +108,24 @@ export default {
             loginParams.append("password", this.ruleForm2.checkPass);
            //jsonp
            $.ajax({
-              // ../../static/json/login.json   http://192.168.43.116:8080/park/login
-              
               type: "get",
                data: { username: _this.ruleForm2.account, password: _this.ruleForm2.checkPass },
-              url: "../../static/json/login.json",
-              // url: "http://192.168.43.116:8080/park/login",
-              // jsonpCallback: "showData",
-              // dataType: "jsonp",
+              // url: "../../static/json/login.json",
+              url: "http://192.168.0.32:8081/park/login",
+              jsonpCallback: "showData",
+              dataType: "jsonp",
               success: function(data) {
                 this.logining = false;
                 console.log(data);
                 var jwt = data.jwt || "";
-                window.localStorage.setItem("jwt", JSON.stringify(data.jwt));
+                window.localStorage.setItem("jwt", data.jwt);
                 $.ajax({
                   type: "get",
-                  url: "../../static/json/rolelist.json",
-                  // url: "http://192.168.43.116:8080/park/index",
-                  // jsonpCallback: "showData",
-                  // dataType: "jsonp",
+                  data:{a:"111"},
+                  // url: "../../static/json/rolelist.json",
+                  url: "http://192.168.0.32:8081/park/index",
+                  // jsonpCallback: "showDatas",
+                  dataType: "jsonp",
                   success: function(data) {
                     // console.log(data);
                     window.localStorage.setItem("user",JSON.stringify(data.userInfo));

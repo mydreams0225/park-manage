@@ -7,7 +7,7 @@
 
 */
 const configs = {
-    base:"",
+    base:"http://192.168.0.32:8081/park",
     test: 'bilili',
     //地区
     options: [
