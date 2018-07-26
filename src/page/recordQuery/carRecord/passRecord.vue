@@ -5,12 +5,13 @@
 				<el-button type="danger" icon="el-icon-delete" size="medium">删除查询到的记录</el-button>
 			</div> -->
 			<div class="margin-tops querys" >
-				<el-select v-model="filters.parkNo" filterable placeholder="所属停车场">
+				<el-select  @change="parkChange" v-model="filters.parkNo" filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in park"
 	                      :key="item.value"
 	                      :label="item.label"
-	                      :value="item.value">
+	                      :value="item.value"
+                       >
 	                    </el-option>
 	            </el-select>
 	            <el-input   id="plate_no" name="plate_no" placeholder="车牌号" v-model="filters.licensePlate" >
@@ -342,90 +343,134 @@ export default {
       filters: {
         parkNo: "",
         entrancePassageway: "",
-        chargeType: "",//计费类型
+        chargeType: "", //计费类型
         admissionReleaseType: "",
         licensePlate: "",
         start_datefrom: new Date(),
         start_dateto: new Date(),
         admissionWatch: ""
       },
-      park: [{}],
+      park: [],
       passageway: [{}],
       fee_type: configs.chargeType,
       releaseMethod: configs.admissionreleasetype,
       list: [
-            {flowId:"11111", 
-            licensePlate: "粤A33333", 
-            licensePlate:"车牌号",
-            chargeType:"",//计费类型
-            car_group:"",
-            entrancePassageway:"",//入口通道
-            enterDate:"",//入场时间
-            admissionReleaseType:"",//放行方式
-            des:"",//
-            admissionWatch:""//入场值班员
-            }
-        ],
-      parkImgs:true,
-      auxiliaryImgs:false,
-      CertificatesImgs:false
-
+        {
+          flowId: "11111",
+          licensePlate: "粤A33333",
+          licensePlate: "车牌号",
+          chargeType: "", //计费类型
+          car_group: "",
+          entrancePassageway: "", //入口通道
+          enterDate: "", //入场时间
+          admissionReleaseType: "", //放行方式
+          des: "", //
+          admissionWatch: "" //入场值班员
+        }
+      ],
+      parkImgs: true,
+      auxiliaryImgs: false,
+      CertificatesImgs: false
     };
   },
+created(){
+  this.getParkList();
 
+},
   methods: {
-        getEntryRecord() {
-         var _this=this;
-          // let para = new URLSearchParams();
-       let para = {}
-       para.jwt= window.localStorage.getItem("jwt");
-       console.log("local")
-       console.log(window.localStorage.getItem("jwt"));
-      // Object.assign({}, this.filters);
-        para.currentPage=this.totals.currentPage; //当前页
-        para.pageSize=this.totals.pageSize;
-        // para.jwt=window.localStorage.getItem("jwt");
-      this.listLoading = true;
-      reqEntryRecord(para).then(res=>{
-        if(res.code===1){
-          console.log(res);
-         this.totals.totalNum = res.totalNum;
-         this.list=res.entryRecords;
-         
-        }else{
-          _this.$message({
-							message: '请求数据失败',
-							type: 'error'
-						});
-           
-        }
+    parkChange(value){
+      this.passageway=[];
+      //1
+       var parkObj=this.park;
+      for(var item in parkObj){
         
-      	  this.listLoading = false;
-      }).catch({
-           
-      })
+        if((parkObj[item])["value"]===value){
+          var entryarr= parkObj[item]["entryPassway"].split("-")
+          console.log(entryarr);
+
+          for(var i in entryarr){
+             var temp={value:entryarr[i],label:entryarr[i]}
+             this.passageway.push(temp);
+          }
+        }
+      }
     },
-    parkImg(){
-      this.parkImgs=true;
-      this.auxiliaryImgs=false;
-      this.CertificatesImgs=false;
+    getParkList() {
+     var  _this=this;
+      var parks = [
+        {
+          parkName: "林芝停车场",
+          parkNo: "1",
+          entryPassway: "林芝入口通道1-林芝入口通道2"
+          // entrychildren : [{  },{  }],
+          // outChildren:[{},{}]
+        },
+        {
+          parkName: "正佳停车场",
+          parkNo: "2",
+          entryPassway: "正佳入口通道"
+        }
+      ];
+      parks.forEach(item => {
+        var park1 = {
+          value: item["parkNo"],
+          label: item["parkName"],
+          entryPassway: item["entryPassway"],
+          outPassway: item["outPassway"]
+        };
+        _this.park.push(park1);
+         console.log(_this.park)
+       
+      });
     },
-    auxiliaryImg(){
-      this.parkImgs=false;
-      this.auxiliaryImgs=true;
-      this.CertificatesImgs=false;
+    getEntryRecord() {
+      var _this = this;
+      // let para = new URLSearchParams();
+      let para = {};
+      para.jwt = window.localStorage.getItem("jwt");
+      console.log("local");
+      console.log(window.localStorage.getItem("jwt"));
+      // Object.assign({}, this.filters);
+      para.currentPage = this.totals.currentPage; //当前页
+      para.pageSize = this.totals.pageSize;
+      // para.jwt=window.localStorage.getItem("jwt");
+      this.listLoading = true;
+      // reqEntryRecord(para)
+      //   .then(res => {
+      //     if (res.code === 1) {
+      //       console.log(res);
+      //       this.totals.totalNum = res.totalNum;
+      //       this.list = res.entryRecords;
+      //     } else {
+      //       _this.$message({
+      //         message: "请求数据失败",
+      //         type: "error"
+      //       });
+      //     }
+
+      //     this.listLoading = false;
+      //   })
+      //   .catch({});
     },
-    CertificatesImg(){
-       this.parkImgs=false;
-      this.auxiliaryImgs=false;
-      this.CertificatesImgs=true;
+    parkImg() {
+      this.parkImgs = true;
+      this.auxiliaryImgs = false;
+      this.CertificatesImgs = false;
     },
-    
+    auxiliaryImg() {
+      this.parkImgs = false;
+      this.auxiliaryImgs = true;
+      this.CertificatesImgs = false;
+    },
+    CertificatesImg() {
+      this.parkImgs = false;
+      this.auxiliaryImgs = false;
+      this.CertificatesImgs = true;
+    },
 
     handleCurrentChange(val) {
-      console.log(`当前页${val}`),
-      this.totals.currentPage=val;
-       this.getEntryRecord();
+      console.log(`当前页${val}`), (this.totals.currentPage = val);
+      this.getEntryRecord();
     },
 
     callbackSelTenant() {
@@ -433,26 +478,23 @@ export default {
       for (var item in filter) {
         filter[item] = "";
       }
-    }
-    ,
-      // 导出excel
+    },
+    // 导出excel
     outExe() {
-                this.$confirm('此操作将导出excel文件, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                   // this.excelData = this.entryRecords //你要导出的数据list。
-                   
-                }).catch(() => {
-                
-                });
-            },
-           
+      this.$confirm("此操作将导出excel文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          // this.excelData = this.entryRecords //你要导出的数据list。
+        })
+        .catch(() => {});
+    }
   },
-    mounted() {
+  mounted() {
     this.getEntryRecord();
-  },
+  }
 };
 </script>
 <style scoped>

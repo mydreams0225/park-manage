@@ -26,7 +26,7 @@ export const reqParkRate = params => { console.log(params);
 
       //添加费率
     //   reqAddRate
-    export const reqAddRate = params => { console.log(params);   
+    export const reqAddorEditRate = params => { console.log(params);   
         return $axios.post(`${base}/rate/addRate`,  
          qs.stringify(params,{ indices: false }),  
            {  // 这里是跨域写法  
