@@ -4,7 +4,7 @@
             <!-- 操作区 -->
               <div class="margin-tops">
                  
-                 <el-button type="danger" icon="el-icon-delete" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+                 <el-button type="danger" icon="el-icon-delete" @click="batchRemove" :disabled="this.checkBox.length===0">批量删除</el-button>
                  <el-button type="success"  icon="el-icon-check">授权车库</el-button>
                  <el-button type="success"  icon="el-icon-check">设置分组</el-button>
                  <div class="menus" style="position:relative ;display:inline-block">
@@ -21,7 +21,7 @@
                  <form :model="filters" class="form-inline" role="form"  onsubmit="subSearchForm();return false;">
                    <el-select v-model="filters.v_park" filterable placeholder="所属停车场">
                             <el-option
-                              v-for="item in park"
+                              v-for="item in querySels.park"
                               :key="item.value"
                               :label="item.label"
                               :value="item.value">
@@ -29,7 +29,7 @@
                    </el-select>
                    <el-select v-model="filters.v_presence_status" filterable placeholder="在场状态">
                             <el-option
-                              v-for="item in presence_status"
+                              v-for="item in querySels.presence_status"
                               :key="item.value"
                               :label="item.label"
                               :value="item.value">
@@ -37,15 +37,15 @@
                    </el-select>
                    <el-select v-model="filters.v_isoverdue" filterable placeholder="是否过期">
                             <el-option
-                              v-for="item in isoverdue"
+                              v-for="item in querySels.isoverdue"
                               :key="item.value"
                               :label="item.label"
                               :value="item.value">
                             </el-option>
                    </el-select>
-                   <el-select v-model="filters.v_vld" filterable placeholder="有效期时间">
+                   <!-- <el-select v-model="filters.v_vld" filterable placeholder="有效期时间">
                             <el-option
-                              v-for="item in vld"
+                              v-for="item in querySels.vld"
                               :key="item.value"
                               :label="item.label"
                               :value="item.value">
@@ -55,10 +55,22 @@
                               v-model="filters.end_value"
                               type="datetime"
                               placeholder="选择日期时间">
+                  </el-date-picker> -->
+                  <span>有效期时间从</span>
+                  <el-date-picker
+                    v-model="filters.start_time"
+                    type="datetime"
+                    placeholder="选择日期时间">
+                  </el-date-picker>
+                  <span>到</span>
+                   <el-date-picker
+                    v-model="filters.end_time"
+                    type="datetime"
+                    placeholder="选择日期时间">
                   </el-date-picker>
                   <el-select v-model="filters.v_price_type" filterable placeholder="计费类型">
                             <el-option
-                              v-for="item in price_type"
+                              v-for="item in querySels.price_type"
                               :key="item.value"
                               :label="item.label"
                               :value="item.value">
@@ -68,7 +80,7 @@
                   
                    <el-select v-model="filters.v_car_type" filterable placeholder="车类型">
                             <el-option
-                              v-for="item in car_type"
+                              v-for="item in querySels.car_type"
                               :key="item.value"
                               :label="item.label"
                               :value="item.value">
@@ -76,7 +88,7 @@
                    </el-select>
                    <el-select v-model="filters.v_car_group" filterable placeholder="车辆分组">
                             <el-option
-                              v-for="item in car_group"
+                              v-for="item in querySels.car_group"
                               :key="item.value"
                               :label="item.label"
                               :value="item.value">
@@ -84,7 +96,7 @@
                    </el-select>
                    <el-select v-model="filters.v_parking_type"  filterable placeholder="车位类型">
                             <el-option
-                              v-for="item in parking_type"
+                              v-for="item in querySels.parking_type"
                               :key="item.value"
                               :label="item.label"
                               :value="item.value">
@@ -92,7 +104,7 @@
                    </el-select>
                    <el-select v-model="filters.v_pay_rule_group" filterable placeholder="缴费规则分组">
                             <el-option
-                              v-for="item in pay_rule_group"
+                              v-for="item in querySels.pay_rule_group"
                               :key="item.value"
                               :label="item.label"
                               :value="item.value">
@@ -115,7 +127,7 @@
                    </el-dialog>
                    <el-select  v-model="filters.v_garage" filterable placeholder="所属车库">
                             <el-option
-                              v-for="item in garage"
+                              v-for="item in querySels.garage"
                               :key="item.value"
                               :label="item.label"
                               :value="item.value">
@@ -138,7 +150,7 @@
                    </el-input>
                    <el-select v-model="filters.v_admin" filterable placeholder="管理员">
                             <el-option
-                              v-for="item in admin"
+                              v-for="item in querySels.admin"
                               :key="item.value"
                               :label="item.label"
                               :value="item.value">
@@ -149,6 +161,7 @@
                    </el-input>
                    <el-button type="primary" icon="el-icon-search"  v-on:click="getCarinfo" >查询</el-button>
                    <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')">清除</el-button>
+                   <el-button type="success" @click="outputExcel()">导出EXCEL报表</el-button>
                  </form>
               </div>
       
@@ -170,6 +183,20 @@
                         label="车牌号"
                         width="120">
                         <template slot-scope="scope"><a href="#">{{ scope.row.car_no }}</a></template>
+                      </el-table-column>
+                       <el-table-column
+                        prop="parkNo"
+                        label=""
+                       display="none"
+                       v-if="noshow"
+                        >
+                      </el-table-column>
+                      <el-table-column
+                        prop="vehicleNO"
+                        label=""
+                       display="none"
+                       v-if="noshow"
+                        >
                       </el-table-column>
                       <el-table-column
                         prop="regist_no"
@@ -259,23 +286,21 @@
                         show-overflow-tooltip>
                          <template slot-scope="scope">
                                 <a href="" >[授权车库]</a>
-                                <a href="" >[延期]</a>
+                                <a href="#" >[延期] </a>
                               </template>
                       </el-table-column>
                       <el-table-column
-                        prop="businessOpera"
                         label="操作"
-                        width="200"
-                        show-overflow-tooltip>
-                         <template  scope="scope">
-                                <a href="#" style="padding:5px; background-color:#1a72c1;color:#fff; border-radius:5px;" ><i class="el-icon-document"></i></a>
-                                <a href="#" @click="handleEdit(scope.$index, scope.row)"  style="padding:5px; background-color:#1a72c1;color:#fff; border-radius:5px;" ><i class="el-icon-edit"></i></a>
-                                <a href="#" @click="handleDel(scope.$index, scope.row)" style="padding:5px; background-color:#d9534f;color:#fff; border-radius:5px;"><i class="el-icon-delete"></i></a>
-                              </template>
+                        width="200" >
+                         <template scope="scope">
+                                <a href="#"  class="editBtn" ><i class="el-icon-document"></i></a>
+                                <a href="#" @click="handleEdit(scope.$index, scope.row)" class="editBtn"><i class="el-icon-edit"></i></a>
+                                <a href="#" @click="handleDel(scope.$index, scope.row)" class="deleteBtn"><i class="el-icon-delete"></i></a>
+                        </template>
                       </el-table-column>
                     </el-table>
                     
-                  </template>
+                </template>
               </div>
               <!-- 分页 -->
                
@@ -316,7 +341,7 @@
                                 </div>
                                 <el-select v-model="editDialog.editForm.park" placeholder="请选择">
                                   <el-option
-                                    v-for="item in filters.park"
+                                    v-for="item in querySels.park"
                                     :key="item.value"
                                     :label="item.label"
                                     :value="item.value">
@@ -349,7 +374,7 @@
                                 <span style="color:rgb(255,0,0)">*</span>计费类型
                                 <el-select v-model="editDialog.editForm.fee_type" placeholder="请选择">
                                   <el-option
-                                    v-for="item in filters.fee_type"
+                                    v-for="item in querySels.fee_type"
                                     :key="item.value"
                                     :label="item.label"
                                     :value="item.value">
@@ -362,7 +387,7 @@
                                   <span style="color:rgb(255,0,0)">*</span>车类型
                                   <el-select v-model="editDialog.editForm.car_type" placeholder="请选择">
                                   <el-option
-                                    v-for="item in filters.car_type"
+                                    v-for="item in querySels.car_type"
                                     :key="item.value"
                                     :label="item.label"
                                     :value="item.value">
@@ -375,7 +400,7 @@
                                 车辆分组
                                 <el-select v-model="editDialog.editForm.car_group" placeholder="请选择">
                                   <el-option
-                                    v-for="item in selects.car_group"
+                                    v-for="item in querySels.car_group"
                                     :key="item.value"
                                     :label="item.label"
                                     :value="item.value">
@@ -388,7 +413,7 @@
                                   <span style="color:rgb(255,0,0)">*</span>车牌颜色
                                   <el-select v-model="editDialog.editForm.plate_color" placeholder="请选择">
                                   <el-option
-                                    v-for="item in selects.plate_color"
+                                    v-for="item in querySels.plate_color"
                                     :key="item.value"
                                     :label="item.label"
                                     :value="item.value">
@@ -407,7 +432,7 @@
                                 缴费规则分组
                                   <el-select v-model="editDialog.editForm.feeRuleGroup" placeholder="请选择">
                                   <el-option
-                                    v-for="item in selects.feeRuleGroup"
+                                    v-for="item in querySels.feeRuleGroup"
                                     :key="item.value"
                                     :label="item.label"
                                     :value="item.value">
@@ -424,7 +449,7 @@
                                 </div>
                                 <el-select v-model="editDialog.editForm.card_type" placeholder="请选择">
                                   <el-option
-                                    v-for="item in selects.card_types"
+                                    v-for="item in querySels.card_types"
                                     :key="item.value"
                                     :label="item.label"
                                     :value="item.value">
@@ -439,7 +464,7 @@
                                     </div>
                                   <el-select v-model="editDialog.editForm.lot_type" placeholder="请选择">
                                   <el-option
-                                    v-for="item in selects.lot_type"
+                                    v-for="item in querySels.lot_type"
                                     :key="item.value"
                                     :label="item.label"
                                     :value="item.value">
@@ -540,11 +565,21 @@
 
 <script>
 import editdialog from "@/components/carInfo_editForm.vue";
-import { reqCarInfo, reqPlateName,reqEdit,reqOwnerName,reqdeleteOne,batchRemove} from "@/api/carManage";
+import {
+  reqCarInfo,//查询
+  reqPlateName,//请求车位池
+  reqEdit,//编辑
+  reqOwnerName,//请求车主
+  reqCarInfoDeleteOne,//单行删除
+  reqCarInfoDeleteMore,//批量删除
+  outExcelCarInfo //导出
+} from "@/api/carManage";
 export default {
   data() {
     return {
-      sels:[],//选中列表
+
+      noshow:false,
+      checkBox: [], //选中列表
       totals: {
         currentPage: 1,
         pageSize: 10,
@@ -554,19 +589,18 @@ export default {
         clientData: [], //[{ plate_name: "车位一" }, { plate_name: "车位二" }],
         plateVisible: false,
         plate_pool: "",
-        isQuery:"",
+        isQuery: "",
+        //业主
+        owner: "",
+        owner_value: "",
+        ownerVisible: false,
+        ownerData: [],
 
-      //业主
-       owner:"",
-       owner_value:"",
-       ownerVisible:false,
-       ownerData:[],
-
-       card_types:[{}],
-       car_group:[{}],
-       plate_color:[{}],
-       feeRuleGroup:[{}],//缴费规则分组
-       lot_type:[{}]
+        card_types: [{}],
+        car_group: [{}],
+        plate_color: [{}],
+        feeRuleGroup: [{}], //缴费规则分组
+        lot_type: [{}]
       },
 
       editDialog: {
@@ -576,29 +610,27 @@ export default {
         //编辑界面数据
         editForm: {
           park: "",
-          car_no:"",
-         
-          easyFplate_no:"",
-          card_type:"",
-          fee_type:"",
-          car_type:"",
-          car_group:"",
-          plate_color:"",
-          id:"",//编号
-          feeRuleGroup:"",
-          lot_type:"",
-          start_time:"",
-          end_time:"",
-          lot_no:"",
-          car_brand:"",//车品牌
-          car_color:"",
-          deposit:"",//押金
-          balance:"",
-          memo:"",//备注
-          plate_pool:""
+          car_no: "",
+          easyFplate_no: "",
+          card_type: "",
+          fee_type: "",
+          car_type: "",
+          car_group: "",
+          plate_color: "",
+          id: "", //编号
+          feeRuleGroup: "",
+          lot_type: "",
+          start_time: "",
+          end_time: "",
+          lot_no: "",
+          car_brand: "", //车品牌
+          car_color: "",
+          deposit: "", //押金
+          balance: "",
+          memo: "", //备注
+          plate_pool: ""
         },
         editLoading: false,
-
         editForm: ""
       },
       editFormVisible: false,
@@ -621,145 +653,240 @@ export default {
           end_c_time: "2018-3-4",
           end_edit_person: "技术部",
           memo: "cs",
-          status: "离场"
+          status: "离场",
+          vehicleNO:"1"
         }
       ],
       isopen: false,
       filters: {
-        v_park: "",
-        v_presence_status: "",
-        v_isoverdue: "",
-        v_vld: "",
-        end_value: "",
-        v_price_type: "",
-        v_car_type: "",
-        v_car_group: "",
-        v_parking_type: "",
-        v_pay_rule_group: "",
-        v_garage: "",
-        v_admin: "",
-        plate_value: "",
+        v_park: "",//停车场编号
+        v_presence_status: "",//在场状态
+        v_isoverdue: "",//是否过期
+        // v_vld: "",
+        start_date: "",//有效期结束时间
+        end_date:"",//有效期开始时间
+        v_price_type: "",//计费类型
+        v_car_type: "",//车类型
+        v_car_group: "",//车辆分组
+        v_parking_type: "",//车位类型
+        v_pay_rule_group: "",//缴费规则分组
+        v_garage: "",//所属车库
+        v_admin: "",//管理员
+        plate_value: "",//所属车位池
 
-        car_no: "",
-        plate_no: "",
-        regist_no: "",
-        carOwner: "",
-        phone: ""
+        car_no: "",//车牌号
+        plate_no: "",//车位号
+        regist_no: "",//注册号
+        carOwner: "",//车主
+        phone: ""//手机号
       },
-      park: [{}],
-      presence_status: [{}],
-      isoverdue: [{}],
-      vld: [
-        {
-          value: "",
-          label: "有效期时间"
-        },
-        {
-          value: "1",
-          label: "小于等于（<=）"
-        },
-        {
-          value: "2",
-          label: "大于等于（>=）"
-        },
-        {
-          value: "3",
-          label: "等于（=）"
-        }
-      ],
-      price_type: [{}],
-      car_type: [{}],
-      car_group: [{}],
-      parking_type: [{}],
-      pay_rule_group: [{}],
-      garage: [{}],
-      admin: [{}]
+
+      querySels: {
+        price_type: configs.chargeType,
+        car_type: configs.carType,
+        car_group: [{}],
+        parking_type: [{}],
+        pay_rule_group: [{}],
+        garage: [{}],
+        admin: [{}],
+        park: [],
+        presence_status: [{}],
+        isoverdue: [{}],
+        vld: [
+          {
+            value: "",
+            label: "有效期时间"
+          },
+          {
+            value: "1",
+            label: "小于等于（<=）"
+          },
+          {
+            value: "2",
+            label: "大于等于（>=）"
+          },
+          {
+            value: "3",
+            label: "等于（=）"
+          }
+        ]
+      }
     };
   },
   mounted() {
     this.getCarinfo();
     this.selectPlate();
   },
-
+  created() {
+    this.getParkList();
+  },
   methods: {
-    selsChange:function(sels){
-      this.sels=sels;
-      console.log("slsl")
-      console.log(sels)
-    },
-   //批量删除
-   batchRemove: function () {
-        var ids = this.sels.map(item => item.car_no).toString();
-				this.$confirm('确认删除选中记录吗？', '提示', {
-					type: 'warning'
-				}).then(() => {
-					this.listLoading = true;
-					//NProgress.start();
-					let para = { ids: ids };
-					batchRemove(para).then((res) => {
-						this.listLoading = false;
-						//NProgress.done();
-						this.$message({
-							message: '删除成功',
-							type: 'success'
-						});
-						this.getCarinfo();
-					});
-				}).catch(() => {
+    //导出excel
+     outputExcel() {
+                this.$confirm('此操作将导出excel文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                  outExcelCarInfo(para).then(res=>{
+                    if(res.code===1){
+                      this.$message({
+                        message: "删除成功",
+                        type: "success"
+                      });
+                    }
+                  })
+                    // this.excelData = this.dataList //你要导出的数据list。
+                    
+                }).catch(() => {
+                
+                });
+            },
+    getParkList() {
+      var _this = this;
+      var userInfo = window.localStorage.getItem("user");
 
-				});
-			},
-    editSubmit(){
-        this.$refs.editForm.validate((valid) => {
-					if (valid) {
-						this.$confirm('确认提交吗？', '提示', {}).then(() => {
-							this.editLoading = true;
-							//NProgress.start();
-							let para = Object.assign({}, this.editDialog.editForm);
-							// para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							reqEdit(para).then((res) => {
-								this.editLoading = false;
-								//NProgress.done();
-								this.$message({
-									message: '提交成功',
-									type: 'success'
-								});
-								this.$refs['editForm'].resetFields();
-								this.editFormVisible = false;
-                this.getCarinfo();
-							});
-						});
-					}
-				});
+      // var parks = [
+      //   {
+      //     parkName: "林芝停车场",
+      //     parkNo: "1",
+      //     entryPassway: "林芝入口通道1-林芝入口通道2"
+      //     // entrychildren : [{  },{  }],
+      //     // outChildren:[{},{}]
+      //   },
+      //   {
+      //     parkName: "正佳停车场",
+      //     parkNo: "2",
+      //     entryPassway: "正佳入口通道"
+      //   }
+      // ];
+
+      if (typeof JSON.parse(userInfo)["parks"] == "object") {
+        JSON.parse(userInfo)["parks"].forEach(item => {
+          var park1 = {
+            value: item["parkNo"],
+            label: item["parkName"],
+            entryPassway: item["entryPassway"],
+            outPassway: item["outPassway"]
+          };
+          _this.querySels.park.push(park1);
+          console.log(_this.querySels.park);
+        });
+      }
     },
-    clickPlate(){
+    selsChange: function(sels) {
+      this.checkBox = sels;
+      console.log("slsl");
+     
+    },
+    //批量删除
+    batchRemove: function() {
+      var vehicleNOs = this.checkBox.map(item => item.vehicleNO).toString();
+      this.$confirm("确认删除选中记录吗？", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          this.listLoading = true;
+          //NProgress.start();
+          let para = { vehicleNO: vehicleNOs};
+          para.jwt = window.localStorage.getItem("jwt");
+          reqCarInfoDeleteMore(para).then(res => {
+            this.listLoading = false;
+            //NProgress.done();
+            this.$message({
+              message: "删除成功",
+              type: "success"
+            });
+            this.getCarinfo();
+          });
+        })
+        .catch(() => {});
+    },
+      //删除
+    handleDel: function(index, row) {
+      // this.$confirm('此操作将导出excel文件, 是否继续?', '提示', {
+      //               confirmButtonText: '确定',
+      //               cancelButtonText: '取消',
+      //               type: 'warning'
+      //           })
+      //   .then(() => {
+          alert("zlz")
+          this.listLoading = true;
+          //NProgress.start();
+          let para = { vehicleNO: row.vehicleNO };
+          para.jwt = window.localStorage.getItem("jwt");
+          reqCarInfoDeleteOne(para).then(res => {
+            if(res.code===1){
+              this.$message({
+                  message: "删除成功",
+                  type: "success"
+                });
+            }
+            this.listLoading = false;
+            //NProgress.done();
+            
+            this.getCarinfo();
+          }).catch(() => {
+          alert("111");
+        });
+        // })
+        
+    },
+    //编辑
+    editSubmit() {
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          this.$confirm("确认修改吗？", "提示", {}).then(() => {
+            this.editLoading = true;
+            //NProgress.start();
+            let para = Object.assign({}, this.editDialog.editForm);
+            para.jwt = window.localStorage.getItem("jwt");
+            // para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
+            reqEdit(para).then(res => {
+              if(res.code===1){
+                    this.$message({
+                    message: "修改成功",
+                    type: "success"
+                  });
+
+              }
+              this.editLoading = false;
+              //NProgress.done();
+              
+              this.$refs["editForm"].resetFields();
+              this.editFormVisible = false;
+              this.getCarinfo();
+            });
+          });
+        }
+      });
+    },
+    clickPlate() {
       this.selects.plateVisible = true;
-      this.selects.isQuery="query";
-
+      this.selects.isQuery = "query";
     },
-    editClickOwner(){
+    editClickOwner() {
       this.selects.ownerVisible = true;
     },
-    editClickPlate(){
-       this.selects.plateVisible = true;
-       this.selects.isQuery="edit";
+    editClickPlate() {
+      this.selects.plateVisible = true;
+      this.selects.isQuery = "edit";
     },
     //单击选中车位池
-        clientCheck(row, column) {
-          this.selects.plateVisible = false;
-          if(this.selects.isQuery==="query"){
-            this.filters.plate_value = row.plate_name;
-          }else if(this.selects.isQuery==="edit"){
-            this.editDialog.editForm.plate_pool=row.plate_name;
-          }
-      
+    clientCheck(row, column) {
+      this.selects.plateVisible = false;
+      if (this.selects.isQuery === "query") {
+        this.filters.plate_value = row.plate_name;
+      } else if (this.selects.isQuery === "edit") {
+        this.editDialog.editForm.plate_pool = row.plate_name;
+      }
     },
     //单击选中业主信息
-    ownerConfin(row, column){
-        this.selects.ownerVisible=false;
-        console.log(row.owner_name)
-        this.editDialog.editForm.owner = row.owner_name;
- console.log(this.selects.owner_value)
+    ownerConfin(row, column) {
+      this.selects.ownerVisible = false;
+      console.log(row.owner_name);
+      this.editDialog.editForm.owner = row.owner_name;
+      console.log(this.selects.owner_value);
     },
     callbackSelTenant: function() {
       for (var item in this.filters) {
@@ -781,69 +908,77 @@ export default {
         })
         .catch(() => {});
     },
-    selectOwner(){
-        let para = {
+    selectOwner() {
+      let para = {
         plate_name: this.selects.owner_name
-
       };
-      reqOwnerName(para).then(res=>{
-          this.selects.ownerData=eval(res).ownerName;
-
-      }).catch(()=>{})
+      reqOwnerName(para)
+        .then(res => {
+          this.selects.ownerData = eval(res).ownerName;
+        })
+        .catch(() => {});
     },
     //获取数据
     getCarinfo() {
-        let para = Object.assign({}, this.filters);
-        para.currentPage=this.totals.currentPage, //当前页
-        
-      // let para = {
-      //   plate_value: this.filters.plate_value, //车位池
-      //   park: this.filters.v_park, //停车场
-      //   currentPage: this.totals.currentPage, //当前页
-      //   pageSize: this.totals.pageSize //每页显示条数
-      // };
-      reqCarInfo(para)
-        .then(res => {
-          this.dt = eval(res).list;
-          this.totals.totalNum = eval(res).total;
-        })
-        .catch(() => {});
+      let para ={
+          parkNo:this.filters.v_park,
+          presence:this.filters.v_presence_status,
+          chargeType:this.filters.v_price_type,
+          licensePlate:this.filters.car_no,
+          registerNo:this.filters.regist_no,
+          carOwner:this.filters.carownerName,
+          telephone:this.filters.phone,
+          remark:this.filters.memo,
+          admin:this.filters.v_admin,
+          isExpire:this.filters.v_isoverdue,
+          // type:this.filters.start_date,
+
+      };
+      (para.currentPage = this.totals.currentPage); //当前页
+      para.pageSize=this.totals.pageSize;
+      para.jwt=window.localStorage.getItem("jwt");
+        reqCarInfo(para)
+          .then(res => {
+            if(res.code===1){
+            var list= eval(res).list;
+            var dt=this.dt;
+            dt.car_no=list.licensePlate;
+            dt.fee_type=list.chargeType;
+            dt.address=list.address;
+            dt.parkNo=list.parkNo;
+            dt.regist_no=list.registerNo;
+            dt.client=list.carownerName;
+            dt.status=list.presence;
+            dt.phone=list.telephone;
+            dt.vld=list.type;
+            // dt.admin=list.admin;
+            dt.memo=list.remark;
+            this.totals.totalNum = eval(res).totalNum;
+            }else{
+               this.$message({
+              message: res.message,
+              type: "error"
+            });
+            }
+           
+          })
+          .catch(() => {});
     },
 
     //显示编辑界面
     handleEdit: function(index, row) {
       this.editFormVisible = true;
-      console.log(row)
+      console.log(row);
       this.editDialog.editForm = Object.assign({}, row);
       console.log("zlz");
     },
-    //删除
-    handleDel: function(index, row) {
-      this.$confirm("确认删除该记录吗?", "提示", {
-        type: "warning"
-      })
-        .then(() => {
-          this.listLoading = true;
-          //NProgress.start();
-          let para = { id: row.id };
-          console.log(para);
-          reqdeleteOne(para).then((res) => {
-          	this.listLoading = false;
-          	//NProgress.done();
-          	this.$message({
-          		message: '删除成功',
-          		type: 'success'
-          	});
-          	this.getUsers();
-          });
-        })
-        .catch(() => {});
-    },
+  
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+      this.totals.currentPage=val;
       this.getCarinfo();
     },
 
@@ -867,6 +1002,12 @@ export default {
 </script>
 
 <style scoped>
+.editBtn{
+  padding:5px; background-color:#1a72c1;color:#fff; border-radius:5px;
+}
+.deleteBtn{
+  padding:5px; background-color:#d9534f;color:#fff; border-radius:5px;
+}
 .el-icon-caret-bottom:before {
   content: "";
 }

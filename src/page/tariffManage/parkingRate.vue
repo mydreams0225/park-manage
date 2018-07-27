@@ -8,6 +8,7 @@
 	    	</div>
 				<!-- 查询区 -->
 	    	<div class="margin-tops">
+					<span>所属停车场</span>
 	    		<el-select v-model="filters.v_park" filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in sels.park"
@@ -40,6 +41,13 @@
 									</el-table-column>
 									<el-table-column
 										prop="parkNo"
+										label=""
+										v-if="noshow"
+										>
+									</el-table-column>
+								
+									<el-table-column
+										prop="rateId"
 										label=""
 										v-if="noshow"
 										>
@@ -213,6 +221,7 @@
 									:value="item.value">
 								</el-option>
 						 </el-select>
+						 <span style="display:none">{{setting.leftobj.rateId}}</span>
 						  <p><strong>当前车库：</strong></p>
 							<label >{{setting.leftobj.garage_name}}</label>
 							 <p><strong>当前计费类型：</strong></p>
@@ -473,7 +482,7 @@
           </el-pagination>
 
 			  </div>
-				<!-- 编辑界面 -->
+				<!-- 添加或修改 界面-->
          <el-dialog 
 				  :title="edit.titles"
 				  :visible.sync="edit.editVisible"
@@ -484,7 +493,7 @@
 		                <div >
 		                <span style="color:red">*</span>
 		                <span >选择车库：</span>
-										<span  style="display:none">{{edit.editObj.parkNo}}</span>
+										<span  style="display:none">{{edit.editObj.reteId}}</span>
 		              </div>
 		             </el-col>
 							   <el-col :span="11">
@@ -499,7 +508,7 @@
 		                <div >
 		                <el-select v-model="edit.editObj.garage_name" filterable  >
                       <el-option
-                        v-for="item in sels.park"
+                        v-for="item in sels.garage"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -539,7 +548,7 @@
 		                <div >
 		                <el-select v-model="edit.editObj.vehicleType" filterable  >
                       <el-option
-                        v-for="item in sels.car_type"
+                        v-for="item in sels.carType"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -571,7 +580,7 @@
 </template>
 <script>
 //reqSettingRate  reqSettingRate
-import {reqSettingRate,reqDeleteOne,batchDeleteMore,reqParkRate,reqAddorEditRate} from '@/api/rateManage'
+import {reqSettingRate,reqDeleteOne,batchDeleteMore,reqParkRate,reqAddorEditRate,reqshowRate} from '@/api/rateManage'
 export default {
   data() {
     return {
@@ -602,7 +611,7 @@ export default {
         isOne: true,
 				isTwo: false,
 				chargeJson:{
-
+          
 				},
         leftobj: {
          garage_name: "",
@@ -622,24 +631,20 @@ export default {
           garage_name: "1",
           chargeType: "3",
 					vehicleType: "car",
-				algorithmType:	"按24小时累计时收费",
+				  algorithmType:	"按24小时累计时收费",
 				
-				parkNo:"parkNo1"
+				  parkNo:"parkNo1"
         }
       ],
       filters: {
-        v_park: ""
+        v_park: "停车场1"
 			},
 			sels:{
-				 car_type:[{value:"3",label:"e"}],
 			   park: [{value:"停车场1",label:"停车场1"}],
-				 feetype: [{value:"1",label:"月"}],
+				 feetype: configs.chargeType,
 				 disc_type:[{value:"1",label:"1"}],
-				 carType: [{value:"1",label:"1"}],
-				 selSuanfa: [
-          { value: "按24小时累计时收费", label: "按24小时累计时收费" },
-          { value: "按连续累计时收费", label: "按连续累计时收费" }
-        ],
+				 carType:configs.carType,
+				 selSuanfa:configs.selSuanfa
 			},
       
       totals: {
@@ -650,21 +655,46 @@ export default {
 			checkBoxs:[],
     };
 	},
-mounted(){
-	this.getParkingRate();
-	
-},
-computed(){
-	this.fff();
-},
+	mounted(){
+		this.getParkingRate();
+		
+	},
+	created(){
+		this.getParkList();
+	},
   methods: {
-	  fff(){
-			if(!this.edit.editVisible){
-				 for(var item in obj){
-            obj[item]="";
-			 }
-			}
-		},
+		//获取park信息
+		getParkList() {
+      var _this = this;
+      var userInfo = window.localStorage.getItem("user");
+      // var parks = [
+      //   {
+      //     parkName: "林芝停车场",
+      //     parkNo: "1",
+      //     entryPassway: "林芝入口通道1-林芝入口通道2"
+      //     // entrychildren : [{  },{  }],
+      //     // outChildren:[{},{}]
+      //   },
+      //   {
+      //     parkName: "正佳停车场",
+      //     parkNo: "2",
+      //     entryPassway: "正佳入口通道"
+      //   }
+      // ];
+      if (typeof userInfo.parks == "object") {
+        userInfo.parks.forEach(item => {
+          var park1 = {
+            value: item["parkNo"],
+            label: item["parkName"],
+            entryPassway: item["entryPassway"],
+            outPassway: item["outPassway"]
+          };
+          _this.sels.park.push(park1);
+          console.log(_this.park);
+        });
+      }
+    },
+	  
 		cancel(){
 			var obj=this.edit.editObj
 			 for(var item in obj){
@@ -678,6 +708,10 @@ computed(){
 		addRateShow(){
 			this.edit.titles="添加费率";
 			this.edit.editVisible=true;
+				var obj=this.edit.editObj
+			 for(var item in obj){
+            obj[item]="";
+			 }
 
 		},
 			//修改费率界面显示
@@ -686,24 +720,24 @@ computed(){
 				this.edit.editVisible=true;
 				 this.edit.editObj = Object.assign({}, row);
 			},
-		saveRate(){
-			let para =Object.assign({}, this.edit);
-       para.jwt= window.localStorage.getItem("jwt");	 
-			reqAddorEditRate(para).then(res=>{
-        if(res.code===1){
-					this.$message({
-							message: '添加或修改成功',
-							type: 'success'
+		  saveRate(){
+					let para =Object.assign({}, this.edit);
+					para.jwt= window.localStorage.getItem("jwt");	 
+					reqAddorEditRate(para).then(res=>{
+						if(res.code===1){
+							this.$message({
+									message: '添加或修改成功',
+									type: 'success'
+								});
+							
+						}
+						this.edit.editObj.forEach(item => {
+							item="";
 						});
-          
-				}
-			   this.edit.editObj.forEach(item => {
-					 item="";
-				 });
-					this.edit.editVisible=false;
-					this.getParkingRate();
-				
-			})
+							this.edit.editVisible=false;
+							this.getParkingRate();
+						
+					})
 
 		},
 		getParkingRate(){
@@ -736,13 +770,13 @@ computed(){
 		//批量删除
 			batchRemove: function () {
 				//能判断的唯一值
-				var parkNo = this.checkBoxs.map(item => item.parkNo).toString();
+				var parkNo = this.checkBoxs.map(item => item.rateId).toString();
 				this.$confirm('确认删除选中记录吗？', '提示', {
 					type: 'warning'
 				}).then(() => {
 					this.listLoading = true;
 					//NProgress.start();
-					let para = { ids: parkNo };
+					let para = { ids: rateId };
 					 para.jwt= window.localStorage.getItem("jwt");
 					batchDeleteMore(para).then((res) => {
 						this.listLoading = false;
@@ -765,7 +799,7 @@ computed(){
 				}).then(() => {
 					this.listLoading = true;
 					//NProgress.start();
-					let para = { id: row.parkNo };
+					let para = { id: row.rateId };
 					 para.jwt= window.localStorage.getItem("jwt");
 					reqDeleteOne(para).then((res) => {
 						this.listLoading = false;
@@ -783,7 +817,14 @@ computed(){
 		//设置费率界面显示
     handleSetting(index, row) {
       this.setting.settingVisible = true;
-      this.setting.leftobj = Object.assign({}, row);
+			this.setting.leftobj = Object.assign({}, row);
+			var para=row.rateId;
+			reqshowRate(para).then(res=>{
+         if(res.code===1){
+					 this.setting.chargeJson=res.chargeJson;
+				 }
+			})
+
 		},
 		//费率测试界面显示
 			rateTest(index, row){

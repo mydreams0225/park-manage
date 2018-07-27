@@ -373,55 +373,57 @@ export default {
       CertificatesImgs: false
     };
   },
-created(){
-  this.getParkList();
-
-},
+  created() {
+    this.getParkList();
+  },
   methods: {
-    parkChange(value){
-      this.passageway=[];
+    parkChange(value) {
+      this.passageway = [];
       //1
-       var parkObj=this.park;
-      for(var item in parkObj){
-        
-        if((parkObj[item])["value"]===value){
-          var entryarr= parkObj[item]["entryPassway"].split("-")
+      var parkObj = this.park;
+      for (var item in parkObj) {
+        if (parkObj[item]["value"] === value) {
+          var entryarr = parkObj[item]["entryPassway"].split("-");
           console.log(entryarr);
 
-          for(var i in entryarr){
-             var temp={value:entryarr[i],label:entryarr[i]}
-             this.passageway.push(temp);
+          for (var i in entryarr) {
+            var temp = { value: entryarr[i], label: entryarr[i] };
+            this.passageway.push(temp);
           }
         }
       }
     },
     getParkList() {
-     var  _this=this;
-      var parks = [
-        {
-          parkName: "林芝停车场",
-          parkNo: "1",
-          entryPassway: "林芝入口通道1-林芝入口通道2"
-          // entrychildren : [{  },{  }],
-          // outChildren:[{},{}]
-        },
-        {
-          parkName: "正佳停车场",
-          parkNo: "2",
-          entryPassway: "正佳入口通道"
-        }
-      ];
-      parks.forEach(item => {
-        var park1 = {
-          value: item["parkNo"],
-          label: item["parkName"],
-          entryPassway: item["entryPassway"],
-          outPassway: item["outPassway"]
-        };
-        _this.park.push(park1);
-         console.log(_this.park)
-       
-      });
+      var _this = this;
+      var userInfo = window.localStorage.getItem("user");
+
+      // var parks = [
+      //   {
+      //     parkName: "林芝停车场",
+      //     parkNo: "1",
+      //     entryPassway: "林芝入口通道1-林芝入口通道2"
+      //     // entrychildren : [{  },{  }],
+      //     // outChildren:[{},{}]
+      //   },
+      //   {
+      //     parkName: "正佳停车场",
+      //     parkNo: "2",
+      //     entryPassway: "正佳入口通道"
+      //   }
+      // ];
+      alert( JSON.parse(userInfo)["parks"] )
+      if (typeof JSON.parse(userInfo)["parks"]  == "object") {
+        JSON.parse(userInfo)["parks"]  .forEach(item => {
+          var park1 = {
+            value: item["parkNo"],
+            label: item["parkName"],
+            entryPassway: item["entryPassway"],
+            outPassway: item["outPassway"]
+          };
+          _this.park.push(park1);
+          console.log(_this.park);
+        });
+      }
     },
     getEntryRecord() {
       var _this = this;

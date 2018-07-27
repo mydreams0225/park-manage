@@ -14833,26 +14833,53 @@ const configs = {
       //计费类型
       chargeType:[
         {
-            value: "1",
+            value: "临时车",
             label: "临时车"
           },
           {
-            value: "2",
+            value: "月票车",
             label: "月票车"
           },
           {
-            value: "3",
+            value: "免费车",
             label: "免费车"
           },
           {
-            value: "4",
+            value: "贵宾车",
             label: "贵宾车"
           },
           {
-            value: "5",
+            value: "政务车",
             label: "政务车"
           },
     ],
+    selSuanfa: [
+        { value: "按24小时累计时收费", label: "按24小时累计时收费" },
+        { value: "按连续累计时收费", label: "按连续累计时收费" }
+      ],
+    carType:[{value:"小型车",label:"小型车"}],
+    plateRelia: [
+        {
+          value: "高",
+          label: "高"
+        }, {
+            value: "中",
+            label: "中"
+          },
+          {
+            value: "低",
+            label: "低"
+          }
+      ],
+      isplate:[
+        {
+          value: "有车牌",
+          label: "有车牌"
+        },{
+            value: "无车牌",
+            label: "无车牌"
+          }
+      ],
     //放行方式
     admissionreleasetype:[
         {

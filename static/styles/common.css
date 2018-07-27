@@ -126,6 +126,9 @@
   .el-card__body{
     position: relative;
   }
+  .fatherImg .el-card__body{
+    height: 150px;
+  }
   .el-radio__label{
     font-size: 12px !important;
   }

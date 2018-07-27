@@ -5,15 +5,16 @@
        <div class="margin-tops">
          <!-- <el-button  type="danger" icon="el-icon-delete" size="medium" @click="handleDel()">删除</el-button>
          <el-button  type="danger" icon="el-icon-delete" size="medium" @click="handleDel()">删除查询到的记录</el-button> -->
-         <el-button  icon="el-icon-circle-check-outline" size="medium">根据在场车辆数纠正空车位数</el-button>
+         <el-button  icon="el-icon-circle-check-outline" size="medium" @click="updateStall">根据在场车辆数纠正空车位数</el-button>
          <div class="fr">
            <el-button  icon="el-icon-upload2" type="primary" size="medium"  @click="imports()">批量导入</el-button>
            <el-button  icon="el-icon-upload" type="success" size="medium" @click="outExe()">导出EXCEL报表</el-button>
          </div>
        </div>
        <!-- 查询区 -->
-       <div class="margin-tops">
+       <div class="margin-tops querys">
          <form :model="filters" class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
+           <span>所属停车场</span>
            <el-select v-model="filters.v_park" filterable placeholder="所属停车场">
                     <el-option
                       v-for="item in park"
@@ -28,17 +29,19 @@
            <el-input id="s_regist_no" name="s_regist_no" placeholder="注册号" v-model="filters.regist_no">
                    <template slot="prepend">注册号</template>   
            </el-input>
+           <span>计费类型</span>
             <el-select v-model="filters.v_price_type" filterable placeholder="计费类型">
                     <el-option
-                      v-for="item in price_type"
+                      v-for="item in querySels.price_type"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
                     </el-option>
            </el-select>
+           <span>车类型</span>
            <el-select v-model="filters.v_car_type" filterable placeholder="车类型">
                     <el-option
-                      v-for="item in car_type"
+                      v-for="item in querySels.car_type"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
@@ -60,17 +63,19 @@
                       placeholder="选择日期时间">
                     </el-date-picker>
            </div>
+           <span>所属车库</span>
            <el-select v-model="filters.v_garage" filterable placeholder="所属车库">
                     <el-option
-                      v-for="item in garage"
+                      v-for="item in querySels.garage"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
                     </el-option>
            </el-select>
+           <span>是否有车牌</span>
            <el-select v-model="filters.v_isplate" filterable placeholder="是否有车牌">
                     <el-option
-                      v-for="item in isplate"
+                      v-for="item in querySels.isplate"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
@@ -94,7 +99,7 @@
            </el-dialog>
            <el-select v-model="filters.v_plateRelia" filterable placeholder="车牌可信度">
                     <el-option
-                      v-for="item in plateRelia"
+                      v-for="item in querySels.plateRelia"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
@@ -114,10 +119,15 @@
                     <a href="#" title="编辑" @click="handleEdit(index, item)"><i class="el-icon-edit"></i></a> 
                     <!-- <a href="#" title="删除" @click="handleDel(index, item)"><i class="el-icon-delete"></i></a> -->
                   </div>
-                  <img :src="item.url" class="image" alt="拍照失败">
+                  <div> 
+                      <img :src="item.url" class="image" alt="拍照失败">
+                  </div>
+                  
                   <div class="info">
                      <p class="l">{{item.car_no}}  <span style="color:rgba(255,255,255,0.6)" >(   {{item.car_type}})</span></p>
                      <p class="r">{{item.entry_time}} {{item.desc}}</p>
+                     <span >{{item.flowId}}</span>
+                     <span>{{item.park_no}}</span>
                   </div>
                </el-card>
              </el-col>
@@ -186,9 +196,140 @@
 
 <script>
 // import { constantRouterMap } from "@/router";
-import { requestAttendCar1, requestAttendCar,requestAttendCarEdit1,requestAttendCarODelete1 } from "@/api/api";
+import { requestAttendCar1, requestAttendCar,requestAttendCarEdit,requestAttendCarODelete1 ,reqUpdateStall} from "@/api/api";
 export default {
+   data() {
+    return {
+      sels:[],
+      clientData: [{ plate_name: "车位一" }, { plate_name: "车位二" }],
+      dialogTableVisible: false,
+      editFormRules: {
+        name: [{ required: true, message: "请输入车牌号", trigger: "blur" }]
+      },
+      //编辑界面数据
+      editForm: {
+        desc: "22",
+        url: "",
+        car_no: "",
+        editCar_no:""
+      },
+      //删除数据格式
+      deleteForm:{
+      },
+
+      editLoading: false,
+      editFormVisible: false,
+      editForm: "",
+      carlist: [
+        {
+           url: "../../static/img/car.jpg",
+          car_no: "粤A9M33",
+          entry_time:"2018--3-3 4：13:4",
+          desc: "停车·",
+          flowId:"1",
+          car_type:"临时车",
+          park_no:"1"
+        },
+        {
+          url: "../../static/img/car.jpg",
+          car_no: "赣A8888",
+          desc: "2018--3-3 4：13:4停车·"
+        },
+        {
+          url: "../../static/img/car.jpg",
+          car_no: "赣F6666"
+        }
+      ],
+      totals: {
+        currentPage: 1,
+        pageSize: 10,
+        totalNum: 10
+      },
+
+      checked: false,
+      currentDate: new Date(),
+      park: [],
+      filters: {
+        plate_value: "",
+        v_park: "111",
+        v_price_type: "", // 计费类型
+        //车类型
+        v_car_type: "",
+        start_value: "",
+        end_value: "",
+        //车库
+        v_garage: "",
+        v_isplate: "",
+        v_plateRelia: "",
+        car_no: "",
+        regist_no: ""
+      },
+       querySels:{
+              price_type: configs.chargeType,
+              car_type: configs.carType,
+              garage: [
+                {
+                  value: "",
+                  label: "所属车库"
+                },
+                {
+                  value: "1",
+                  label: "所属车库1"
+                }
+              ],
+              isplate: configs.isplate,
+              plateRelia:configs.plateRelia
+       },
+     
+    };
+  },
+  created(){
+    this.getParkList();
+  },
   methods: {
+    getParkList() {
+      var _this = this;
+      var userInfo = window.localStorage.getItem("user");
+
+      // var parks = [
+      //   {
+      //     parkName: "林芝停车场",
+      //     parkNo: "1",
+      //     entryPassway: "林芝入口通道1-林芝入口通道2"
+      //     // entrychildren : [{  },{  }],
+      //     // outChildren:[{},{}]
+      //   },
+      //   {
+      //     parkName: "正佳停车场",
+      //     parkNo: "2",
+      //     entryPassway: "正佳入口通道"
+      //   }
+      // ];
+      alert( JSON.parse(userInfo)["parks"] )
+      if (typeof JSON.parse(userInfo)["parks"]  == "object") {
+        JSON.parse(userInfo)["parks"]  .forEach(item => {
+          var park1 = {
+            value: item["parkNo"],
+            label: item["parkName"],
+            entryPassway: item["entryPassway"],
+            outPassway: item["outPassway"]
+          };
+          _this.park.push(park1);
+          console.log(_this.park);
+        });
+      }
+    },
+    updateStall(){
+      let para={
+        parkNo:this.filters.v_park,
+        jwt:window.localStorage.getItem("jwt")
+      }
+      reqUpdateStall(para).then(res=>{
+        if(res.code===1){
+            
+        }
+      })
+    },
     imports(){
       this.$router.push({ path: "/import" })
     },
@@ -235,15 +376,33 @@ export default {
         car_no: this.filters.car_no, //车牌号
         regist_no: this.filters.regist_no, //注册号
         currentPage: this.totals.currentPage, //当前页
-        pageSize: this.totals.pageSize //每页显示条数
+        pageSize: this.totals.pageSize, //每页显示条数
+        jwt:window.localStorage.getItem("jwt")
       };
-      console.log("getend");
-      requestAttendCar1(para).then(res => {
+      
+      requestAttendCar(para).then(res => {
         // this.$axios.get('../../static/json/park.json',{ para: para }).then((res) => {
         //本地写法
-        console.log(res);
-        this.carlist = eval(res).list;
-        this.totals.totalNum = eval(res).total;
+        if(res.code===1){
+              var list= eval(res).flowList;
+              var dt=this.carlist;
+              //  {
+              //   url: "../../static/img/car.jpg",
+              //   car_no: "粤A9M33",
+              //   entry_time:"2018--3-3 4：13:4",
+              //   desc: "停车·",
+              //   car_type:"临时车"
+              // },
+              dt.url=list.url;
+              dt.car_no=list.licensePlate;
+              dt.entry_time=list.enterDate;
+              // dt.desc=list.desc;
+              // dt.car_type=list.car_type;
+              this.totals.totalNum = eval(res).totalNum;
+        }else{
+              alert("暂无数据")
+        }
+        
         //请求后端写法
         // this.parkList = res;
         //this.totalnum=(eval(res)).total;
@@ -267,19 +426,44 @@ export default {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.editLoading = true;
             //NProgress.start();
-            let para = Object.assign({}, this.editForm);
+            // let para = Object.assign({}, this.editForm);
+            var para={
+              desc:this.editForm.desc,
+              url:this.editForm.url,
+              UfLicenseplate:this.editForm.car_no,
+              licensePlate:this.editForm.editCar_no,
+              flowId:this.editForm.flowId,
+              parkNo:this.editForm.park_no
+              // currentPage:this.totals.currentPage,
+              // pageSize:this.totals.pageSize
+            };
+         var user=   window.localStorage.getItem("user");
+           para.admin=JSON.parse(user).username
+            // para.
+             //编辑界面数据
+              // editForm: {
+              //   desc: "22",
+              //   url: "",
+              //   car_no: "",
+              //   editCar_no:""
+              // },
+              para.jwt=window.localStorage.getItem("jwt");
+
             // para.birth =
             //   !para.birth || para.birth == ""
             //     ? ""
             //     : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
            
-            requestAttendCarEdit1(para).then((res) => {
-              this.editLoading = false;
-              //NProgress.done();
-              this.$message({
+            requestAttendCarEdit(para).then((res) => {
+              if(res.code===1){
+                 this.$message({
                 message: '提交成功',
                 type: 'success'
               });
+              }
+              this.editLoading = false;
+              //NProgress.done();
+             
               this.$refs['editForm'].resetFields();
               this.editFormVisible = false;
               this.getAttendCar();
@@ -356,123 +540,20 @@ export default {
      
     // });
   },
-  data() {
-    return {
-      sels:[],
-      clientData: [{ plate_name: "车位一" }, { plate_name: "车位二" }],
-      dialogTableVisible: false,
-      editFormRules: {
-        name: [{ required: true, message: "请输入车牌号", trigger: "blur" }]
-      },
-      //编辑界面数据
-      editForm: {
-        desc: "22",
-        url: "",
-        car_no: "",
-        editCar_no:""
-      },
-      //删除数据格式
-      deleteForm:{
-
-      },
-
-      editLoading: false,
-      editFormVisible: false,
-      editForm: "",
-      carlist: [
-        {
-          url: "../../static/img/car.jpg",
-          car_no: "粤A9M33",
-          entry_time:"2018--3-3 4：13:4",
-          desc: "停车·",
-          car_type:"临时车"
-        },
-        {
-          url: "../../static/img/car.jpg",
-          car_no: "赣A8888",
-          desc: "2018--3-3 4：13:4停车·"
-        },
-        {
-          url: "../../static/img/car.jpg",
-          car_no: "赣F6666"
-        }
-      ],
-      totals: {
-        currentPage: 1,
-        pageSize: 10,
-        totalNum: 10
-      },
-
-      checked: false,
-      currentDate: new Date(),
-      park: configs.park,
-      filters: {
-        plate_value: "",
-        v_park: "",
-        v_price_type: "", // 计费类型
-        //车类型
-        v_car_type: "",
-        start_value: "",
-        end_value: "",
-        //车库
-        v_garage: "",
-        v_isplate: "",
-        v_plateRelia: "",
-        car_no: "",
-        regist_no: ""
-      },
-
-      price_type: [
-        {
-          value: "",
-          label: "计费类型"
-        },
-        {
-          value: "1",
-          label: "月票车"
-        }
-      ],
-
-      car_type: [
-        {
-          value: "",
-          label: "车类型"
-        },
-        {
-          value: "1",
-          label: "小型车"
-        }
-      ],
-
-      garage: [
-        {
-          value: "",
-          label: "所属车库"
-        },
-        {
-          value: "1",
-          label: "所属车库1"
-        }
-      ],
-      isplate: [
-        {
-          value: "",
-          label: "是否有车牌"
-        }
-      ],
-
-      plateRelia: [
-        {
-          value: "",
-          label: "车牌可信度"
-        }
-      ]
-    };
-  }
+ 
 };
 </script>
 
 <style scoped>
+.el-card{
+  height: 150px;
+}
+.fatherImg .el-card__body{
+  height: 150px;
+}
+.querys span{
+  font-size: 12px;
+}
 ul > li {
   list-style: none;
 }

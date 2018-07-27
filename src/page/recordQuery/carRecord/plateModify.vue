@@ -64,24 +64,24 @@
                         >
                       </el-table-column>
                       <el-table-column
-                        prop="operateType"
+                        prop="upType"
                         label="操作类型"
                         >
                       </el-table-column>
                       <el-table-column
-                        prop="modiBefore"
+                        prop="ufLicenseplate"
                         label="修改前车牌号">
                       </el-table-column>
                       <el-table-column
-                        prop="modiAfter"
+                        prop="uqLicenseplate"
                         label="修改后车牌">
                       </el-table-column>               
                       <el-table-column
-                        prop="operate_time"
+                        prop="upDate"
                         label="操作时间">
                       </el-table-column>
                       <el-table-column
-                        prop="dutyMan"
+                        prop="upStaff"
                         label="值班员">
                       </el-table-column>
 
@@ -124,28 +124,48 @@ export default {
         v_operateType: "",
         dutyMan: "",
         start_datefrom: "",
-        start_dateto: ""
+        start_dateto: "",
+        v_modiBefore:"",
+        v_modiAfter:""
       },
       v_operateType: [],
       park: [{}],
       operateType: [],
 
-      tableData: [{}]
+      tableData: []
     };
   },
   mounted(){
     this.getPlateModify();
   },
   methods: {
+
     getPlateModify(){
       let para ={
-
+         parkNo:this.filters.v_park,
+         upType:this.filters.v_operateType,
+         ufLicenseplate:this.filters.v_modiBefore,
+         uqLicenseplate:this.filters.v_modiAfter,
+         currentPage:this.totals.currentPage,
+         pageSize:this.totals.pageSize,
+         jwt:window.localStorage.getItem("jwt")
+        //  upDate:this.filters.start_datefrom,
+        // upStaff:
+        //  ufLicenseplate:this.filters.
       }
       reqPlateModify(para).then(res=>{
           if(res.code===1){
-            this.totals.totalNum=res.total;
-            this.tableData=res.list;
+            this.totals.totalNum=res.totalNum;
+            this.tableData=res.vehicleInfoList;
+            console.log(res)
+            
+         
+
+          }else{
+            
           }
+      }).catch(()=>{
+        alert("错误")
       })
     },
     callbackSelTenant() {

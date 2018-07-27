@@ -301,7 +301,7 @@
                   <template>
                     <el-select v-model="v_tab2_park" placeholder="请选择">
                       <el-option
-                        v-for="item in tab2_park"
+                        v-for="item in park"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -330,7 +330,7 @@
 
 <script>
 import $axios from "axios";
-import { postFile } from "../../api/api";
+import { postFile ,reqEdit} from "@/api/carManage";
 export default {
   data() {
     return {
@@ -367,15 +367,12 @@ export default {
 
       tabPosition: "top",
 
-      price_type: [ {
-            value: "月票车",
-            label: "月票车"
-          }],
-      car_type: [{}],
+      price_type:configs.chargeType,
+      car_type: configs.carType,
 
-      pay_rule_group: [{}],
+      pay_rule_group: [{value:"1",label:"3"}],
 
-      park:configs.park,
+      park:[],//停车场
 
       plate_color: [{}],
 
@@ -393,7 +390,42 @@ export default {
       ]
     };
   },
+  created(){
+    this.getParkList();
+  },
   methods: {
+     getParkList() {
+      var _this = this;
+      var userInfo = window.localStorage.getItem("user");
+
+      // var parks = [
+      //   {
+      //     parkName: "林芝停车场",
+      //     parkNo: "1",
+      //     entryPassway: "林芝入口通道1-林芝入口通道2"
+      //     // entrychildren : [{  },{  }],
+      //     // outChildren:[{},{}]
+      //   },
+      //   {
+      //     parkName: "正佳停车场",
+      //     parkNo: "2",
+      //     entryPassway: "正佳入口通道"
+      //   }
+      // ];
+      
+      if (typeof JSON.parse(userInfo)["parks"]  == "object") {
+        JSON.parse(userInfo)["parks"]  .forEach(item => {
+          var park1 = {
+            value: item["parkNo"],
+            label: item["parkName"],
+            entryPassway: item["entryPassway"],
+            outPassway: item["outPassway"]
+          };
+          _this.park.push(park1);
+          console.log(_this.park);
+        });
+      }
+    },
     valids(){
       var tab1=this.tab1;
       if(tab1.car_no===""){
@@ -408,17 +440,34 @@ export default {
         if(this.valids()){      
       	this.$confirm('确认提交吗？', '提示', {}).then(() => {
 							this.editLoading = true;
-							//NProgress.start();
-							let para = Object.assign({}, this.tab1);
+              let para={
+                licensePlate:this.tab1.car_no,
+                registerNo:this.tab1.car_no,
+                licenseColor:this.tab1.v_plate_color,
+                carColor:this.tab1.car_color,
+                // telephone:this.tab1.telephone,
+                parkingType:this.tab1.v_seat_type,
+               chargeType:this.tab1.v_price_type,
+               effectiveStart:this.tab1.start_date,
+               remark:this.tab1.memo,
+               vehicleType:this.tab1.v_car_type,
+               effectiveEnd:this.tab1.end_date,
+               parkNo:this.tab1.v_park,
+               vehicleBrand:this.tab1.car_logo
+              }
+               para.jwt = window.localStorage.getItem("jwt");
 							// para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
 							reqEdit(para).then((res) => {
-								this.editLoading = false;
-								//NProgress.done();
+                this.editLoading = false;
+                if(res.code===1){
+                  	//NProgress.done();
 								this.$message({
 									message: '提交成功',
 									type: 'success'
 								});
-								this.$refs['editForm'].resetFields();
+                }
+							
+								
 								this.editFormVisible = false;
                 this.getCarinfo();
 							});
