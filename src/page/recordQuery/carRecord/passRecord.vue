@@ -1,9 +1,7 @@
 <template>
 	<section>
 		<div class="parent">
-			<!-- <div class="margin-tops">
-				<el-button type="danger" icon="el-icon-delete" size="medium">删除查询到的记录</el-button>
-			</div> -->
+      <!-- 查询区 -->
 			<div class="margin-tops querys" >
 				<el-select  @change="parkChange" v-model="filters.parkNo" filterable placeholder="所属停车场">
 	                    <el-option
@@ -67,6 +65,7 @@
                  	<el-button type="success" size="medium" @click="outExe()"><strong><i class="el-icon-upload"></i></strong > 导出EXCEL报表</el-button>	
                  </div>
 			</div>
+      <!-- 展示区 -->
 			<div class="margin-tops">
 				 <template>
                     <el-table
@@ -97,6 +96,11 @@
                       </el-table-column>
                       <el-table-column
                         prop="licensePlate"
+                        label="车牌号"
+                        >
+                      </el-table-column>
+                      <el-table-column
+                        prop="registerNo"
                         label="车牌号"
                         >
                       </el-table-column>
@@ -214,79 +218,6 @@
                                               </div>
                                           </div>
                                       </el-col>
-
-                                      <!-- <el-col :span="12">
-                                          <div class="panel">
-                                         <p class="title">出场记录信息</p>
-                                          <div class="imgBox">
-                                                <ul>
-                                                  <li> <img src="" alt="无图片"></li>
-                                                </ul>  
-                                          </div>
-                                          <div class="wenziBox">
-                                                      <el-row :gutter="20">
-                                                          <el-col :span="8">
-                                                              车牌号：
-                                                          </el-col>
-                                                          <el-col :span="8">
-                                                           
-                                                          </el-col>
-                                                      </el-row>
-                                                      <el-row :gutter="20">
-                                                          <el-col :span="8">
-                                                              注册号：
-                                                          </el-col>
-                                                          <el-col :span="8">
-                                                            
-                                                          </el-col>
-                                                      </el-row>
-                                                      <el-row :gutter="20">
-                                                          <el-col :span="8">
-                                                              出场时间：
-                                                          </el-col>
-                                                          <el-col :span="8">
-                                                            
-                                                          </el-col>
-                                                      </el-row>
-                                                      <el-row :gutter="20">
-                                                          <el-col :span="8">
-                                                              出场控制器：
-                                                          </el-col>
-                                                          <el-col :span="8">
-                                                          
-                                                          </el-col>
-                                                      </el-row>
-                                                      <el-row :gutter="20">
-                                                          <el-col :span="8">
-                                                              出场通道：
-                                                          </el-col>
-                                                          <el-col :span="8">
-                                                        
-                                                            
-                                                          </el-col>
-                                                      </el-row>
-                                                      <el-row :gutter="20">
-                                                          <el-col :span="8">
-                                                              计费类型：
-                                                          </el-col>
-                                                          <el-col :span="8">
-                                                        
-                                                            
-                                                          </el-col>
-                                                      </el-row>
-                                                      <el-row :gutter="20">
-                                                          <el-col :span="8">
-                                                              车类型
-                                                          </el-col>
-                                                          <el-col :span="8">
-                                                        
-                                                            
-                                                          </el-col>
-                                                      </el-row>
-                                              </div>
-                                       </div>
-                                      </el-col> -->
-
                                  </el-row>
                                  <el-row :gutter="20">
                                      <el-col :span="12">
@@ -312,11 +243,8 @@
                     </el-table>
                  </template>
 			</div>
-      
 			 <div>
-
-				 <el-pagination
-              
+				 <el-pagination    
               @current-change="handleCurrentChange"
               :current-page.sync="totals.currentPage"
               :page-size.sync="totals.pageSize"
@@ -358,7 +286,7 @@ export default {
         {
           flowId: "11111",
           licensePlate: "粤A33333",
-          licensePlate: "车牌号",
+          registerNo: "111",
           chargeType: "", //计费类型
           car_group: "",
           entrancePassageway: "", //入口通道
@@ -396,7 +324,6 @@ export default {
     getParkList() {
       var _this = this;
       var userInfo = window.localStorage.getItem("user");
-
       // var parks = [
       //   {
       //     parkName: "林芝停车场",
@@ -411,7 +338,7 @@ export default {
       //     entryPassway: "正佳入口通道"
       //   }
       // ];
-      alert( JSON.parse(userInfo)["parks"] )
+     
       if (typeof JSON.parse(userInfo)["parks"]  == "object") {
         JSON.parse(userInfo)["parks"]  .forEach(item => {
           var park1 = {
@@ -428,7 +355,27 @@ export default {
     getEntryRecord() {
       var _this = this;
       // let para = new URLSearchParams();
-      let para = {};
+      // filters: {
+      //   parkNo: "",
+      //   entrancePassageway: "",
+      //   chargeType: "", //计费类型
+      //   admissionReleaseType: "",
+      //   licensePlate: "",
+      //   start_datefrom: new Date(),
+      //   start_dateto: new Date(),
+      //   admissionWatch: ""
+      // },
+      var filters=this.filters;
+      let para = {
+          parkNo:filters.parkNo, // 停车场编号
+          entrancePassageway:filters.entrancePassageway, // 入口通道
+          chargeType:filters.chargeType, // 计费类型
+          admissionReleaseType:filters.admissionReleaseType, //放行方式
+          licensePlate:filters.licensePlate, // 车牌号
+          start_datefrom:filters.start_datefrom, // 入场时间从
+          start_dateto:filters.start_dateto, // 到
+          admissionWatch:filters.admissionWatch // 值班员
+      };
       para.jwt = window.localStorage.getItem("jwt");
       console.log("local");
       console.log(window.localStorage.getItem("jwt"));
@@ -437,22 +384,42 @@ export default {
       para.pageSize = this.totals.pageSize;
       // para.jwt=window.localStorage.getItem("jwt");
       this.listLoading = true;
-      // reqEntryRecord(para)
-      //   .then(res => {
-      //     if (res.code === 1) {
-      //       console.log(res);
-      //       this.totals.totalNum = res.totalNum;
-      //       this.list = res.entryRecords;
-      //     } else {
-      //       _this.$message({
-      //         message: "请求数据失败",
-      //         type: "error"
-      //       });
-      //     }
+      reqEntryRecord(para)
+        .then(res => {
+          if (res.code === 1) {
+            console.log(res);
+            this.totals.totalNum = res.totalNum;
+            var retpara = res.entryRecords;
+            getRetList(retpara,_this);
+          } else {
+            _this.$message({
+              message: "请求数据失败",
+              type: "error"
+            });
+          }
 
-      //     this.listLoading = false;
-      //   })
-      //   .catch({});
+          this.listLoading = false;
+        })
+        .catch({});
+    },
+    //获得返回参数并操作
+    getRetList(retpara,_this){
+          retpara.forEach(item=>{
+              var temp={
+                       flowId:item.flowId,
+                       licensePlate:item.licensePlate,// 车牌号
+                       registerNo:item.registerNo,// 注册号
+                       chargeType:item.chargeType,// 计费类型
+                       car_group:item.car_group, //车辆分组
+                       entrancePassageway:item.entrancePassageway, //入口通道
+                       enterDate:item.enterDate, // 入场时间
+                       admissionReleaseType:item.admissionReleaseType, //放行方式
+                       des:item.des, //描述
+                       admissionWatch:item.admissionWatch, //入场值班员,
+                       admissionPhotoPath:item.admissionPhotoPath // 拍照地址
+                      };
+               _this.list.push(temp);
+            });
     },
     parkImg() {
       this.parkImgs = true;
@@ -471,7 +438,8 @@ export default {
     },
 
     handleCurrentChange(val) {
-      console.log(`当前页${val}`), (this.totals.currentPage = val);
+      console.log(`当前页${val}`), 
+      this.totals.currentPage = val;
       this.getEntryRecord();
     },
 

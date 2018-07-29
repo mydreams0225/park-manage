@@ -2,12 +2,9 @@
 	<section>
 		 <div class="parent">
 		 	<div class="margin-tops">
-			 	<el-tabs type="border-card">
-				  
+			 	<el-tabs type="border-card"> 
 				  <el-tab-pane label="缴费规则分组">
 				  	<div class="font">
-				  		
-				  	
 					  	 <div >是否启用固定车辆在线支付：
 					  	 	<template>
 							  <el-radio v-model="show.used" label="启用"></el-radio>

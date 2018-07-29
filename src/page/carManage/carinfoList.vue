@@ -166,8 +166,7 @@
               </div>
       
                <!-- 展示区 -->
-              <div  class="margin-tops" style="padding-top:10px; ">
-              
+              <div  class="margin-tops" style="padding-top:10px; ">   
                 <template>
                     <el-table
                       ref="multipleTable"
@@ -292,10 +291,11 @@
                       <el-table-column
                         label="操作"
                         width="200" >
-                         <template scope="scope">
+                         <template slot-scope="scopes">
                                 <a href="#"  class="editBtn" ><i class="el-icon-document"></i></a>
-                                <a href="#" @click="handleEdit(scope.$index, scope.row)" class="editBtn"><i class="el-icon-edit"></i></a>
-                                <a href="#" @click="handleDel(scope.$index, scope.row)" class="deleteBtn"><i class="el-icon-delete"></i></a>
+                                <a href="#" @click="handleEdit(scopes.$index, scopes.row)" class="editBtn"><i class="el-icon-edit"></i></a>
+                                <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="handleDel(scopes.$index, scopes.row)"></el-button>
+                                <!-- <a href="#" @click="handleDel(scopes.$index, scopes.row)" class="deleteBtn"><i class="el-icon-delete"></i></a> -->
                         </template>
                       </el-table-column>
                     </el-table>
@@ -804,13 +804,11 @@ export default {
     },
       //删除
     handleDel: function(index, row) {
-      // this.$confirm('此操作将导出excel文件, 是否继续?', '提示', {
-      //               confirmButtonText: '确定',
-      //               cancelButtonText: '取消',
-      //               type: 'warning'
-      //           })
-      //   .then(() => {
-          alert("zlz")
+      var vehicleNOs = this.checkBox.map(item => item.vehicleNO).toString();
+      this.$confirm("确认删除该记录吗？", "提示", {
+        type: "warning"
+      })
+        .then(() => {
           this.listLoading = true;
           //NProgress.start();
           let para = { vehicleNO: row.vehicleNO };
@@ -829,7 +827,7 @@ export default {
           }).catch(() => {
           alert("111");
         });
-        // })
+      })
         
     },
     //编辑

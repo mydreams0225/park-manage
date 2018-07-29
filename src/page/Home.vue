@@ -26,58 +26,11 @@
 		</el-col>
 
 		<el-col :xs="24" :sm="24" :md="24" :lg="24" class="main">
-			<aside :class="collapsed?'menu-collapsed':'menu-expanded'" >
+			<aside >
 				<!--导航菜单-->
-        <el-menu :default-active="$route.path" class="el-menu-vertical-demo el-menus" @open="handleopen" @close="handleclose" @select="handleselect" theme="dark" unique-opened router>
-					<menu-tree :nodes="$router.options.routes"></menu-tree>
-				</el-menu>
-				<!-- <el-menu :default-active="$route.path" class="el-menu-vertical-demo el-menus" @open="handleopen" @close="handleclose" @select="handleselect"
-					 unique-opened router v-show="!collapsed" >
-					 <div class="tools" @click.prevent="collapse">
-					   <i>|||</i>
-
-				     </div>
-					<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
-						<el-submenu :index="index+''" v-if="!item.leaf" :key="index">
-							<template slot="title" ><i :class="item.iconCls"></i>{{item.name}}</template>
-
-								<el-menu-item-group  v-for="child  in item.children"  :index="child.path" :key="child.path"  v-if="!child.hidden">
-		                              
-		                                <el-submenu  :index="child.path"  v-if="child.z &&!item.leaf">
-		                                	<template slot="title" class="child_title"><i :class="child.iconCls"></i>{{child.name}}</template>
-		                                	<el-menu-item  v-for="sun  in child.children" :index="sun.path" :key="sun.path" >
-		                                		{{sun.name}}
-		                                	</el-menu-item>
-		                                </el-submenu>
-		                               
-		                                <el-menu-item :index="child.path" v-if="!child.z" :key="child.path"> {{child.name}}  </el-menu-item>
-		                       </el-menu-item-group>
-						</el-submenu>
-						<el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path" :key="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
-					</template>
-				</el-menu> -->
-				<!--导航菜单-折叠后-->
-				<!-- <ul class="el-menu el-menu-vertical-demo collapsed el-menus"  v-show="collapsed" ref="menuCollapsed">
-					 <div class="tools" @click.prevent="collapse">
-					   <i>|||</i>
-
-				     </div>
-					<li v-for="(item,index) in $router.options.routes" v-if="!item.hidden" class="el-submenu item" :key="index">
-						<template v-if="!item.leaf">
-							<div class="el-submenu__title" style="padding-left: 10px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"><i :class="item.iconCls" ></i></div>
-							<ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"> 
-								<li v-for="child in item.children" v-if="!child.hidden" :key="child.path" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==child.path?'is-active':''"  @click="$router.push(child.path)">{{child.name}}
-
-								</li>
-							</ul>
-						</template>
-						<template v-else>
-							<li class="el-submenu">
-								<div class="el-submenu__title el-menu-item" style="padding-left: 20px;height: 56px;line-height: 56px;padding: 0 20px;" :class="$route.path==item.children[0].path?'is-active':''" @click="$router.push(item.children[0].path)"><i  :class="item.iconCls"></i></div>
-							</li>
-						</template>
-					</li>
-				</ul> -->
+        <el-menu   :default-active="$route.path" class="el-menu-vertical-demo el-menus" @open="handleopen" @close="handleclose" @select="handleselect" theme="dark" unique-opened router>
+        	<menu-tree :nodes="$router.options.routes"></menu-tree>
+				</el-menu>			
 			</aside>
 			<section class="content-container">
 				<div class="grid-content bg-purple-light">
@@ -104,13 +57,13 @@
 
 <script>
 import { requestLogin ,requestMenu,requestLogin1 ,requestMenu1} from "@/api/api";
-// import MenuUtils from "@/utils/MenuUtils";
 import { getRole } from "../api/api";
 import parkFee from "@/page/financeReport/parkFee";
 import MenuTree from "@/page/MenuTree";
 export default {
   data() {
     return {
+      isCollapse:true,
       nodes: this.$router.options.routes,
       sysName: "logos",
       w:
@@ -136,28 +89,6 @@ export default {
 
 
   methods: {
-    //   login(datas) {
-    //    window.sessionStorage.setItem("userRole", JSON.stringify(datas));
-      
-    //   MenuUtils(routers, datas,false);
-    // },
-    // getMenu (){
-    //   console.log('zlzlll')
-    //   var jwt=window.sessionStorage.getItem("jwt");
-    //   let para = new URLSearchParams();
-    //             para.append("jwt", jwt);
-     
-    //   requestMenu(para).then(data => {
-    //               window.sessionStorage.setItem("user", JSON.stringify(data.userInfo));
-    //                 console.log('fdfdgfsdgfds')
-    //                 console.log(data);
-    //                 console.log('dddd')
-    //                 this.login(data.menus);
-    //                 console.log("routers");
-    //                 console.log(routers);
-    //                 this.$router.addRoutes(routers);
-    //               });
-    // },
     onSubmit() {
       console.log("submit!");
     },
@@ -190,7 +121,7 @@ export default {
         window.innerWidth ||
         document.documentElement.clientWidth ||
         document.body.clientWidth;
-      this.collapsed = !this.collapsed;
+      this.isCollapse = !this.isCollapse;
     },
     showMenu(i, status) {
       console.log("i,status");
@@ -214,7 +145,7 @@ export default {
   },
   mounted() {
     // this.getMenu();
-    var user = sessionStorage.getItem("user");
+    var user = window.localStorage.getItem("user");
     if (user) {
       user = JSON.parse(user);
       this.sysUserName = user.name || "";

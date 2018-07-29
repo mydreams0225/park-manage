@@ -42,6 +42,7 @@ export default {
   //background-color: #222;
   background: rgba(0,0,0,0.8);
   color: #fff;
+  text-align: right;
 }
 .el-menu-item.is-active{
   background: #09c;

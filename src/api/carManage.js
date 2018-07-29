@@ -55,4 +55,10 @@ export const outExcelCarInfo = params => {
        {  // 这里是跨域写法  
       headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
       }).then(res => res.data); }; 
-
+// 8.postFile
+export const postFile = params => {    
+  return $axios.post(`${base}/vehicleInfo/export`,  
+   qs.stringify(params,{ indices: false }),  
+     {  // 这里是跨域写法  
+    headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
+    }).then(res => res.data); }; 

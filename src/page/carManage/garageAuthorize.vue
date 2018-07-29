@@ -2,12 +2,10 @@
 	<section>
 		<div class="parent">
 			<div class="margin-tops">
-				
-			
-			<template>
-				  <el-tabs v-model="activeName" type="border-card">
-				    <el-tab-pane label="按车辆分组授权" name="first">
-				    	<div  class="tsd">
+		    	<template>
+				         <el-tabs v-model="activeName" type="border-card">
+				           <el-tab-pane label="按车辆分组授权" name="first">
+				    	    <div  class="tsd">
 				             <el-row :gutter="20">
 				              <el-col :span="12"><div class="grid-content bg-purple">
 				                 <p><strong>注意事项：</strong></p>
@@ -15,7 +13,6 @@
 				              </div>
 				            </el-col>
 				            </el-row>
-
 				          </div>
 				          <div  class="tab1_group">
 				          	<el-card class="box-card">
@@ -110,21 +107,20 @@
 	</section>
 </template>
 <script>
- export default{
-    data(){
-    	return{
-    		activeName: 'first',
-    		radio:'1'
-    	}
-    }
- }
+export default {
+  data() {
+    return {
+      activeName: "first",
+      radio: "1"
+    };
+  }
+};
 </script>
 <style scoped>
-
- .tsd{
- 	padding-bottom:15px;
- 	 border-bottom: 1px #999 dotted;
- 	 width:900px;
- 	 margin-top:15px;
- }
+.tsd {
+  padding-bottom: 15px;
+  border-bottom: 1px #999 dotted;
+  width: 900px;
+  margin-top: 15px;
+}
 </style>

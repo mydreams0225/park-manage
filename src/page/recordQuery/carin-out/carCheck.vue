@@ -119,7 +119,7 @@
 </template>
 <script>
 //reqCarCheck
-import reqCarCheck from '@/api/recordQuery'
+import {reqCarCheck} from '@/api/recordQuery'
 export default {
   data() {
     return {

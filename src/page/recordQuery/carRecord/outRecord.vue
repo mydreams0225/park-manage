@@ -1,10 +1,10 @@
 <template>
 	<section>
 		<div class="parent">
-		
+	   	<!-- 查询区 -->
 			<div class="margin-tops querys" >
         <span> 所属停车场</span>
-				<el-select v-model="filters.v_park" filterable placeholder="所属停车场">
+				<el-select @change="parkChange" v-model="filters.v_park" filterable placeholder="所属停车场">
                      
 	                    <el-option
 	                      v-for="item in park"
@@ -89,6 +89,7 @@
                  	<el-button type="success" size="medium"><strong><i class="el-icon-upload"></i></strong > 导出EXCEL报表</el-button>	
                  </div>
 			</div>
+      <!-- 展示区 -->
 			<div class="margin-tops">
 				 <template>
                     <el-table
@@ -124,7 +125,7 @@
                         label="车辆分组">
                       </el-table-column>               
                       <el-table-column
-                        prop="entrancePassageway"
+                        prop="exitPassageway"
                         label="通道">
                       </el-table-column>
                       <el-table-column
@@ -266,7 +267,7 @@
                                                               出场时间：
                                                           </el-col>
                                                           <el-col :span="8">
-                                                            {{props.row.enterDate}}
+                                                            {{props.row.outDate}}
                                                           </el-col>
                                                       </el-row>
                                                       <el-row :gutter="20">
@@ -283,7 +284,7 @@
                                                           </el-col>
                                                           <el-col :span="8">
                                                         
-                                                            {{props.row.entrancePassageway}}
+                                                            {{props.row.exitPassageway}}
                                                           </el-col>
                                                       </el-row>
                                                       <el-row :gutter="20">
@@ -417,6 +418,7 @@
                     </el-table>
                  </template>
 			</div>
+      <!-- 分页 -->
 			<div>
 		        <!-- <Paging v-bind:total="totals"></Paging>		         -->
 						<el-pagination
@@ -427,7 +429,7 @@
               layout="total, prev, pager, next"
               :total.sync="totals.totalNum">
             </el-pagination>
-		   </div>
+		  </div>
 		</div>
 	</section>
 </template>
@@ -437,72 +439,165 @@ import { reqOutRecord } from "@/api/recordQuery";
 export default {
   data() {
     return {
-      listLoading:false,
-      noshow:false,
+      listLoading: false,
+      noshow: false,
       filters: {
-              v_park: "",
-              v_passageway: "",
-              v_fee_type: "",
-              v_releaseMethod: "",
-              v_plate_no: "",
-              v_fee_type: "",
-              start_datefrom: "",
-              start_dateto: "",
-              v_dutyMan: "",
-              v_parkingTime: "",
-              value: "",
-              v_min: ""
+        v_park: "",
+        v_passageway: "",
+        v_fee_type: "",
+        v_releaseMethod: "",
+        v_plate_no: "",
+        v_fee_type: "",
+        start_datefrom: "",
+        start_dateto: "",
+        v_dutyMan: "",
+        v_parkingTime: "",
+        value: "",
+        v_min: ""
       },
       parkingTime: [],
       min: [],
-      park: [{}],
+      park: [],
       passageway: [{}],
       fee_type: [{}],
       releaseMethod: [{}],
 
       totals: {
-              totalNum: 4,
-              pageSize: 1,
-              currentPage: 1
+        totalNum: 4,
+        pageSize: 1,
+        currentPage: 1
       },
       list: []
     };
   },
-  mounted(){
+  created() {
+    this.getParkList();
+  },
+  mounted() {
     this.getOutRecord();
   },
   methods: {
-    getOutRecord(){
-      var _this=this;
-     let para = {}
-       para.jwt= window.localStorage.getItem("jwt");
-       para.currentPage=this.totals.currentPage; //当前页
-        para.pageSize=this.totals.pageSize;
-        this.listLoading = true;
-      reqOutRecord(para).then(res=>{
-        if(res.code===1){
-                console.log(res);
-                this.totals.totalNum = res.totalNum;
-                this.list=res.outRecords;
-         
-        }else{
-             _this.$message({
-							message: '请求数据失败',
-							type: 'error'
-						});
+    parkChange(value) {
+      this.passageway = [];
+      //1
+      var parkObj = this.park;
+      for (var item in parkObj) {
+        if (parkObj[item]["value"] === value) {
+          var entryarr = [];
+          if (!parkObj[item]["outPassway"]) {
+          } else {
+            entryarr = parkObj[item]["outPassway"].split("-");
+          }
+
+          for (var i in entryarr) {
+            var temp = { value: entryarr[i], label: entryarr[i] };
+            this.passageway.push(temp);
+          }
         }
-         this.listLoading = false;
-      })
+      }
     },
-		callbackSelTenant(){
-			var filter=this.filters;
-       for(var item in filter){
-				 filter[item]="";
-			 }
-		},
+    getParkList() {
+      var _this = this;
+      var userInfo = window.localStorage.getItem("user");
+      var parks = [
+        {
+          parkName: "林芝停车场",
+          parkNo: "1",
+          outPassway: "林芝出口通道1-林芝出口通道2"
+          // entryPassway: "林芝入口通道1-林芝入口通道2"
+          // entrychildren : [{  },{  }],
+          // outChildren:[{},{}]
+        },
+        {
+          parkName: "正佳停车场",
+          parkNo: "2",
+          exitPassway: "正佳入口通道"
+        }
+      ];
+
+      // if (typeof JSON.parse(userInfo)["parks"]  != "object") {
+      // JSON.parse(userInfo)["parks"]  .forEach(item => {
+      parks.forEach(item => {
+        var park1 = {
+          value: item["parkNo"],
+          label: item["parkName"],
+          entryPassway: item["entryPassway"],
+          outPassway: item["outPassway"]
+        };
+        _this.park.push(park1);
+        console.log(_this.park);
+      });
+      // }
+    },
+    // 获取请求时入参方法
+    getfilterPara(filters, _this) {
+      var para = {
+        jwt: window.localStorage.getItem("jwt"),
+        parkNo: filters.v_park, //停车场编号
+        exitPassageway: filters.v_passageway, //出口通道
+        chargeType: filters.v_fee_type, //计费类型
+        admissionReleaseType: filters.v_releaseMethod, //放行方式
+        licensePlate: filters.v_plate_no, // 车牌号
+        start_datefrom: filters.start_datefrom, // 出场时间从
+        start_dateto: filters.start_datefrom, // 到
+        admissionWatch: filters.v_dutyMan, //值班员
+        v_parkingTime: filters.v_parkingTime, //停车时长符号
+        value: filters.value, // 停车时长值
+        v_min: filters.v_min, // 停车单位
+        currentPage: _this.totals.currentPage, //当前页
+        pageSize: _this.totals.pageSize
+      };
+      return para;
+    },
+    getOutRecord() {
+      var _this = this;
+      var filters = this.filters;
+      // 获取入参
+      var para = this.getfilterPara(filters, _this);
+      this.listLoading = true;
+      reqOutRecord(para).then(res => {
+        if (res.code === 1) {
+          console.log(res);
+          this.totals.totalNum = res.totalNum;
+          var retpara = res.outRecords;
+          this.getRetList(retpara, _this);
+        } else {
+          _this.$message({
+            message: "请求数据失败",
+            type: "error"
+          });
+        }
+        this.listLoading = false;
+      });
+    },
+    //获得返回参数并操作
+    getRetList(retpara, _this) {
+      retpara.forEach(item => {
+        var temp = {
+          flowId: item.flowId,
+          licensePlate: item.licensePlate, // 车牌号
+          registerNo: item.registerNo, // 注册号
+          chargeType: item.chargeType, // 计费类型
+          car_group: item.car_group, //车辆分组
+          exitPassageway: item.exitPassageway, //出口通道
+          outDate: item.outDate, // 出场时间
+          admissionReleaseType: item.admissionReleaseType, //放行方式
+          des: item.des, //描述
+          admissionWatch: item.admissionWatch, //入场值班员,
+          admissionPhotoPath: item.admissionPhotoPath // 拍照地址
+        };
+        _this.list.push(temp);
+      });
+    },
+    callbackSelTenant() {
+      var filter = this.filters;
+      for (var item in filter) {
+        filter[item] = "";
+      }
+    },
     handleCurrentChange(val) {
-        this.totals.currentPage=val;
-        this.getOutRecord();
+      this.totals.currentPage = val;
+      this.getOutRecord();
     }
   }
 };
@@ -555,8 +650,7 @@ export default {
   height: 100px;
   list-style: none;
 }
-.querys span{
+.querys span {
   font-size: 12px;
-
 }
 </style>

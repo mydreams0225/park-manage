@@ -456,7 +456,7 @@
 										</el-tabs>
 										<div class="footerBtn">
                             <el-button  type="primary" size="medium" @click="settingRateSaves"><i class="el-icon-plus" ></i>保存</el-button>
-	    	                  	<el-button  size="medium"><i class="el-icon-delete"></i>取消</el-button>
+	    	                  	<el-button  size="medium" @click="setting.settingVisible= false"><i class="el-icon-delete"></i>取消</el-button>
 										</div>
 
 								 </div>
@@ -580,91 +580,94 @@
 </template>
 <script>
 //reqSettingRate  reqSettingRate
-import {reqSettingRate,reqDeleteOne,batchDeleteMore,reqParkRate,reqAddorEditRate,reqshowRate} from '@/api/rateManage'
+import {
+  reqSettingRate,
+  reqDeleteOne,
+  batchDeleteMore,
+  reqParkRate,
+  reqAddorEditRate,
+  reqshowRate
+} from "@/api/rateManage";
 export default {
   data() {
     return {
-		noshow:false,
-			edit:{
-				editVisible: false,
-					titles:"",
-				editObj:{
-				
-         garage_name: "",
+			noshow: false, //table不显示的列
+			//编辑或新增的集合
+      edit: {
+        editVisible: false,
+        titles: "",
+        editObj: {
+          garage_name: "",
           chargeType: "",
-					vehicleType: "",
-				algorithmType:	"",
-				
-				parkNo:""
-				},
+          vehicleType: "",
+          algorithmType: "",
+          parkNo: ""
+        }
 			},
-			test:{
-				testVisible:false,
-				testObj:{
-				},
-				start_date:new Date(new Date().getTime() - 1 * 60 * 60 * 1000),
-				end_date:new Date()
+			//费率测试
+      test: {
+        testVisible: false,
+        testObj: {},
+        start_date: new Date(new Date().getTime() - 1 * 60 * 60 * 1000),
+        end_date: new Date()
 			},
+			//设置费率的数据
       setting: {
         settingVisible: false,
         v_selSuanfa: "",
         isOne: true,
-				isTwo: false,
-				chargeJson:{
-          
-				},
+        isTwo: false,
+        chargeJson: {},
         leftobj: {
-         garage_name: "",
+          garage_name: "",
           chargeType: "",
-					vehicleType: "",
-				algorithmType:	"",
-				},
-				oneForm:{
-					name:"",
-					freeparkMin:"",
-					disc_type:"",
-					disc_value:""
-				}
+          vehicleType: "",
+          algorithmType: ""
+        },
+        oneForm: {
+          name: "",
+          freeparkMin: "",
+          disc_type: "",
+          disc_value: ""
+        }
       },
       tableData: [
         {
           garage_name: "1",
           chargeType: "3",
-					vehicleType: "car",
-				  algorithmType:	"按24小时累计时收费",
-				
-				  parkNo:"parkNo1"
+          vehicleType: "car",
+          algorithmType: "按24小时累计时收费",
+          parkNo: "parkNo1"
         }
       ],
       filters: {
         v_park: "停车场1"
-			},
-			sels:{
-			   park: [{value:"停车场1",label:"停车场1"}],
-				 feetype: configs.chargeType,
-				 disc_type:[{value:"1",label:"1"}],
-				 carType:configs.carType,
-				 selSuanfa:configs.selSuanfa
-			},
-      
+      },
+      sels: {
+        park: [{ value: "停车场1", label: "停车场1" }],
+        feetype: configs.chargeType,
+        disc_type: [{ value: "1", label: "1" }],
+        carType: configs.carType,
+        selSuanfa: configs.selSuanfa
+      },
+
       totals: {
         totalNum: 1,
         pageSize: 1,
         currentPage: 1
-			},
-			checkBoxs:[],
+      },
+      checkBoxs: []
     };
-	},
-	mounted(){
-		this.getParkingRate();
-		
-	},
-	created(){
-		this.getParkList();
-	},
+  },
+  mounted() {
+    this.getParkingRate();
+  },
+  created() {
+    this.getParkList();
+  },
   methods: {
-		//获取park信息
-		getParkList() {
+    //获取park信息
+    getParkList() {
       var _this = this;
       var userInfo = window.localStorage.getItem("user");
       // var parks = [
@@ -690,148 +693,139 @@ export default {
             outPassway: item["outPassway"]
           };
           _this.sels.park.push(park1);
-          console.log(_this.park);
+          console.log(_this.sels.park);
         });
       }
     },
-	  
-		cancel(){
-			var obj=this.edit.editObj
-			 for(var item in obj){
-            obj[item]="";
-			 }
-	
-			this.edit.editVisible=false;
-			
-		},
-		//显示添加费率界面
-		addRateShow(){
-			this.edit.titles="添加费率";
-			this.edit.editVisible=true;
-				var obj=this.edit.editObj
-			 for(var item in obj){
-            obj[item]="";
-			 }
 
-		},
-			//修改费率界面显示
-			editRate(index, row){
-				this.edit.titles="修改费率";
-				this.edit.editVisible=true;
-				 this.edit.editObj = Object.assign({}, row);
-			},
-		  saveRate(){
-					let para =Object.assign({}, this.edit);
-					para.jwt= window.localStorage.getItem("jwt");	 
-					reqAddorEditRate(para).then(res=>{
-						if(res.code===1){
-							this.$message({
-									message: '添加或修改成功',
-									type: 'success'
-								});
-							
-						}
-						this.edit.editObj.forEach(item => {
-							item="";
-						});
-							this.edit.editVisible=false;
-							this.getParkingRate();
-						
-					})
+    cancel() {
+      var obj = this.edit.editObj;
+      for (var item in obj) {
+        obj[item] = "";
+      }
 
-		},
-		getParkingRate(){
-			let para = {
-				parkNo:this.filters.v_park
-			}
-       para.jwt= window.localStorage.getItem("jwt");
-       console.log("local")
-       console.log(window.localStorage.getItem("jwt"));
+      this.edit.editVisible = false;
+    },
+    //显示添加费率界面
+    addRateShow() {
+      this.edit.titles = "添加费率";
+      this.edit.editVisible = true;
+      var obj = this.edit.editObj;
+      for (var item in obj) {
+        obj[item] = "";
+      }
+    },
+    //修改费率界面显示
+    editRate(index, row) {
+      this.edit.titles = "修改费率";
+      this.edit.editVisible = true;
+      this.edit.editObj = Object.assign({}, row);
+    },
+    saveRate() {
+      let para = Object.assign({}, this.edit);
+      para.jwt = window.localStorage.getItem("jwt");
+      reqAddorEditRate(para).then(res => {
+        if (res.code === 1) {
+          this.$message({
+            message: "添加或修改成功",
+            type: "success"
+          });
+        }
+        this.edit.editObj.forEach(item => {
+          item = "";
+        });
+        this.edit.editVisible = false;
+        this.getParkingRate();
+      });
+    },
+    getParkingRate() {
+      let para = {
+				parkNo: this.filters.v_park,
+				currentPage:this.totals.currentPage,
+				pageSize:this.totals.pageSize
+      };
+      para.jwt = window.localStorage.getItem("jwt");
       // Object.assign({}, this.filters);
-        para.currentPage=this.totals.currentPage; //当前页
-        para.pageSize=this.totals.pageSize;
-			  reqParkRate(para).then(res=>{
-         if(res.code===1){
-				
-					 this.tableData=res.parkRateInfos;
-					 console.log(res.parkRateInfos);
-					 this.totals.totalNum=res.totalNum
-
-				 }
-			}).catch(()=>{
-				  
-			})
-		},
-		selsChange: function (sels) {
-			console.log(sels);
-				this.checkBoxs = sels;
-			},
-		//批量删除
-		//批量删除
-			batchRemove: function () {
-				//能判断的唯一值
-				var parkNo = this.checkBoxs.map(item => item.rateId).toString();
-				this.$confirm('确认删除选中记录吗？', '提示', {
-					type: 'warning'
-				}).then(() => {
-					this.listLoading = true;
-					//NProgress.start();
-					let para = { ids: rateId };
-					 para.jwt= window.localStorage.getItem("jwt");
-					batchDeleteMore(para).then((res) => {
-						this.listLoading = false;
-						//NProgress.done();
-						this.$message({
-							message: '删除成功',
-							type: 'success'
-						});
-						this.getParkingRate();
-					});
-				}).catch(() => {
-
-				});
-			},
-		//单行删除
-		//删除
-			handleDel: function (index, row) {
-				this.$confirm('确认删除该记录吗?', '提示', {
-					type: 'warning'
-				}).then(() => {
-					this.listLoading = true;
-					//NProgress.start();
-					let para = { id: row.rateId };
-					 para.jwt= window.localStorage.getItem("jwt");
-					reqDeleteOne(para).then((res) => {
-						this.listLoading = false;
-						//NProgress.done();
-						this.$message({
-							message: '删除成功',
-							type: 'success'
-						});
-						this.getParkingRate();
-					});
-				}).catch(() => {
-
-				});
-			},
-		//设置费率界面显示
+      para.currentPage = this.totals.currentPage; //当前页
+      para.pageSize = this.totals.pageSize;
+      reqParkRate(para)
+        .then(res => {
+          if (res.code === 1) {
+            this.tableData = res.parkRateInfos;
+            this.totals.totalNum = res.totalNum;
+          }
+        })
+        .catch(() => {});
+    },
+    selsChange: function(sels) {
+      console.log(sels);
+      this.checkBoxs = sels;
+    },
+    //批量删除
+    //批量删除
+    batchRemove: function() {
+      //能判断的唯一值
+      var parkNo = this.checkBoxs.map(item => item.rateId).toString();
+      this.$confirm("确认删除选中记录吗？", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          this.listLoading = true;
+          //NProgress.start();
+          let para = { ids: rateId };
+          para.jwt = window.localStorage.getItem("jwt");
+          batchDeleteMore(para).then(res => {
+            this.listLoading = false;
+            //NProgress.done();
+            this.$message({
+              message: "删除成功",
+              type: "success"
+            });
+            this.getParkingRate();
+          });
+        })
+        .catch(() => {});
+    },
+    //单行删除
+    //删除
+    handleDel: function(index, row) {
+      this.$confirm("确认删除该记录吗?", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          this.listLoading = true;
+          //NProgress.start();
+          let para = { id: row.rateId };
+          para.jwt = window.localStorage.getItem("jwt");
+          reqDeleteOne(para).then(res => {
+            this.listLoading = false;
+            //NProgress.done();
+            this.$message({
+              message: "删除成功",
+              type: "success"
+            });
+            this.getParkingRate();
+          });
+        })
+        .catch(() => {});
+    },
+    //设置费率界面显示
     handleSetting(index, row) {
       this.setting.settingVisible = true;
-			this.setting.leftobj = Object.assign({}, row);
-			var para=row.rateId;
-			reqshowRate(para).then(res=>{
-         if(res.code===1){
-					 this.setting.chargeJson=res.chargeJson;
-				 }
-			})
+      this.setting.leftobj = Object.assign({}, row);
+      var para = row.rateId;
+      reqshowRate(para).then(res => {
+        if (res.code === 1) {
+          this.setting.chargeJson = res.chargeJson;
+        }
+      });
+    },
+    //费率测试界面显示
+    rateTest(index, row) {
+      this.test.testVisible = true;
+      this.test.testObj = Object.assign({}, row);
+    },
 
-		},
-		//费率测试界面显示
-			rateTest(index, row){
-				this.test.testVisible=true;
-        this.test.testObj = Object.assign({}, row);
-			},
-		
     changelSuanfa(val) {
       alert(val);
       var rightd = document.getElementsByClassName("rightd")[0];
@@ -842,29 +836,29 @@ export default {
         this.setting.isOne = false;
         this.setting.isTwo = true;
       }
-		},
-		//设置费率保存请求
-		settingRateSaves(){
-			let para={
-					chargeJson:this.setting.chargeJson,
-					freeParkTime:this.setting.oneForm.freeparkMin,
-					rateId:this.leftobj.algorithmType,
-					chargeType:this.leftobj.chargeType,
-					vehicleType:this.leftobj.vehicleType,
-					discountType:this.oneForm.disc_type,
-					discountValue:this.oneForm.disc_value,
-			}
-			 para.jwt= window.localStorage.getItem("jwt");
-			
-			reqSettingRate(para).then(res=>{
-           if(res.code===1){
-						   this.$message({
-                message: '恭喜你，这是一条成功消息',
-               type: 'success'
-        });
-					 }
-			})
-		},
+    },
+    //设置费率保存请求
+    settingRateSaves() {
+      let para = {
+        chargeJson: this.setting.chargeJson,
+        freeParkTime: this.setting.oneForm.freeparkMin,
+        rateId: this.leftobj.algorithmType,
+        chargeType: this.leftobj.chargeType,
+        vehicleType: this.leftobj.vehicleType,
+        discountType: this.oneForm.disc_type,
+        discountValue: this.oneForm.disc_value
+      };
+      para.jwt = window.localStorage.getItem("jwt");
+
+      reqSettingRate(para).then(res => {
+        if (res.code === 1) {
+          this.$message({
+            message: "恭喜你，这是一条成功消息",
+            type: "success"
+          });
+        }
+      });
+    },
     callbackSelTenant() {
       for (var item in this.filters) {
         this.filters[item] = "";
@@ -899,12 +893,11 @@ export default {
   left: 0;
   top: 0;
   border-right: 1px solid #ccc;
-	padding-right: 20px;
-	height: 730px;
+  padding-right: 20px;
+  height: 730px;
 }
 .rateMain .leftd p {
-	line-height: 40px;
-	
+  line-height: 40px;
 }
 .rateMain .rightd {
   width: 830px;
@@ -913,32 +906,29 @@ export default {
   top: 0;
 }
 
-.rateMain .rightd .el-form-item{
-	margin-bottom: 0px;
+.rateMain .rightd .el-form-item {
+  margin-bottom: 0px;
 }
- .rateMain .rightd .el-form-item .el-input{
-	 width: 150px;
-	 height: 20px;
-
-	
- }
- .rateMain .rightd .one{
-	 font-size: 9px;
-
- }
-  .rateMain .rightd .one .el-input{
-		height: 30px;
-	}
-  .rateMain .rightd  .bg-purple{
-		 padding-top: 10px;
-		 width: 110px;
-	}
-	   .rateMain .rightd .one  .footerBtn{
-			 border-top:1px dashed #ccc;
-			 margin-top:15px;
-			 padding-top: 15px;
-		 }
-		 .add .el-row{
-			     margin-bottom: 10px;
-		 }
+.rateMain .rightd .el-form-item .el-input {
+  width: 150px;
+  height: 20px;
+}
+.rateMain .rightd .one {
+  font-size: 9px;
+}
+.rateMain .rightd .one .el-input {
+  height: 30px;
+}
+.rateMain .rightd .bg-purple {
+  padding-top: 10px;
+  width: 110px;
+}
+.rateMain .rightd .one .footerBtn {
+  border-top: 1px dashed #ccc;
+  margin-top: 15px;
+  padding-top: 15px;
+}
+.add .el-row {
+  margin-bottom: 10px;
+}
 </style>

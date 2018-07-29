@@ -721,7 +721,7 @@ export default {
               {" "}
               <strong>{node.label} </strong>
                <span  class="addP">
-                  <a href="#"  ><strong>+添加</strong></a>
+                  <a href="#" onclick="alert(`fff`) "><strong>+添加</strong></a>
              
                </span>
             </span>
@@ -737,7 +737,7 @@ export default {
               <strong>{node.label} </strong>
                 <span  class="addP">
                   <a href="#" ><strong>+添加</strong></a>&nbsp;
-                   <el-button size="mini"type="danger" icon="el-icon-delete"  />
+                   <el-button onclick="alert(`删除`)" size="mini"type="danger" icon="el-icon-delete"  />
                </span>
                
 
@@ -770,7 +770,7 @@ export default {
 
             <el-button size="mini"type="primary" icon="el-icon-document" />
             <el-button size="mini"type="primary" icon="el-icon-edit" />
-            <el-button size="mini"type="danger" icon="el-icon-delete" />
+            <el-button size="mini"type="danger" onclick="alert(`删除`)"  icon="el-icon-delete" />
           </span>
         );
       }

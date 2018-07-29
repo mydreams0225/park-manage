@@ -8,13 +8,13 @@
            <div class="margin-tops">
              <el-row :gutter="20">
               <el-col :span="6">
-                <div class="grid-content bg-purple">
+                <div >
                 <span style="color:red">*</span>
                 <span >所属停车场：</span>
                 <template>
-                  <el-select v-model="tab1.v_park" placeholder="请选择">
+                  <el-select v-model="tab1.park" placeholder="请选择">
                     <el-option
-                      v-for="item in park"
+                      v-for="item in sels.park"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
@@ -23,10 +23,10 @@
                 </template>
               </div>
              </el-col>
-              <el-col :span="6"><div class="grid-content bg-purple">
+              <el-col :span="6"><div >
                 <template>
                      <!-- `checked` 为 true 或 false -->
-                  <el-checkbox v-model="tab1.read_card" :checked="tab1.read_card">开启读卡操作</el-checkbox>
+                  <el-checkbox  v-model="tab1.readCard" :checked="tab1.readCard">开启读卡操作</el-checkbox>
                 </template>
               </div>
             </el-col>
@@ -54,28 +54,28 @@
               <div >
                <el-row :gutter="24">
                   <el-col :span="4">
-                    <div class="grid-content bg-purple">
+                    <div >
                      <span style="color:red;">*</span>
                      <span>车牌号码：</span>
-                      <span v-show="valid.car_no"><font style="color:red"> 注册号和车牌号必须输入一个</font></span>
-                     <el-input v-model="tab1.car_no" placeholder="请输入车牌号" ></el-input>
+                      <span v-show="valid.carNo"><font style="color:red"> 注册号和车牌号必须输入一个</font></span>
+                     <el-input @change="carNoChange" v-model="tab1.carNo" placeholder="请输入车牌号" ></el-input>
                   </div>
                 </el-col>
                   <el-col :span="6">
-                    <div class="grid-content bg-purple">
+                    <div >
                     <span style="color:red;">*</span>
                      <span>注册号</span>
-                     <el-checkbox checked="checked" style="font-size:12px;">与车牌号一样</el-checkbox>
-                     <el-input v-model="tab1.car_no" :disabled="true" ></el-input>
+                     <el-checkbox  @change="sameCarNo" v-model="tab1.checkCarNo"  style="font-size:12px;">与车牌号一样</el-checkbox>
+                     <el-input v-model="tab1.registNo" :disabled="tab1.registDisable" ></el-input>
                   </div>
                 </el-col>
                   <el-col :span="4">
-                    <div class="grid-content bg-purple">
+                    <div >
                       <span style="color:red;">*</span>
                      <span>计费类型：</span>
-                     <el-select v-model="tab1.v_price_type" placeholder="请选择">
+                     <el-select v-model="tab1.priceType" placeholder="请选择">
                       <el-option
-                        v-for="item in price_type"
+                        v-for="item in sels.priceType"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -84,12 +84,12 @@
                     </div>
                   </el-col>
                   <el-col :span="4">
-                    <div class="grid-content bg-purple">
+                    <div >
                       <span style="color:red;">*</span>
                      <span>车类型：</span>
-                     <el-select v-model="tab1.v_car_type" placeholder="请选择">
+                     <el-select v-model="tab1.carType" placeholder="请选择">
                       <el-option
-                        v-for="item in car_type"
+                        v-for="item in sels.carType"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -98,12 +98,12 @@
                     </div>
                   </el-col>
                   <el-col :span="4">
-                    <div class="grid-content bg-purple">
+                    <div >
                     <span style="color:red;">*</span>
                      <span>缴费规则分组：</span>
-                     <el-select v-model="tab1.v_pay_rule_group" placeholder="请选择">
+                     <el-select v-model="tab1.payRuleGroup" placeholder="请选择">
                       <el-option
-                        v-for="item in pay_rule_group"
+                        v-for="item in sels.payRuleGroup"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -116,19 +116,19 @@
               <div >
                    <el-row :gutter="24">
                       <el-col :span="4">
-                        <div class="grid-content bg-purple">
+                        <div >
                          <span>容错车牌</span>
-                         <el-input v-model="tab1.v_error_car" placeholder="请输入内容" ></el-input>
+                         <el-input v-model="tab1.errorCar" placeholder="请输入内容" ></el-input>
                        </div>
                     </el-col>
                       <el-col :span="4">
-                        <div class="grid-content bg-purple">
+                        <div >
                        
                          <span>车牌颜色</span>
                          
-                          <el-select v-model="tab1.v_plate_color" placeholder="请选择">
+                          <el-select v-model="tab1.plateColor" placeholder="请选择">
                           <el-option
-                            v-for="item in plate_color"
+                            v-for="item in sels.plateColor"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -137,11 +137,11 @@
                       </div>
                     </el-col>
                       <el-col :span="4">
-                        <div class="grid-content bg-purple">
+                        <div >
                          <span>车位类型：</span>
-                         <el-select v-model="tab1.v_seat_type" placeholder="请选择">
+                         <el-select v-model="tab1.seatType" placeholder="请选择">
                           <el-option
-                            v-for="item in seat_type"
+                            v-for="item in sels.seatType"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -150,12 +150,12 @@
                         </div>
                       </el-col>
                       <el-col :span="4">
-                        <div class="grid-content bg-purple">
+                        <div >
                         
                          <span>车辆分组：</span>
-                         <el-select v-model="tab1.v_car_group" placeholder="请选择">
+                         <el-select v-model="tab1.carGroup" placeholder="请选择">
                           <el-option
-                            v-for="item in car_group"
+                            v-for="item in sels.carGroup"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -164,14 +164,14 @@
                         </div>
                       </el-col>
                       <el-col :span="4">
-                        <div class="grid-content bg-purple">
+                        <div >
                         
                          <span>车位号：</span>
-                         <el-input  v-model="tab1.plate_no"></el-input>
+                         <el-input  v-model="tab1.plateNo"></el-input>
                         </div>
                       </el-col>
                       <el-col :span="4">
-                        <div class="grid-content bg-purple">
+                        <div >
                        
                          <span>编号</span>
                          <el-input v-model="tab1.id" ></el-input>
@@ -182,22 +182,22 @@
                <div class="newcardate">
                     <el-row :gutter="24">
                           <el-col :span="12">
-                            <div class="grid-content bg-purple">
+                            <div >
                              <span>有效期开始时间</span>
                             <el-date-picker
-                                v-model="tab1.start_date"
+                                v-model="tab1.startDate"
                                 type="date"
                                 placeholder="">
                               </el-date-picker>
                            </div>
                         </el-col>
                         <el-col :span="12">
-                          <div class="grid-content bg-purple">
+                          <div >
                          
                            <span>有效期结束时间</span>
                            
                            <el-date-picker
-                                v-model="tab1.end_date"
+                                v-model="tab1.endDate"
                                 type="date"
                                 placeholder="">
                               </el-date-picker>
@@ -209,21 +209,21 @@
                <div >
                     <el-row :gutter="24">
                           <el-col :span="8">
-                            <div class="grid-content bg-purple">
+                            <div >
                              <span>车品牌：</span>
-                             <el-input v-model="tab1.car_logo" ></el-input>
+                             <el-input v-model="tab1.carLogo" ></el-input>
                            </div>
                         </el-col>
                         <el-col :span="8">
-                          <div class="grid-content bg-purple">
+                          <div >
                          
                            <span>车颜色：</span>
-                           <el-input  v-model="tab1.car_color"></el-input>
+                           <el-input  v-model="tab1.carColor"></el-input>
                            
                         </div>
                       </el-col>
                      <el-col :span="8">
-                          <div class="grid-content bg-purple">
+                          <div >
                          
                            <span>收费：</span>
                            <el-input  v-model="tab1.fee">￥1</el-input>
@@ -235,7 +235,7 @@
                <div class="memo">
                     <el-row :gutter="24">
                           <el-col :span="24">
-                            <div class="grid-content bg-purple">
+                            <div >
                              <span>备注：</span>
                              <el-input v-model="tab1.memo" placeholder="选填" ></el-input>
                            </div>
@@ -246,9 +246,9 @@
                <div class="memo sshy">
                     <el-row :gutter="24">
                           <el-col :span="12">
-                            <div class="grid-content bg-purple">
+                            <div >
                              <span>所属业主：（点击选择，x清除）[点击添加业主信息]</span>
-                             <el-input :value="tab1.carOwner_value" v-on:click.native="carOwnerVisible = true"  placeholder="点击选择" readonly="readonly" ></el-input>
+                             <el-input :value="tab1.carOwnerValue" v-on:click.native="carOwnerVisible = true"  placeholder="点击选择" readonly="readonly" ></el-input>
                                  <el-dialog title="选择所属业主"  :visible.sync="carOwnerVisible" width="550px" >
                                         <form class="plate_poolSearch">
                                           <el-input   id="plate_pool" name="plate_pool" placeholder="名称" value="" >
@@ -264,7 +264,7 @@
                            </div>
                         </el-col>
                          <el-col :span="12">
-                            <div class="grid-content bg-purple">
+                            <div >
                              <span>所属车位池：（点击选择，x清除）</span>
                              <el-input :value="tab1.plate_value" v-on:click.native="dialogTableVisible = true" placeholder="点击选择" readonly="readonly" ></el-input>
                              <el-dialog title="选择所属车位池"  :visible.sync="dialogTableVisible" width="550px" >
@@ -294,14 +294,14 @@
            <div class="font" style="margin-top:15px">
               <el-row :gutter="20">
                 <el-col :span="6">
-                  <div class="grid-content bg-purple">
+                  <div >
                   <span style="color:red">*</span>
                   <span >所属停车场：</span>
                  
                   <template>
                     <el-select v-model="v_tab2_park" placeholder="请选择">
                       <el-option
-                        v-for="item in park"
+                        v-for="item in sels.park"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -342,45 +342,45 @@ export default {
         car_no:false
       },
       tab1: {
-        read_card: false,
-        v_park: "",
-        car_no: "",
-        end_date: "",
-        start_date: "",
-        v_price_type: "",
-        v_car_type: "",
-        v_pay_rule_group: "",
-        v_plate_color: "",
-        v_seat_type: "",
-        v_car_group: "",
-        v_error_car: "",
-        plate_no: "",
+        readCard: false,
+        park: "",
+        carNo: "",
+        registNo:"",
+        endDate: "",
+        startDate: "",
+        priType: "",
+        carType: "",
+        payRuleGroup: "",
+        platColor: "",
+        seatType: "",
+        carGroup: "",
+        errorCar: "",
+        plateNo: "",
         id: "",
-        car_logo: "",
-        car_color: "",
+        carLogo: "",
+        carColor: "",
         fee: "",
-        carOwner_value: "",
-
+        carOwnerValue: "",
         memo: "",
-        plate_value: ""
+        plateValue: "",
+        checkCarNo:true,
+        registDisable:true
       },
-
       tabPosition: "top",
-
-      price_type:configs.chargeType,
-      car_type: configs.carType,
-
-      pay_rule_group: [{value:"1",label:"3"}],
-
-      park:[],//停车场
-
-      plate_color: [{}],
-
-      seat_type: [{}],
+      sels:{
+          priceType:configs.chargeType,
+          carType: configs.carType,
+          payRuleGroup: [{value:"1",label:"3"}],
+          park:[],//停车场
+          plateColor: [{}],
+          seatType: [{}],
+          carGroup: [{}],
+      },
+      
       file: {
         name: ""
       },
-      car_group: [{}],
+      
       v_tab2_park: "",
       tab2_park: [
         {
@@ -393,43 +393,59 @@ export default {
   created(){
     this.getParkList();
   },
+
   methods: {
+    carNoChange(value){
+     var checkBox= this.tab1.checkCarNo;
+      if(checkBox==true){
+       this.tab1.registNo=this.tab1.carNo;
+     }
+    },
+    sameCarNo(val){
+      if(!val){
+       
+        this.tab1.registDisable=false;
+      }else{
+        this.tab1.registDisable=true;
+      }
+        
+    },
      getParkList() {
       var _this = this;
       var userInfo = window.localStorage.getItem("user");
 
-      // var parks = [
-      //   {
-      //     parkName: "林芝停车场",
-      //     parkNo: "1",
-      //     entryPassway: "林芝入口通道1-林芝入口通道2"
-      //     // entrychildren : [{  },{  }],
-      //     // outChildren:[{},{}]
-      //   },
-      //   {
-      //     parkName: "正佳停车场",
-      //     parkNo: "2",
-      //     entryPassway: "正佳入口通道"
-      //   }
-      // ];
+      var parks = [
+        {
+          parkName: "林芝停车场",
+          parkNo: "1",
+          entryPassway: "林芝入口通道1-林芝入口通道2"
+          // entrychildren : [{  },{  }],
+          // outChildren:[{},{}]
+        },
+        {
+          parkName: "正佳停车场",
+          parkNo: "2",
+          entryPassway: "正佳入口通道"
+        }
+      ];
       
-      if (typeof JSON.parse(userInfo)["parks"]  == "object") {
-        JSON.parse(userInfo)["parks"]  .forEach(item => {
+      // if (typeof JSON.parse(userInfo)["parks"]  == "object") {
+       parks.forEach(item => {
           var park1 = {
             value: item["parkNo"],
             label: item["parkName"],
             entryPassway: item["entryPassway"],
             outPassway: item["outPassway"]
           };
-          _this.park.push(park1);
+          _this.sels.park.push(park1);
           console.log(_this.park);
         });
-      }
+      // }
     },
     valids(){
       var tab1=this.tab1;
-      if(tab1.car_no===""){
-         this.valid.car_no=true;
+      if(tab1.carNo===""){
+         this.valid.carNo=true;
          return false;
       }else{
         alert('dd')
@@ -441,19 +457,19 @@ export default {
       	this.$confirm('确认提交吗？', '提示', {}).then(() => {
 							this.editLoading = true;
               let para={
-                licensePlate:this.tab1.car_no,
-                registerNo:this.tab1.car_no,
-                licenseColor:this.tab1.v_plate_color,
-                carColor:this.tab1.car_color,
+                licensePlate:this.tab1.carNo,
+                registerNo:this.tab1.carNo,
+                licenseColor:this.tab1.plateColor,//车位颜色
+                carColor:this.tab1.carColor,
                 // telephone:this.tab1.telephone,
-                parkingType:this.tab1.v_seat_type,
-               chargeType:this.tab1.v_price_type,
-               effectiveStart:this.tab1.start_date,
+                parkingType:this.tab1.seatType,
+               chargeType:this.tab1.priceType,
+               effectiveStart:this.tab1.startDate,
                remark:this.tab1.memo,
-               vehicleType:this.tab1.v_car_type,
-               effectiveEnd:this.tab1.end_date,
-               parkNo:this.tab1.v_park,
-               vehicleBrand:this.tab1.car_logo
+               vehicleType:this.tab1.carType,
+               effectiveEnd:this.tab1.endDate,
+               parkNo:this.tab1.park,
+               vehicleBrand:this.tab1.carLogo
               }
                para.jwt = window.localStorage.getItem("jwt");
 							// para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
@@ -499,14 +515,14 @@ export default {
       this.dialogFormVisible = false;
       this.dialogTableVisible = false;
       console.log("zlz");
-      this.tab1.plate_value = row.plate_name;
+      this.tab1.plateValue = row.plateName;
       // console.log(column)
     },
     carOwnerCheck(row, column) {
       this.dialogFormVisible = false;
       this.carOwnerVisible = false;
       console.log("zlz");
-      this.tab1.carOwner_value = row.carOwner_name;
+      this.tab1.carOwnerValue = row.carOwnerName;
       // console.log(column)
     },
     getFile(event) {
@@ -517,7 +533,7 @@ export default {
       event.preventDefault();
       // let formData = new FormData();
       let formData = new URLSearchParams();
-      formData.append("name", this.tab2_park[0].label);
+      formData.append("name", this.sels.park[0].label);
 
       formData.append("file", this.file);
 
