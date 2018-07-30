@@ -6,6 +6,9 @@
 
 
 */
+const business={
+    isOpenLock:[{value:"0",label:"不开启"},{value:"1",label:"开启"}]
+};
 const configs = {
     base: "http://192.168.0.32:8081/park",
     //地区
