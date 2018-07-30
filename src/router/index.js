@@ -59,6 +59,7 @@ import groups from '@/page/sysManage/groups'
 import menu from '@/page/sysManage/menu'
 import test from '@/page/test.vue'
 import imports from '@/page/import.vue'
+import s404  from '@/page/404.vue'
 Vue.use(Router)
 const commonRouter = [
     {
@@ -68,6 +69,7 @@ const commonRouter = [
 
         hidden: true
     },
+ 
     {
         path: '/',
         component: Home,
@@ -79,7 +81,8 @@ const commonRouter = [
 
         ],
         hidden: true
-    }
+    },
+    {path:'*',component:s404, hidden: true}
 
 ];
 

@@ -5,10 +5,10 @@
        <div class="margin-tops">
          <!-- <el-button  type="danger" icon="el-icon-delete" size="medium" @click="handleDel()">删除</el-button>
          <el-button  type="danger" icon="el-icon-delete" size="medium" @click="handleDel()">删除查询到的记录</el-button> -->
-         <el-button  icon="el-icon-circle-check-outline" size="medium" @click="updateStall">根据在场车辆数纠正空车位数</el-button>
+         <el-button  icon="el-icon-circle-check-outline" size="medium" @click="updatestall">根据在场车辆数纠正空车位数</el-button>
          <div class="fr">
            <el-button  icon="el-icon-upload2" type="primary" size="medium"  @click="imports()">批量导入</el-button>
-           <el-button  icon="el-icon-upload" type="success" size="medium" @click="outExe()">导出EXCEL报表</el-button>
+           <el-button  icon="el-icon-upload" type="success" size="medium" @click="outexe()">导出EXCEL报表</el-button>
          </div>
        </div>
        <!-- 查询区 -->
@@ -105,8 +105,8 @@
                       :value="item.value">
                     </el-option>
            </el-select>
-           <el-button type="primary" icon="el-icon-search" size="medium" v-on:click="getAttendCar" >查询</el-button>
-           <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')" size="medium">清除</el-button>
+           <el-button type="primary" icon="el-icon-search" size="medium" v-on:click="getattendcar" >查询</el-button>
+           <el-button icon="el-icon-delete" v-on:click="callbackseltenant(null,'')" size="medium">清除</el-button>
          </form>
        </div>
        <!-- 数据展示区 -->
@@ -189,19 +189,24 @@
         <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
       </div>
     </el-dialog>
-    
     </div>
 	</section>
 </template>
 
 <script>
 // import { constantRouterMap } from "@/router";
-import { requestAttendCar1, requestAttendCar,requestAttendCarEdit,requestAttendCarODelete1 ,reqUpdateStall} from "@/api/api";
+import {
+  requestAttendCar1,
+  requestAttendCar,
+  requestAttendCarEdit,
+  requestAttendCarODelete1,
+  reqUpdateStall
+} from "@/api/api";
 export default {
-   data() {
+  data() {
     return {
-      sels:[],
-      clientData: [{ plate_name: "车位一" }, { plate_name: "车位二" }],
+      sels: [],
+      clientData: configs.plateName,
       dialogTableVisible: false,
       editFormRules: {
         name: [{ required: true, message: "请输入车牌号", trigger: "blur" }]
@@ -211,24 +216,23 @@ export default {
         desc: "22",
         url: "",
         car_no: "",
-        editCar_no:""
+        editCar_no: ""
       },
       //删除数据格式
-      deleteForm:{
-      },
+      deleteForm: {},
 
       editLoading: false,
       editFormVisible: false,
       editForm: "",
       carlist: [
         {
-           url: "../../static/img/car.jpg",
+          url: "../../static/img/car.jpg",
           car_no: "粤A9M33",
-          entry_time:"2018--3-3 4：13:4",
+          entry_time: "2018--3-3 4：13:4",
           desc: "停车·",
-          flowId:"1",
-          car_type:"临时车",
-          park_no:"1"
+          flowId: "1",
+          car_type: "临时车",
+          park_no: "1"
         },
         {
           url: "../../static/img/car.jpg",
@@ -264,26 +268,16 @@ export default {
         car_no: "",
         regist_no: ""
       },
-       querySels:{
-              price_type: configs.chargeType,
-              car_type: configs.carType,
-              garage: [
-                {
-                  value: "",
-                  label: "所属车库"
-                },
-                {
-                  value: "1",
-                  label: "所属车库1"
-                }
-              ],
-              isplate: configs.isplate,
-              plateRelia:configs.plateRelia
-       },
-     
+      querySels: {
+        price_type: configs.chargeType,
+        car_type: configs.carType,
+        garage:configs.garage,
+        isplate: configs.isplate,
+        plateRelia: configs.plateRelia
+      }
     };
   },
-  created(){
+  created() {
     this.getParkList();
   },
   methods: {
@@ -305,9 +299,9 @@ export default {
       //     entryPassway: "正佳入口通道"
       //   }
       // ];
-      alert( JSON.parse(userInfo)["parks"] )
-      if (typeof JSON.parse(userInfo)["parks"]  == "object") {
-        JSON.parse(userInfo)["parks"]  .forEach(item => {
+      alert(JSON.parse(userInfo)["parks"]);
+      if (typeof JSON.parse(userInfo)["parks"] == "object") {
+        JSON.parse(userInfo)["parks"].forEach(item => {
           var park1 = {
             value: item["parkNo"],
             label: item["parkName"],
@@ -319,50 +313,49 @@ export default {
         });
       }
     },
-    updateStall(){
-      let para={
-        parkNo:this.filters.v_park,
-        jwt:window.localStorage.getItem("jwt")
-      }
-      reqUpdateStall(para).then(res=>{
-        if(res.code===1){
-            
+    updatestall() {
+      let para = {
+        parkNo: this.filters.v_park,
+        jwt: window.localStorage.getItem("jwt")
+      };
+      reqUpdateStall(para).then(res => {
+        if (res.code === 1) {
         }
-      })
+      });
     },
-    imports(){
-      this.$router.push({ path: "/import" })
+    imports() {
+      this.$router.push({ path: "/import" });
     },
     // 导出excel
-    outExe() {
-                this.$confirm('此操作将导出excel文件, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    // this.excelData = this.dataList //你要导出的数据list。
-                    
-                }).catch(() => {
-                
-                });
-            },
-            
-    selsChange: function (index,row) {
-         this.sels.push(row.url) ;
-        console.log(row);
-        console.log(this.sels);
-        var s = [];
-        //遍历数组
-        for(var i = 0,len=this.sels.length;i<len;i++){
-            if(s.indexOf(this.sels[i]) == -1){  //判断在s数组中是否存在，不存在则push到s数组中
-                s.push(this.sels[i]);
-            }
+    outexe() {
+      this.$confirm("此操作将导出excel文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          // this.excelData = this.dataList //你要导出的数据list。
+        })
+        .catch(() => {});
+    },
+
+    selsChange: function(index, row) {
+      this.sels.push(row.url);
+      console.log(row);
+      console.log(this.sels);
+      var s = [];
+      //遍历数组
+      for (var i = 0, len = this.sels.length; i < len; i++) {
+        if (s.indexOf(this.sels[i]) == -1) {
+          //判断在s数组中是否存在，不存在则push到s数组中
+          s.push(this.sels[i]);
         }
-        console.log(s);
-        return false
-			},
-    getAttendCar() {
-      console.log("getAttendCar");
+      }
+      console.log(s);
+      return false;
+    },
+    getattendcar() {
+      console.log("getattendcar");
       let para = {
         // plate_value: this.filters.plate_value, //车位池
         park: this.filters.v_park, //停车场
@@ -377,32 +370,32 @@ export default {
         regist_no: this.filters.regist_no, //注册号
         currentPage: this.totals.currentPage, //当前页
         pageSize: this.totals.pageSize, //每页显示条数
-        jwt:window.localStorage.getItem("jwt")
+        jwt: window.localStorage.getItem("jwt")
       };
-      
+
       requestAttendCar(para).then(res => {
         // this.$axios.get('../../static/json/park.json',{ para: para }).then((res) => {
         //本地写法
-        if(res.code===1){
-              var list= eval(res).flowList;
-              var dt=this.carlist;
-              //  {
-              //   url: "../../static/img/car.jpg",
-              //   car_no: "粤A9M33",
-              //   entry_time:"2018--3-3 4：13:4",
-              //   desc: "停车·",
-              //   car_type:"临时车"
-              // },
-              dt.url=list.url;
-              dt.car_no=list.licensePlate;
-              dt.entry_time=list.enterDate;
-              // dt.desc=list.desc;
-              // dt.car_type=list.car_type;
-              this.totals.totalNum = eval(res).totalNum;
-        }else{
-              alert("暂无数据")
+        if (res.code === 1) {
+          var list = eval(res).flowList;
+          var dt = this.carlist;
+          //  {
+          //   url: "../../static/img/car.jpg",
+          //   car_no: "粤A9M33",
+          //   entry_time:"2018--3-3 4：13:4",
+          //   desc: "停车·",
+          //   car_type:"临时车"
+          // },
+          dt.url = list.url;
+          dt.car_no = list.licensePlate;
+          dt.entry_time = list.enterDate;
+          // dt.desc=list.desc;
+          // dt.car_type=list.car_type;
+          this.totals.totalNum = eval(res).totalNum;
+        } else {
+          alert("暂无数据");
         }
-        
+
         //请求后端写法
         // this.parkList = res;
         //this.totalnum=(eval(res)).total;
@@ -420,53 +413,52 @@ export default {
     },
     //提交编辑
     editSubmit: function() {
-      
       this.$refs.editForm.validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.editLoading = true;
             //NProgress.start();
             // let para = Object.assign({}, this.editForm);
-            var para={
-              desc:this.editForm.desc,
-              url:this.editForm.url,
-              UfLicenseplate:this.editForm.car_no,
-              licensePlate:this.editForm.editCar_no,
-              flowId:this.editForm.flowId,
-              parkNo:this.editForm.park_no
+            var para = {
+              desc: this.editForm.desc,
+              url: this.editForm.url,
+              UfLicenseplate: this.editForm.car_no,
+              licensePlate: this.editForm.editCar_no,
+              flowId: this.editForm.flowId,
+              parkNo: this.editForm.park_no
               // currentPage:this.totals.currentPage,
               // pageSize:this.totals.pageSize
             };
-         var user=   window.localStorage.getItem("user");
-           para.admin=JSON.parse(user).username
+            var user = window.localStorage.getItem("user");
+            para.admin = JSON.parse(user).username;
             // para.
-             //编辑界面数据
-              // editForm: {
-              //   desc: "22",
-              //   url: "",
-              //   car_no: "",
-              //   editCar_no:""
-              // },
-              para.jwt=window.localStorage.getItem("jwt");
+            //编辑界面数据
+            // editForm: {
+            //   desc: "22",
+            //   url: "",
+            //   car_no: "",
+            //   editCar_no:""
+            // },
+            para.jwt = window.localStorage.getItem("jwt");
 
             // para.birth =
             //   !para.birth || para.birth == ""
             //     ? ""
             //     : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
-           
-            requestAttendCarEdit(para).then((res) => {
-              if(res.code===1){
-                 this.$message({
-                message: '提交成功',
-                type: 'success'
-              });
+
+            requestAttendCarEdit(para).then(res => {
+              if (res.code === 1) {
+                this.$message({
+                  message: "提交成功",
+                  type: "success"
+                });
               }
               this.editLoading = false;
               //NProgress.done();
-             
-              this.$refs['editForm'].resetFields();
+
+              this.$refs["editForm"].resetFields();
               this.editFormVisible = false;
-              this.getAttendCar();
+              this.getattendcar();
             });
           });
         }
@@ -482,7 +474,7 @@ export default {
     //       //NProgress.start();
     //       // let para = { id: row.id };
     //       let para = Object.assign({}, row);
-         
+
     //       requestAttendCarODelete1(para).then((res) => {
     //         this.listLoading = false;
     //         //NProgress.done();
@@ -490,7 +482,7 @@ export default {
     //           message: '删除成功',
     //           type: 'success'
     //         });
-    //         this.getAttendCar();
+    //         this.getattendcar();
     //       });
     //     })
     //     .catch(() => {});
@@ -500,10 +492,10 @@ export default {
     },
     handleCurrentChange(val) {
       this.totals.currentPage = val;
-      this.getAttendCar();
+      this.getattendcar();
       console.log(`当前页: ${val}`);
     },
-    callbackSelTenant: function() {
+    callbackseltenant: function() {
       // var aa = document.getElementsByTagName("input");
       // console.log(aa);
       // for (var i = 0; i < aa.length; i++) {
@@ -529,29 +521,28 @@ export default {
     }
   },
   mounted() {
-    this.getAttendCar();
+    this.getattendcar();
   },
-  created(){
+  created() {
     let data = JSON.parse(window.localStorage.getItem("user"));
-    var arr=data.userParkInfos;
+    var arr = data.userParkInfos;
 
     // arr.forEach(item => {
     //   //  this.park.value
-     
+
     // });
-  },
- 
+  }
 };
 </script>
 
 <style scoped>
-.el-card{
+.el-card {
   height: 150px;
 }
-.fatherImg .el-card__body{
+.fatherImg .el-card__body {
   height: 150px;
 }
-.querys span{
+.querys span {
   font-size: 12px;
 }
 ul > li {
@@ -670,13 +661,13 @@ ul > li {
   position: absolute;
   bottom: 0;
   right: 0;
-  padding: 5px ;
+  padding: 5px;
 }
 .info .l {
   position: absolute;
   bottom: 0;
   left: 0;
-  padding: 5px ;
+  padding: 5px;
 }
 .el-card__body {
   padding: 0 !important;

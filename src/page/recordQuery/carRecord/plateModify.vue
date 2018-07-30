@@ -3,7 +3,7 @@
 		<div class="parent">
 		
 			<div class="margin-tops querys" >
-				      <el-select v-model="filters.v_park" filterable placeholder="所属停车场">
+				      <el-select v-model="filters.park" filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in park"
 	                      :key="item.value"
@@ -11,7 +11,7 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
-	             <el-select v-model="filters.v_operateType" filterable placeholder="操作类型">
+	             <el-select v-model="filters.releaseMethod" filterable placeholder="操作类型">
 	                    <el-option
 	                      v-for="item in operateType"
 	                      :key="item.value"
@@ -19,16 +19,16 @@
 	                      :value="item.value">
 	                    </el-option>
 	             </el-select>
-	            <el-input v-model="filters.v_modiBefore"  id="dutyMan" name="dutyMan" placeholder="修改前车牌" >
+	            <el-input v-model="filters.modiBefore"  id="dutyMan" name="dutyMan" placeholder="修改前车牌" >
                      <template slot="prepend">修改前车牌</template>   
                 </el-input>
-                <el-input v-model="filters.v_modiAfter"  id="dutyMan" name="dutyMan" placeholder="修改后车牌" >
+                <el-input v-model="filters.modiAfter"  id="dutyMan" name="dutyMan" placeholder="修改后车牌" >
                      <template slot="prepend">修改后车牌</template>   
                 </el-input>
 	            <div class="dates block">
 		                    <span class="demonstration">操作时间从</span>
 		                    <el-date-picker
-		                      v-model="filters.start_datefrom"
+		                      v-model="filters.startDateFrom"
 		                      type="datetime"
 		                      placeholder="选择日期时间">
 		                    </el-date-picker>
@@ -36,7 +36,7 @@
 		                   <div class="dates block">
 		                    <span class="demonstration">到</span>
 		                    <el-date-picker
-		                      v-model="filters.start_dateto"
+		                      v-model="filters.startDateTo"
 		                      type="datetime"
 		                      placeholder="选择日期时间">
 		                    </el-date-picker>
@@ -120,15 +120,15 @@ export default {
         currentPage: 1
       },
       filters: {
-        v_park: "",
-        v_operateType: "",
+        park: "",
+        releaseMethod: "",
         dutyMan: "",
-        start_datefrom: "",
-        start_dateto: "",
-        v_modiBefore:"",
-        v_modiAfter:""
+        startDateFrom: "",
+        startDateTo: "",
+        modiBefore:"",
+        modiAfter:""
       },
-      v_operateType: [],
+      releaseMethod: [],
       park: [{}],
       operateType: [],
 
@@ -142,14 +142,14 @@ export default {
 
     getPlateModify(){
       let para ={
-         parkNo:this.filters.v_park,
-         upType:this.filters.v_operateType,
-         ufLicenseplate:this.filters.v_modiBefore,
-         uqLicenseplate:this.filters.v_modiAfter,
+         parkNo:this.filters.park,
+         upType:this.filters.releaseMethod,
+         ufLicenseplate:this.filters.modiBefore,
+         uqLicenseplate:this.filters.modiAfter,
          currentPage:this.totals.currentPage,
          pageSize:this.totals.pageSize,
          jwt:window.localStorage.getItem("jwt")
-        //  upDate:this.filters.start_datefrom,
+        //  upDate:this.filters.startDateFrom,
         // upStaff:
         //  ufLicenseplate:this.filters.
       }

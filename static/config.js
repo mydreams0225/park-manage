@@ -7,8 +7,7 @@
 
 */
 const configs = {
-    base:"http://192.168.0.32:8081/park",
-    test: 'bilili',
+    base: "http://192.168.0.32:8081/park",
     //地区
     options: [
         {
@@ -14786,6 +14785,7 @@ const configs = {
             "label": "澳门特别行政区"
         }
     ],
+    //系统类型
     parksys: [{
         value: '-1',
         label: '系统类型'
@@ -14794,7 +14794,7 @@ const configs = {
         value: '停车场管理系统（网页版',
         label: '停车场管理系统（网页版）'
     }],
-     //在线状态
+    //在线状态
     online: [{
         value: "在线",
         label: '在线'
@@ -14806,6 +14806,96 @@ const configs = {
         value: '1',
         label: '新建'
     }],
+    //停车场
+    park: [
+        {
+            value: "-1",
+            label: "所属停车场"
+        },
+        {
+            value: "停车场1",
+            label: "停车场1"
+        }
+    ],
+    //计费类型
+    chargeType: [
+        {
+            value: "临时车",
+            label: "临时车"
+        },
+        {
+            value: "月票车",
+            label: "月票车"
+        },
+        {
+            value: "免费车",
+            label: "免费车"
+        },
+        {
+            value: "贵宾车",
+            label: "贵宾车"
+        },
+        {
+            value: "政务车",
+            label: "政务车"
+        },
+    ],
+    //算法
+    selSuanfa: [
+        { value: "按24小时累计时收费", label: "按24小时累计时收费" },
+        { value: "按连续累计时收费", label: "按连续累计时收费" }
+    ],
+    //车类型
+    carType: [{ value: "小型车", label: "小型车" }],
+    //信誉度
+    plateRelia: [
+        {
+            value: "高",
+            label: "高"
+        }, {
+            value: "中",
+            label: "中"
+        },
+        {
+            value: "低",
+            label: "低"
+        }
+    ],
+    //是否有车牌
+    isplate: [
+        {
+            value: "有车牌",
+            label: "有车牌"
+        }, {
+            value: "无车牌",
+            label: "无车牌"
+        }
+    ],
+    //放行方式
+    admissionreleasetype: [
+        {
+            value: "1",
+            label: "自动放行"
+        },
+        {
+            value: "2",
+            label: "手动放行"
+        },
+    ],
+    plateName:[{ plate_name: "车位一" }, { plate_name: "车位二" }],
+    garage: [
+        {
+          value: "2",
+          label: "车库2"
+        },
+        {
+          value: "1",
+          label: "所属车库1"
+        }
+      ],
+      //车辆分组
+      carGroup:[{value:"1",label:"分组1"}],
+      plateType:[{value:"车位1",label:"车位1"}],
     //停车场列表展示区
     parkList: [{
         date: '2016-05-02',
@@ -14818,79 +14908,13 @@ const configs = {
         online: '在线2小时',
 
     }],
-    
-    //停车场
-    park:[
-        {
-          value: "-1",
-          label: "所属停车场"
-        },
-        {
-          value: "停车场1",
-          label: "停车场1"
-        }
-      ],
-      //计费类型
-      chargeType:[
-        {
-            value: "临时车",
-            label: "临时车"
-          },
-          {
-            value: "月票车",
-            label: "月票车"
-          },
-          {
-            value: "免费车",
-            label: "免费车"
-          },
-          {
-            value: "贵宾车",
-            label: "贵宾车"
-          },
-          {
-            value: "政务车",
-            label: "政务车"
-          },
-    ],
-    selSuanfa: [
-        { value: "按24小时累计时收费", label: "按24小时累计时收费" },
-        { value: "按连续累计时收费", label: "按连续累计时收费" }
-      ],
-    carType:[{value:"小型车",label:"小型车"}],
-    plateRelia: [
-        {
-          value: "高",
-          label: "高"
-        }, {
-            value: "中",
-            label: "中"
-          },
-          {
-            value: "低",
-            label: "低"
-          }
-      ],
-      isplate:[
-        {
-          value: "有车牌",
-          label: "有车牌"
-        },{
-            value: "无车牌",
-            label: "无车牌"
-          }
-      ],
-    //放行方式
-    admissionreleasetype:[
-        {
-            value: "1",
-            label: "自动放行"
-          },
-          {
-            value: "2",
-            label: "手动放行"
-          },
-    ]
-
+    //缴费规则分组
+    payRuleGroup:[{value:"缴费规则1",value:"缴费规则2"}],
+    //在场状态
+    presenceStatus:[{value:"在场",label:"在场"}],
+    //是否过期
+    isOverdue:[{value:"是",label:"是"}],
+    //业主信息
+    homeOwner:[{ carOwner_name: "业主1" }, { carOwner_name: "业主2" }]
 
 }

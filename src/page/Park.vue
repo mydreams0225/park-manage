@@ -15,6 +15,7 @@
         <div> -->
         <div class="parent">
           <form :model="filters" class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
+                    <span>所属客户</span>
                     <el-input clearable :value="filters.clientValue"   id="client" name="client" placeholder="点击选择" readonly="readonly"  v-on:click.native="dialogTableVisible = true" style="cursor:pointer" >
                       <template slot="prepend"> 所属客户</template>   
                     </el-input>
@@ -32,10 +33,11 @@
                         <el-table-column property="clientName" label="" ></el-table-column>
                       </el-table>
                     </el-dialog>
+                    <span>系统类型</span>
                     <el-select v-model="filters.v_sys_type" id="types"  filterable placeholder="系统类型">
+                      <!-- <el-option selected="selected">全部</el-option> -->
                         <el-option
                           v-for="item in types"
-                          
                           :key="item.value"
                           :label="item.label"
                           :value="item.value">
@@ -50,6 +52,7 @@
                     <el-input   id="address" name="address" placeholder="地址" v-model="filters.address">
                      <template slot="prepend">地址</template>   
                     </el-input>
+                    <span>在线状态</span>
                     <el-select v-model="filters.online_status" filterable placeholder="在线状态">
                       <el-option
                         v-for="item in online"
@@ -93,6 +96,7 @@
                         :value="item.value">
                       </el-option>
                     </el-select> -->
+                    <span>工程状态</span>
                      <el-select v-model="filters.v_project_statu" filterable placeholder="工程状态">
                       <el-option
                         v-for="item in project_status"
@@ -228,11 +232,13 @@ export default {
         type: this.filters.types,
         address: this.filters.address,
         area:this.filters.v_area[2],
-        sys_type: this.filters.v_sys_type,
+        sys_type: this.filters.v_sys_type ,
         online_status: this.filters.online_status,
         clientValue: this.filters.clientValue,
         v_project_statu:this.filters.v_project_statu,
-        currentPage1: this.totals.currentPage
+        currentPage: this.totals.currentPage,
+        pageSize:this.totals.pageSize
+
       };
       this.listLoading = true;
       //NProgress.start();
@@ -456,5 +462,8 @@ a:hover {
 }
 .red {
   background-color: #d9534f;
+}
+.form-inline span{
+  font-size: 12px;
 }
 </style>

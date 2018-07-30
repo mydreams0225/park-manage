@@ -4,7 +4,7 @@
 	   	<!-- 查询区 -->
 			<div class="margin-tops querys" >
         <span> 所属停车场</span>
-				<el-select @change="parkChange" v-model="filters.v_park" filterable placeholder="所属停车场">
+				<el-select @change="parkChange" v-model="filters.park" filterable placeholder="所属停车场">
                      
 	                    <el-option
 	                      v-for="item in park"
@@ -13,11 +13,11 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
-	            <el-input id="plate_no" name="plate_no" placeholder="车牌号" v-model="filters.v_plate_no" >
+	            <el-input id="plate_no" name="plate_no" placeholder="车牌号" v-model="filters.plateNo" >
                      <template slot="prepend">车牌号</template>   
               </el-input>
               <span>通道</span>
-              <el-select v-model="filters.v_passageway" filterable placeholder="通道">
+              <el-select v-model="filters.passageway" filterable placeholder="通道">
 	                    <el-option
 	                      v-for="item in passageway"
 	                      :key="item.value"
@@ -26,9 +26,9 @@
 	                    </el-option>
 	            </el-select>
               <span>计费类型</span>
-	            <el-select v-model="filters.v_fee_type" filterable placeholder="计费类型">
+	            <el-select v-model="filters.feeType" filterable placeholder="计费类型">
 	                    <el-option
-	                      v-for="item in fee_type"
+	                      v-for="item in feeType"
 	                      :key="item.value"
 	                      :label="item.label"
 	                      :value="item.value">
@@ -37,7 +37,7 @@
 	            <div class="dates block">
 		                    <span class="demonstration">出场时间从</span>
 		                    <el-date-picker
-		                      v-model="filters.start_datefrom"
+		                      v-model="filters.startDateFrom"
 		                      type="datetime"
 		                      placeholder="选择日期时间">
 		                    </el-date-picker>
@@ -45,17 +45,17 @@
 		                   <div class="dates block">
 		                    <span class="demonstration">到</span>
 		                    <el-date-picker
-		                      v-model="filters.start_dateto"
+		                      v-model="filters.startDateTo"
 		                      type="datetime"
 		                      placeholder="选择日期时间">
 		                    </el-date-picker>
 
                 </div>
-                <el-input   id="dutyMan" name="dutyMan" placeholder="值班员"  v-model="filters.v_dutyMan">
+                <el-input   id="dutyMan" name="dutyMan" placeholder="值班员"  v-model="filters.dutyMan">
                      <template slot="prepend">值班员</template>   
                 </el-input>
                 <span>放行方式</span>
-                <el-select v-model="filters.v_releaseMethod" filterable placeholder="放行方式">
+                <el-select v-model="filters.releaseMethod" filterable placeholder="放行方式">
 	                    <el-option
 	                      v-for="item in releaseMethod"
 	                      :key="item.value"
@@ -64,7 +64,7 @@
 	                    </el-option>
 	            </el-select>
               <span>停车时长</span>
-	            <el-select v-model="filters.v_parkingTime" filterable placeholder="停车时长">
+	            <el-select v-model="filters.parkingTime" filterable placeholder="停车时长">
 	                    <el-option
 	                      v-for="item in parkingTime"
 	                      :key="item.value"
@@ -75,7 +75,7 @@
 	            <el-input  v-model="filters.value" placeholder="请输入值" >
 	            	 <template slot="prepend">请输入值</template>   
                 </el-input>
-                <el-select v-model="filters.v_min" filterable placeholder="分钟">
+                <el-select v-model="filters.min" filterable placeholder="分钟">
 	                    <el-option
 	                      v-for="item in min"
 	                      :key="item.value"
@@ -442,24 +442,24 @@ export default {
       listLoading: false,
       noshow: false,
       filters: {
-        v_park: "",
-        v_passageway: "",
-        v_fee_type: "",
-        v_releaseMethod: "",
-        v_plate_no: "",
-        v_fee_type: "",
-        start_datefrom: "",
-        start_dateto: "",
-        v_dutyMan: "",
-        v_parkingTime: "",
+        park: "",
+        passageway: "",
+        feeType: "",
+        releaseMethod: "",
+        plateNo: "",
+        feeType: "",
+        startDateFrom: "",
+        startDateTo: "",
+        dutyMan: "",
+        parkingTime: "",
         value: "",
-        v_min: ""
+        min: ""
       },
       parkingTime: [],
       min: [],
       park: [],
       passageway: [{}],
-      fee_type: [{}],
+      feeType: [{}],
       releaseMethod: [{}],
 
       totals: {
@@ -511,7 +511,7 @@ export default {
         {
           parkName: "正佳停车场",
           parkNo: "2",
-          exitPassway: "正佳入口通道"
+          outPassway: "正佳入口通道"
         }
       ];
 
@@ -533,17 +533,17 @@ export default {
     getfilterPara(filters, _this) {
       var para = {
         jwt: window.localStorage.getItem("jwt"),
-        parkNo: filters.v_park, //停车场编号
-        exitPassageway: filters.v_passageway, //出口通道
-        chargeType: filters.v_fee_type, //计费类型
-        admissionReleaseType: filters.v_releaseMethod, //放行方式
-        licensePlate: filters.v_plate_no, // 车牌号
-        start_datefrom: filters.start_datefrom, // 出场时间从
-        start_dateto: filters.start_datefrom, // 到
-        admissionWatch: filters.v_dutyMan, //值班员
-        v_parkingTime: filters.v_parkingTime, //停车时长符号
+        parkNo: filters.park, //停车场编号
+        exitPassageway: filters.passageway, //出口通道
+        chargeType: filters.feeType, //计费类型
+        admissionReleaseType: filters.releaseMethod, //放行方式
+        licensePlate: filters.plateNo, // 车牌号
+        startDateFrom: filters.startDateFrom, // 出场时间从
+        startDateTo: filters.startDateFrom, // 到
+        admissionWatch: filters.dutyMan, //值班员
+        parkingTime: filters.parkingTime, //停车时长符号
         value: filters.value, // 停车时长值
-        v_min: filters.v_min, // 停车单位
+        min: filters.min, // 停车单位
         currentPage: _this.totals.currentPage, //当前页
         pageSize: _this.totals.pageSize
       };

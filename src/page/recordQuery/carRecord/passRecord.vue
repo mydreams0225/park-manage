@@ -25,7 +25,7 @@
 	            </el-select>
 	            <el-select v-model="filters.chargeType" filterable placeholder="计费类型" >
 	                    <el-option
-	                      v-for="item in fee_type"
+	                      v-for="item in feeType"
 	                      :key="item.value"
 	                      :label="item.label"
 	                      :value="item.value">
@@ -34,7 +34,7 @@
 	            <div class="dates block">
 		                    <span class="demonstration">入场时间从</span>
 		                    <el-date-picker
-		                      v-model="filters.start_datefrom"
+		                      v-model="filters.startDateFrom"
 		                      type="datetime"
 		                      placeholder="选择日期时间">
 		                    </el-date-picker>
@@ -42,7 +42,7 @@
 		                   <div class="dates block">
 		                    <span class="demonstration">到</span>
 		                    <el-date-picker
-		                      v-model="filters.start_dateto"
+		                      v-model="filters.startDateTo"
 		                      type="datetime"
 		                      placeholder="选择日期时间">
 		                    </el-date-picker>
@@ -109,7 +109,7 @@
                         label="计费类型">
                       </el-table-column>
                       <el-table-column
-                        prop="car_group"
+                        prop="carGroup"
                         label="车辆分组">
                       </el-table-column>               
                       <el-table-column
@@ -274,13 +274,13 @@ export default {
         chargeType: "", //计费类型
         admissionReleaseType: "",
         licensePlate: "",
-        start_datefrom: new Date(),
-        start_dateto: new Date(),
+        startDateFrom: new Date(),
+        startDateTo: new Date(),
         admissionWatch: ""
       },
       park: [],
       passageway: [{}],
-      fee_type: configs.chargeType,
+      feeType: configs.chargeType,
       releaseMethod: configs.admissionreleasetype,
       list: [
         {
@@ -288,7 +288,7 @@ export default {
           licensePlate: "粤A33333",
           registerNo: "111",
           chargeType: "", //计费类型
-          car_group: "",
+          carGroup: "",
           entrancePassageway: "", //入口通道
           enterDate: "", //入场时间
           admissionReleaseType: "", //放行方式
@@ -361,8 +361,8 @@ export default {
       //   chargeType: "", //计费类型
       //   admissionReleaseType: "",
       //   licensePlate: "",
-      //   start_datefrom: new Date(),
-      //   start_dateto: new Date(),
+      //   startDateFrom: new Date(),
+      //   startDateTo: new Date(),
       //   admissionWatch: ""
       // },
       var filters=this.filters;
@@ -372,8 +372,8 @@ export default {
           chargeType:filters.chargeType, // 计费类型
           admissionReleaseType:filters.admissionReleaseType, //放行方式
           licensePlate:filters.licensePlate, // 车牌号
-          start_datefrom:filters.start_datefrom, // 入场时间从
-          start_dateto:filters.start_dateto, // 到
+          startDateFrom:filters.startDateFrom, // 入场时间从
+          startDateTo:filters.startDateTo, // 到
           admissionWatch:filters.admissionWatch // 值班员
       };
       para.jwt = window.localStorage.getItem("jwt");
@@ -410,7 +410,7 @@ export default {
                        licensePlate:item.licensePlate,// 车牌号
                        registerNo:item.registerNo,// 注册号
                        chargeType:item.chargeType,// 计费类型
-                       car_group:item.car_group, //车辆分组
+                       carGroup:item.carGroup, //车辆分组
                        entrancePassageway:item.entrancePassageway, //入口通道
                        enterDate:item.enterDate, // 入场时间
                        admissionReleaseType:item.admissionReleaseType, //放行方式
