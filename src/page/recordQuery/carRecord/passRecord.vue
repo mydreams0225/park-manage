@@ -3,6 +3,7 @@
 		<div class="parent">
       <!-- 查询区 -->
 			<div class="margin-tops querys" >
+        <span>所属停车场</span>
 				<el-select  @change="parkChange" v-model="filters.parkNo" filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in park"
@@ -15,6 +16,7 @@
 	            <el-input   id="plate_no" name="plate_no" placeholder="车牌号" v-model="filters.licensePlate" >
                      <template slot="prepend">车牌号</template>   
                 </el-input>
+                <span>通道</span>
                 <el-select v-model="filters.entrancePassageway" filterable placeholder="通道" >
 	                    <el-option
 	                      v-for="item in passageway"
@@ -23,6 +25,7 @@
 	                      :value="item.value">
 	                    </el-option>
 	            </el-select>
+              <span>计费类型</span>
 	            <el-select v-model="filters.chargeType" filterable placeholder="计费类型" >
 	                    <el-option
 	                      v-for="item in feeType"
@@ -51,6 +54,7 @@
                 <el-input   id="dutyMan" name="dutyMan" placeholder="值班员"  v-model="filters.admissionWatch">
                      <template slot="prepend">值班员</template>   
                 </el-input>
+                <span>放行方式</span>
                 <el-select v-model="filters.admissionReleaseType" filterable placeholder="放行方式">
 	                    <el-option
 	                      v-for="item in releaseMethod"
@@ -514,5 +518,8 @@ export default {
 .panel ul li {
   height: 100px;
   list-style: none;
+}
+.querys  span{
+  font-size: 12px;
 }
 </style>

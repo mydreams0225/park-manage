@@ -29,6 +29,8 @@ import {constantRouterMap} from '@/router';
 
 import Blob from './excel/Blob';
  import Export2Excel from './excel/Export2Excel';
+ import common from '../commonFunction/common.js';
+  Vue.prototype.common=common
 let data = JSON.parse(window.localStorage.getItem('userRole'));
  
 if (data){

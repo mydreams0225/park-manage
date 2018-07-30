@@ -332,6 +332,27 @@
                     "name": "菜单管理"
                 }
             ]
+        },
+        {
+            "path": "/merchantManage",
+            "hasChildren":true,
+            "name": "商户管理",
+            "iconCls": "el-icon-check",
+            "children": [
+                {
+                    "path": "/merchantManage/businessListings",
+                    "hasChildren":false,
+                    "component": "merchantManage/businessListings",
+                    "name": "商户列表"
+                },
+                {
+                    "path": "/merchantManage/businessAccountList",
+                    "hasChildren":false,
+                    "component": "merchantManage/businessAccountList",
+                    "name": "商户账号列表"
+                }
+               
+            ]
         }
     ]
 }

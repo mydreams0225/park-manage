@@ -3,6 +3,7 @@
 		<div class="parent">
 		
 			<div class="margin-tops querys" >
+             <span>所属停车场</span>
 				      <el-select v-model="filters.park" filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in park"
@@ -196,5 +197,8 @@ export default {
   position: absolute;
   top: 45px;
   right: 0;
+}
+.querys span{
+  font-size: 12px;
 }
 </style>
