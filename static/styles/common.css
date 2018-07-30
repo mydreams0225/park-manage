@@ -135,4 +135,8 @@
   .querys span{
     font-size: 12px;
 }
+.querys .el-input-group {
+
+  width: 200px;
+}
 
