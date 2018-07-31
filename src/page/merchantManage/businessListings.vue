@@ -4,7 +4,7 @@
             <!-- 操作区 -->
             <div class="margin-tops">
                 <el-button type="primary" size="medium" @click="addbusiness"><i class="el-icon-plus"></i> 新增</el-button>
-                <el-button type="denger" size="medium" @click="batchdelete"><i class="el-icon-delete"></i> 删除</el-button>
+                <el-button type="danger" size="medium" @click="batchdelete"><i class="el-icon-delete"></i> 删除</el-button>
 
             </div>
             <!-- 查询区 -->
@@ -26,7 +26,7 @@
                      <template slot="prepend">门牌号</template>   
                 </el-input>
                 <el-button type="primary" size="medium" @click="querybusiness"><i class="el-icon-search" ></i>查询</el-button>
-                <el-button size="medium"><i class="el-icon-delete"></i> 清除</el-button>
+                <el-button size="medium" @click="clearquery"><i class="el-icon-delete"></i> 清除</el-button>
             </div>
             <!-- 展示区 -->
             <div class="margin-tops showarea">
@@ -68,9 +68,9 @@
                      <el-table-column
                         prop="isOpenLock"
                         label="是否开启加密锁">
-                        <template slot-scope="scope">
-                            <span style="color:red;"><i class="el-icon-error"></i></span>
-                            <span style="color:green;"><i class="el-icon-success"></i></span>
+                        <template slot-scope="scoped">
+                            <span v-if="scoped.row.isOpenLock==0" style="color:red;"><i class="el-icon-error"></i></span>
+                            <span v-if="scoped.row.isOpenLock==1" style="color:#32CD32;"><i class="el-icon-success"></i></span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -145,7 +145,7 @@
                             </el-col>
                             <el-col :span="12">
                                 <span style="color:red">*</span><span>商户名称:</span>
-                                <div><el-input placeholder="必填" v-model="save.obj.businessName"></el-input></div>
+                                <div><el-input placeholder="必填" v-model="save.obj.businessName"></el-input><span style="display:none">{{save.obj.businessId}}</span></div>
                             </el-col>
                         </el-row>
                          <el-row :gutter="20">
@@ -202,15 +202,25 @@
     </section>
 </template>
 <script>
+import {
+  reqBusinessList,
+  batchDeleteBusinessList,
+  reqAddBusinessList,
+  reqModifyBusinessList,
+  reqDeleteOneBusinessList
+} from "@/api/businessManage";
 export default {
   data() {
     return {
+      checkBoxs: [],
       dialogVisible: false,
       // park:[],
       filters: {
-        park: ""
+        park: "",
+        bussinessName: "",
+        businessName: ""
       },
-      isOpenLock:business.isOpenLock,
+      isOpenLock: business.isOpenLock,
       businessList: [
         {
           businessId: "1",
@@ -219,10 +229,8 @@ export default {
           contacts: "wo",
           contactNumber: "111",
           isOpenLock: "1",
-          customDiscounts:"",//折扣原因
-          createTime:"2017-3-3",
-
-
+          customDiscounts: "", //折扣原因
+          createTime: "2017-3-3"
         }
       ],
       totals: {
@@ -239,37 +247,185 @@ export default {
   },
   created() {
     var park = this.common.getParkList();
-
     this.park = park;
     console.log("333" + this.park);
+  },
+  mounted() {
+    this.querybusiness();
   },
   methods: {
     handlecurrentchange(val) {
       this.totals.currentPage = val;
     },
-    //添加商户信息
+    //添加商户信息展示
     addbusiness() {
-        var obj=this.save.obj;
-     
+      var obj = this.save.obj;
+
       this.save.saveVisible = true;
       this.save.titles = "添加商户";
       for (var item in obj) {
         obj[item] = "";
       }
     },
-    //编辑商户信息
-    handleedit(index,row) {
+    //编辑商户信息展示
+    handleedit(index, row) {
       this.save.saveVisible = true;
       this.save.titles = "编辑商户";
       this.save.obj = Object.assign({}, row);
     },
     //多选框选中
-    handleselectchange() {},
-    savebusiness() {},
+    handleselectchange(sels) {
+      console.log(sels);
+      this.checkBoxs = sels;
+    },
+    //添加或修改商户列表
+    savebusiness() {
+      var save = this.save.obj;
+      let para = {
+        jwt: window.localStorage.getItem("jwt"),
+        parkId:save["park"],//停车场编号
+        shopName: save["businessName"],//商户名称
+        shopNum: save["doorNumber"],//门牌号
+        contact: save["contacts"],//联系人
+        telePhone: save["contactNumber"],//手机号
+        isLock: save["isOpenLock"],//是否开启加锁
+        remark: save["customDiscounts"] ,//联系地址
+        address:save["address"],//地址
+        reason:save["memo"]//备注
+      };
+      if (!save.businessId) {
+          //添加
+            reqAddBusinessList(para).then(res => {
+                if (res.code === 1) {
+                this.$message({
+                    message: "添加成功",
+                    type: "success"
+                });
+                
+                }
+            }).catch(()=>{
+                console.log("错误")
+            });
+        // para.title = "添加";
+      } else {
+        para.shopId = save["businessId"];
+        reqModifyBusinessList(para).then(res => {
+                if (res.code === 1) {
+                this.$message({
+                    message: "修改成功",
+                    type: "success"
+                });
+                
+                }
+            }).catch(()=>{
+                console.log("错误");
+            });
+        // para.title = "修改";
+      }
+      this.querybusiness();
+      
+    },
     //查询
-    querybusiness() {},
+    querybusiness() {
+      var list = this.filters;
+      var _this = this;
+      let para = {
+        parkId: list.park,
+        shopName: list.businessName,
+        shopNum: list.doorNumber,
+        jwt: window.localStorage.getItem("jwt"),
+        currentPage: this.totals.currentPage,
+        pageSize: this.totals.pageSize
+      };
+      reqBusinessList(para).then(res => {
+        if (res.code === 1) {
+          _this.totals.totalNum = res.totalNum;
+          var list = JSON.parse(res.list);
+          getRetList(list, _this);
+        }
+      });
+    },
+    handlecurrentchange(val){
+       this.totals.currentPage=val;
+       this.querybusiness();
+    },
+    //返回参数解析
+    getRetList(retpara, _this) {
+      retpara.forEach(item => {
+        var temp = {
+          businessId: item["shopId"],
+          businessName: item["shopName"],
+          doorNumber: item["shopNum"],
+          contacts: item["contact"],
+          contactNumber: item["telePhone"],
+          isOpenLock:parseInt(item["isLock"]) ,
+          customDiscounts: item["remark"],
+          createTime: item["createDate"]
+        };
+
+        _this.businessList.push(temp);
+      });
+    },
     //批量删除
-    batchdelete() {}
+    batchdelete() {
+      var businessId = this.checkBoxs.map(item => item.businessId).toString();
+      if(businessId.length===0){
+           this.$alert("请选择要删除的行", "提示", {
+        type: "warning"
+      })
+      return;
+      }
+      this.$confirm("确认删除选中记录吗？", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          this.listLoading = true;
+          //NProgress.start();
+          let para = { shopId: businessId };
+          para.jwt = window.localStorage.getItem("jwt");
+          batchDeleteBusinessList(para).then(res => {
+            this.listLoading = false;
+            if (res.code === 1) {
+              //NProgress.done();
+              this.$message({
+                message: "删除成功",
+                type: "success"
+              });
+            }
+
+            this.querybusiness();
+          });
+        })
+        .catch(() => {});
+    },
+    //单行删除
+    handledel(index, row) {
+      this.$confirm("确认删除该记录吗?", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          this.listLoading = true;
+          //NProgress.start();
+          let para = { shopId: row.businessId };
+          para.jwt = window.localStorage.getItem("jwt");
+          reqDeleteOneBusinessList(para).then(res => {
+            this.listLoading = false;
+            //NProgress.done();
+            this.$message({
+              message: "删除成功",
+              type: "success"
+            });
+            this.querybusiness();
+          });
+        })
+        .catch(() => {});
+    },
+    clearquery(){
+        var filter = this.filters;
+      for (var item in filter) {
+        filter[item] = "";
+      }
+    },
   }
 };
 </script>

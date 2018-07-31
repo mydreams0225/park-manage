@@ -7,7 +7,10 @@
 
 */
 const business={
-    isOpenLock:[{value:"0",label:"不开启"},{value:"1",label:"开启"}]
+    isOpenLock:[{value:"1",label:"开启"},{value:"2",label:"不开启"}],
+    bussinessStatus:[{value:"1",label:"启用"},{value:"2",label:"不启用"}],
+    useState:[{value:"1",label:"未使用"},{value:"2",label:"使用"}]
+
 };
 const configs = {
     base: "http://192.168.0.32:8081/park",

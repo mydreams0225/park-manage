@@ -4,12 +4,12 @@
 				<!-- 工具条 -->
 	    	<div class="margin-tops">
 	    		<el-button @click="addRateShow" type="primary" size="medium"><i class="el-icon-plus" ></i>新增</el-button>
-	    		<el-button type="danger" size="medium"><i class="el-icon-delete"></i>删除</el-button>
+	    		<el-button @click="batchRemove" type="danger" size="medium"><i class="el-icon-delete"></i>删除</el-button>
 	    	</div>
 				<!-- 查询区 -->
 	    	<div class="margin-tops">
 					<span>所属停车场</span>
-	    		<el-select v-model="filters.v_park" filterable placeholder="所属停车场">
+	    		<el-select v-model="filters.park" filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in sels.park"
 	                      :key="item.value"
@@ -53,7 +53,7 @@
 										>
 									</el-table-column>
 									<el-table-column
-										prop="garage_name"
+										prop="garageName"
 										label="车库"
 										>
 									</el-table-column>
@@ -114,7 +114,7 @@
 		              <el-col :span="12">
 		                <div >
 		               
-		                <span ><strong>当前算法：</strong> </span>
+		                <span ><strong>当前算法：</strong> {{test.testObj.algorithmType}}</span>
 		              </div>
 		             </el-col>
 							   		              
@@ -123,20 +123,23 @@
 		              <el-col :span="12">
 		                <div >
 		               
-		                <span ><strong>当前计费类型：{{test.testObj.fee_type}} </strong> </span>
+		                <span ><strong>当前计费类型： </strong>{{test.testObj.chargeType}} </span>
 		              </div>
 		             </el-col>
 								 <el-col :span="12">
 		                <div >
 		               
-		                <span ><strong>当前车类型：{{test.testObj.car_type}} </strong> </span>
+		                <span ><strong>当前车类型： </strong> {{test.testObj.vehicleType}}</span>
 		              </div>
 		             </el-col>           
 		       </el-row>	
 					 <el-row :gutter="20">
 		              <el-col :span="12">
 		                <div >
-		                <span > <strong>子库是否启用: </strong>	 </span>
+		                <span > <strong>子库是否启用: </strong>  
+										   <el-radio v-model="test.isused" @change="sunChange" label="no" >不启用</el-radio>
+                       <el-radio v-model="test.isused" @change="sunChange" label="yes" >启用</el-radio>
+									 </span>
 		              </div>
 		             </el-col>      
 		          </el-row>
@@ -174,7 +177,41 @@
 		              </div>
 		             </el-col>              
 		       </el-row>
-					 <el-row :gutter="20">
+					 	<el-row v-show="showsunGarage" :gutter="20">
+		              <el-col :span="12">
+		                <div >
+		                <span >子库开始时间：</span>
+		              </div>
+		             </el-col>
+								<el-col :span="12">
+		                <div >
+		                <span >子库结束时间：</span>
+		              </div>
+		             </el-col>              
+		       </el-row>
+							<el-row v-show="showsunGarage" :gutter="20">
+		              <el-col :span="12">
+		                <div >
+		                <span >
+											<el-date-picker
+											v-model="test.sumStartDate"
+											type="datetime"
+											placeholder="选择日期时间">
+										</el-date-picker>
+										</span>
+		              </div>
+		             </el-col>
+								<el-col :span="12">
+		                <div >
+		                <span >	<el-date-picker
+											v-model="test.sumEndDate"
+											type="datetime"
+											placeholder="选择日期时间">
+										</el-date-picker></span>
+		              </div>
+		             </el-col>              
+		       </el-row>
+					 <el-row v-show="testResult" :gutter="20">
 		              <el-col :span="6">
 		                <div >
 		                <span >
@@ -185,17 +222,17 @@
 							    <el-col :span="18">
 		                <div >
 		                <span style="color:red; font-size:18px;" >
-										   应付金额
+										   应付金额:
 										</span>
 		              </div>
 									<div >
 		                <span style="color:red; font-size:18px; " >
-										   折扣金额
+										   折扣金额:
 										</span>
 		              </div>
 									<div >
 		                <span style="color:red; font-size:18px; " >
-										   折后金额
+										   折后金额:
 										</span>
 		              </div>
 		             </el-col>    
@@ -223,7 +260,7 @@
 						 </el-select>
 						 <span style="display:none">{{setting.leftobj.rateId}}</span>
 						  <p><strong>当前车库：</strong></p>
-							<label >{{setting.leftobj.garage_name}}</label>
+							<label >{{setting.leftobj.garageName}}</label>
 							 <p><strong>当前计费类型：</strong></p>
 							 <label >{{setting.leftobj.chargeType}}</label>
 							  <p><strong>当前车类型：</strong></p>
@@ -237,9 +274,9 @@
 											<el-input v-model="setting.oneForm.freeparkMin"></el-input>
 										</el-form-item>
 										<el-form-item label="折扣类型：">
-											<el-select v-model="setting.oneForm.disc_type" filterable >
+											<el-select v-model="setting.oneForm.discType" filterable >
 	                    <el-option
-	                      v-for="item in sels.disc_type"
+	                      v-for="item in sels.discType"
 	                      :key="item.value"
 	                      :label="item.label"
 	                      :value="item.value">
@@ -247,10 +284,10 @@
 		                </el-select>
 										</el-form-item>
 										 <el-form-item label="折扣值：">
-											<el-input v-model="setting.oneForm.disc_value"></el-input>
+											<el-input v-model="setting.oneForm.discValue"></el-input>
 										</el-form-item>
 									 </el-form>
-                   <el-tabs >·
+                   <el-tabs >
 												<el-tab-pane label="按小时收费" class="chargeJson">
                             <el-row :gutter="20" >
 															<el-col :span="6"><div >0~1小时收费：</div></el-col>
@@ -333,7 +370,7 @@
 															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t1"></el-input></div></el-col>
 															<el-col :span="3"><div >6~6.5小时收费：</div></el-col>
 															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t13"></el-input></div></el-col>
-															<el-col :span="3"><div >12~12.5小时收费：</div></el-col>
+																<el-col :span="3"><div >12~12.5小时收费：</div></el-col>
 															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t25"></el-input></div></el-col>
 															<el-col :span="3"><div >18~18.5小时收费：</div></el-col>
 															<el-col :span="3"><div class="grid-content "><el-input v-model="setting.chargeJson.t37"></el-input></div></el-col>
@@ -506,7 +543,7 @@
 								<el-row :gutter="24">
 		              <el-col :span="11">
 		                <div >
-		                <el-select v-model="edit.editObj.garage_name" filterable  >
+		                <el-select v-model="edit.editObj.garageName" filterable  >
                       <el-option
                         v-for="item in sels.garage"
                         :key="item.value"
@@ -591,13 +628,15 @@ import {
 export default {
   data() {
     return {
+			testResult:false,
+			showsunGarage:false,
 			noshow: false, //table不显示的列
 			//编辑或新增的集合
       edit: {
         editVisible: false,
         titles: "",
         editObj: {
-          garage_name: "",
+          garageName: "",
           chargeType: "",
           vehicleType: "",
           algorithmType: "",
@@ -607,19 +646,24 @@ export default {
 			//费率测试
       test: {
         testVisible: false,
-        testObj: {},
+        testObj: {
+					
+				},
+				isused:"no",
+				sumEndDate:new Date(),
+				sumStartDate:new Date(new Date().getTime() - 1 * 60 * 60 * 1000),
         start_date: new Date(new Date().getTime() - 1 * 60 * 60 * 1000),
         end_date: new Date()
 			},
 			//设置费率的数据
       setting: {
         settingVisible: false,
-        v_selSuanfa: "",
+        selSuanfa: "",
         isOne: true,
         isTwo: false,
         chargeJson: {},
         leftobj: {
-          garage_name: "",
+          garageName: "",
           chargeType: "",
           vehicleType: "",
           algorithmType: ""
@@ -627,13 +671,13 @@ export default {
         oneForm: {
           name: "",
           freeparkMin: "",
-          disc_type: "",
-          disc_value: ""
+          discType: "",
+          discValue: ""
         }
       },
       tableData: [
         {
-          garage_name: "1",
+          garageName: "1",
           chargeType: "3",
           vehicleType: "car",
           algorithmType: "按24小时累计时收费",
@@ -641,16 +685,15 @@ export default {
         }
       ],
       filters: {
-        v_park: "停车场1"
+        park: "停车场1"
       },
       sels: {
         park: [{ value: "停车场1", label: "停车场1" }],
         feetype: configs.chargeType,
-        disc_type: [{ value: "1", label: "1" }],
+        discType: [{ value: "1", label: "1" }],
         carType: configs.carType,
         selSuanfa: configs.selSuanfa
       },
-
       totals: {
         totalNum: 1,
         pageSize: 1,
@@ -666,6 +709,14 @@ export default {
     this.getParkList();
   },
   methods: {
+		sunChange(val){
+			console.log(val);
+			if(val==="yes"){
+				this.showsunGarage=true;
+			}else{
+				this.showsunGarage=false;
+			}
+		},
     //获取park信息
     getParkList() {
       var _this = this;
@@ -697,13 +748,11 @@ export default {
         });
       }
     },
-
     cancel() {
       var obj = this.edit.editObj;
       for (var item in obj) {
         obj[item] = "";
       }
-
       this.edit.editVisible = false;
     },
     //显示添加费率界面
@@ -740,7 +789,7 @@ export default {
     },
     getParkingRate() {
       let para = {
-				parkNo: this.filters.v_park,
+				parkNo: this.filters.park,
 				currentPage:this.totals.currentPage,
 				pageSize:this.totals.pageSize
       };
@@ -823,9 +872,8 @@ export default {
     //费率测试界面显示
     rateTest(index, row) {
       this.test.testVisible = true;
-      this.test.testObj = Object.assign({}, row);
+      this.test.testObj = Object.assign({}, row);discValue
     },
-
     changelSuanfa(val) {
       alert(val);
       var rightd = document.getElementsByClassName("rightd")[0];
@@ -845,11 +893,10 @@ export default {
         rateId: this.leftobj.algorithmType,
         chargeType: this.leftobj.chargeType,
         vehicleType: this.leftobj.vehicleType,
-        discountType: this.oneForm.disc_type,
-        discountValue: this.oneForm.disc_value
+        discountType: this.oneForm.discType,
+        discountValue: this.oneForm.discValue
       };
       para.jwt = window.localStorage.getItem("jwt");
-
       reqSettingRate(para).then(res => {
         if (res.code === 1) {
           this.$message({
@@ -886,7 +933,6 @@ export default {
   height: 730px;
   position: relative;
 }
-
 .rateMain .leftd {
   position: absolute;
   width: 200px;
@@ -905,7 +951,6 @@ export default {
   right: 0;
   top: 0;
 }
-
 .rateMain .rightd .el-form-item {
   margin-bottom: 0px;
 }

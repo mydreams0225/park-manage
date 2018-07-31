@@ -350,6 +350,12 @@
                     "hasChildren":false,
                     "component": "merchantManage/businessAccountList",
                     "name": "商户账号列表"
+                },
+                {
+                    "path": "/merchantManage/businessRQcode",
+                    "hasChildren":false,
+                    "component": "merchantManage/businessRQcode",
+                    "name": "商户二维码优惠券"
                 }
                
             ]

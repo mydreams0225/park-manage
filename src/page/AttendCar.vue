@@ -119,15 +119,15 @@
                     <a href="#" title="编辑" @click="handleEdit(index, item)"><i class="el-icon-edit"></i></a> 
                     <!-- <a href="#" title="删除" @click="handleDel(index, item)"><i class="el-icon-delete"></i></a> -->
                   </div>
-                  <div> 
+                  <div class="showImgBox"> 
                       <img :src="item.url" class="image" alt="拍照失败">
                   </div>
                   
                   <div class="info">
                      <p class="l">{{item.car_no}}  <span style="color:rgba(255,255,255,0.6)" >(   {{item.car_type}})</span></p>
                      <p class="r">{{item.entry_time}} {{item.desc}}</p>
-                     <span >{{item.flowId}}</span>
-                     <span>{{item.park_no}}</span>
+                     <span style="display:none">{{item.flowId}}</span>
+                     <span style="display:none">{{item.park_no}}</span>
                   </div>
                </el-card>
              </el-col>
@@ -240,6 +240,12 @@ export default {
           desc: "2018--3-3 4：13:4停车·"
         },
         {
+          url: "../../static/img/car.jpg",
+          car_no: "赣F6666"
+        },{
+          url: "../../static/img/car.jpg",
+          car_no: "赣F6666"
+        },{
           url: "../../static/img/car.jpg",
           car_no: "赣F6666"
         }
@@ -537,10 +543,14 @@ export default {
 
 <style scoped>
 .el-card {
-  height: 150px;
+  height: 230px;
 }
 .fatherImg .el-card__body {
-  height: 150px;
+  height: 230px;
+}
+.fatherImg .showImgBox img{
+  height: 230px;
+  
 }
 .querys span {
   font-size: 12px;
@@ -624,8 +634,15 @@ ul > li {
 }
 .el-card__body .el-checkbox {
   position: absolute;
-  top: 15px;
-  left: 15px;
+  top: 2px;
+  left: 2px;
+}
+/* 编辑 */
+.el-card__body .rf a{
+  position: absolute;
+  top: -13px;
+  right: -42px;
+
 }
 .rf i {
   position: absolute;
@@ -647,12 +664,13 @@ ul > li {
 
 .info {
   width: 100%;
+  height: 230px;
   background-color: rgb(0, 0, 0, 0.8);
   color: #fff;
   font-size: 12px;
   position: absolute;
   height: 25px;
-  bottom: 0;
+  bottom: -80px;
   left: 0;
   /* padding: 5px; */
   /* margin:5px; */
@@ -672,4 +690,5 @@ ul > li {
 .el-card__body {
   padding: 0 !important;
 }
+
 </style>
