@@ -101,7 +101,7 @@ export default {
           console.log("yzm" + _this.ruleForm2.yzm);
           var yzmt = this.verifyCode.validate(_this.ruleForm2.yzm);
           console.log("yzmt" + yzmt);
-          if (yzmt) {
+          // if (yzmt) {
             this.logining = true;
             var loginParams = new URLSearchParams();
             loginParams.append("username", this.ruleForm2.account);
@@ -110,11 +110,11 @@ export default {
            $.ajax({
               type: "get",
                data: { username: _this.ruleForm2.account, password: _this.ruleForm2.checkPass },
-               url: "../../static/json/login.json",
+               //url: "../../static/json/login.json",
               // url: "http://192.168.0.32:8081/park/login",
-              // url: `${configs.base}/park/login`,
-              // jsonpCallback: "showData",
-              // dataType: "jsonp",
+              url: `${configs.base}/login`,
+              jsonpCallback: "showData",
+              dataType: "jsonp",
               success: function(data) {
                 this.logining = false;
                 console.log(data);
@@ -123,11 +123,11 @@ export default {
                 $.ajax({
                   type: "get",
                   data:{a:"111"},
-                   url: "../../static/json/rolelist.json",
+                  // url: "../../static/json/rolelist.json",
                   // url: "http://192.168.0.32:8081/park/index",
-                  // url:`${configs.base}/park/index` ,
-                  // // jsonpCallback: "showDatas",
-                  // dataType: "jsonp",
+                  url:`${configs.base}/index` ,
+                  // jsonpCallback: "showDatas",
+                  dataType: "jsonp",
                   success: function(data) {
                     // console.log(data);
                     window.localStorage.setItem("user",JSON.stringify(data.userInfo));
@@ -149,10 +149,10 @@ export default {
             });
            ////jsonpend
            
-          } else {
-            alert("验证码错误");
-            return false;
-          }
+          // } else {
+          //   alert("验证码错误");
+          //   return false;
+          // }
         } else {
           console.log("error submit!!");
           return false;

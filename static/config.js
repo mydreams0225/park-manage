@@ -13,7 +13,7 @@ const business={
 
 };
 const configs = {
-    base: "http://192.168.0.32:8081/park",
+    base: "http://192.168.0.105:8081/park",
     //地区
     options: [
         {

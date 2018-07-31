@@ -218,7 +218,8 @@ export default {
       filters: {
         park: "",
         bussinessName: "",
-        businessName: ""
+        businessName: "",
+        doorNumber:""
       },
       isOpenLock: business.isOpenLock,
       businessList: [
@@ -308,19 +309,23 @@ export default {
             });
         // para.title = "添加";
       } else {
-        para.shopId = save["businessId"];
-        reqModifyBusinessList(para).then(res => {
-                if (res.code === 1) {
-                this.$message({
-                    message: "修改成功",
-                    type: "success"
+            para.shopId = save["businessId"];
+            reqModifyBusinessList(para).then(res => {
+                    if (res.code === 1) {
+                    this.$message({
+                        message: "修改成功",
+                        type: "success"
+                    });
+                    }else{
+                        this.$message({
+                        message: res.message,
+                        type: "error"
+                    }); 
+                    }
+                }).catch(()=>{
+                    console.log("错误");
                 });
-                
-                }
-            }).catch(()=>{
-                console.log("错误");
-            });
-        // para.title = "修改";
+            // para.title = "修改";
       }
       this.querybusiness();
       
@@ -338,10 +343,18 @@ export default {
         pageSize: this.totals.pageSize
       };
       reqBusinessList(para).then(res => {
-        if (res.code === 1) {
+          console.log(res);
+        if (res.code == 1) {
           _this.totals.totalNum = res.totalNum;
           var list = JSON.parse(res.list);
+          console.log("333ddd");
+          console.log(res);
           getRetList(list, _this);
+        }else{
+            this.$message({
+                    message: res.message,
+                    type: "error"
+                });
         }
       });
     },
@@ -391,6 +404,11 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
+            }else{
+               this.$message({
+                message: res.message,
+                type: "error"
+              }); 
             }
 
             this.querybusiness();
@@ -409,12 +427,20 @@ export default {
           let para = { shopId: row.businessId };
           para.jwt = window.localStorage.getItem("jwt");
           reqDeleteOneBusinessList(para).then(res => {
-            this.listLoading = false;
-            //NProgress.done();
-            this.$message({
-              message: "删除成功",
-              type: "success"
-            });
+              if(res.code==1){
+                    this.listLoading = false;
+                    //NProgress.done();
+                    this.$message({
+                    message: "删除成功",
+                    type: "success"
+                    });
+              }else{
+                  this.$message({
+                  message: res.message,
+                  type: "error"
+              }); 
+              }
+            
             this.querybusiness();
           });
         })
