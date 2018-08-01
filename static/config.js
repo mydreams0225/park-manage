@@ -7,9 +7,10 @@
 
 */
 const business={
-    isOpenLock:[{value:"1",label:"开启"},{value:"2",label:"不开启"}],
+    isOpenLock:[{value:1,label:"开启"},{value:2,label:"不开启"}],
     bussinessStatus:[{value:"1",label:"启用"},{value:"2",label:"不启用"}],
-    useState:[{value:"1",label:"未使用"},{value:"2",label:"使用"}]
+    useState:[{value:"1",label:"未使用"},{value:"2",label:"使用"}],
+    discountCycle:[{value:"1",label:"无限制"},{value:"2",label:"每月"},{value:"3",label:"每周"},{value:"4",label:"每天"},{value:"5",lable:"总共"}]
 
 };
 const configs = {

@@ -110,8 +110,7 @@ export default {
            $.ajax({
               type: "get",
                data: { username: _this.ruleForm2.account, password: _this.ruleForm2.checkPass },
-               //url: "../../static/json/login.json",
-              // url: "http://192.168.0.32:8081/park/login",
+                // url: "../../static/json/login.json",
               url: `${configs.base}/login`,
               jsonpCallback: "showData",
               dataType: "jsonp",
@@ -124,9 +123,7 @@ export default {
                   type: "get",
                   data:{a:"111"},
                   // url: "../../static/json/rolelist.json",
-                  // url: "http://192.168.0.32:8081/park/index",
                   url:`${configs.base}/index` ,
-                  // jsonpCallback: "showDatas",
                   dataType: "jsonp",
                   success: function(data) {
                     // console.log(data);

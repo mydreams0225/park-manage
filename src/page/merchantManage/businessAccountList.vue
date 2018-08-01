@@ -64,6 +64,48 @@
                         type="index"
                         label="序号">
                     </el-table-column>
+                   
+                    <el-table-column
+                       v-if="noshow"
+                        prop="businessAccountId"
+                        >
+                    </el-table-column>
+                    <el-table-column
+                       v-if="noshow"
+                        prop="freeConsumption"
+                        >
+                    </el-table-column>
+
+                    <el-table-column
+                       v-if="noshow"
+                        prop="freeMinute"
+                        >
+                    </el-table-column>
+                    <el-table-column
+                       v-if="noshow"
+                        prop="maxFreeTime"
+                        >
+                    </el-table-column>
+                    <el-table-column
+                       v-if="noshow"
+                        prop="isusefreeMoney"
+                        >
+                    </el-table-column>
+                    <el-table-column
+                       v-if="noshow"
+                        prop="freeMoney"
+                        >
+                    </el-table-column>
+                    <el-table-column
+                       v-if="noshow"
+                        prop="isusebyProportionFree"
+                        >
+                    </el-table-column>
+                    <el-table-column
+                       v-if="noshow"
+                        prop="duringMoreFree"
+                        >
+                    </el-table-column>
                     <el-table-column
                         prop="businessName"
                         label="商户名称">
@@ -72,6 +114,7 @@
                         prop="name"
                         label="姓名">
                     </el-table-column>
+
                      <el-table-column
                         prop="businessAccount"
                         label="商户账号">
@@ -164,10 +207,10 @@
 				  :title="save.titles"
 				  :visible.sync="save.saveVisible"
 				  width="40%">
-				     <div class="saveShow">
+				     <div class="saveShow business">
                         <el-row :gutter="20">
                             <el-col :span="12">
-                                <span style="color:red">*</span><span>所属商户:</span>
+                                <span @change="changemerchant" style="color:red">*</span><span>所属商户:</span>
                                 <div>
                                <el-select v-model="save.obj.merchant" filterable >
                                 <el-option
@@ -176,29 +219,37 @@
                                     :label="item.label"
                                     :value="item.value">
                                 </el-option>
+
                                 </el-select>
+                                <span v-show="show.merchant" class="valid">请选择商户</span>
                                 </div>
                             </el-col>
                             <el-col :span="12">
                                 <span style="color:red">*</span><span>姓名:</span>
-                                <div><el-input placeholder="必填" v-model="save.obj.name"></el-input></div>
+                                <div><el-input @change="businessAccountName"  placeholder="必填" v-model="save.obj.name"></el-input>
+                                   <span v-show="show.businessAccountName" class="valid">请输入姓名</span>
+                                </div>
                             </el-col>
                         </el-row>
                          <el-row :gutter="20">
                             <el-col :span="12">
                                 <span style="color:red">*</span><span>商户账号：</span>
-                                <div><el-input v-model="save.obj.businessAccount"></el-input></div>
+                                <div><el-input @change="businessAccountId" v-model="save.obj.businessAccount"></el-input>
+                               <span v-show="show.businessAccountId" class="valid">请输入商户账号</span>
+                                </div>
                             </el-col>
                             <el-col :span="12">
                                 <span style="color:red">*</span><span>密码：</span>
-                                <div><el-input v-model="save.obj.password"></el-input></div>
+                                <div><el-input @change="businessAccountPwd" v-model="save.obj.password"></el-input>
+                                <span v-show="show.businessAccountPwd" class="valid">请输入密码</span>
+                                </div>
                             </el-col>
                         </el-row>
                          <el-row :gutter="20">
                             <el-col :span="6">
-                                <span>折扣周期：</span>
+                                <span style="color:red">*</span><span>折扣周期：</span>
                                 <div>
-                                    <el-select v-model="save.obj.discountCycle" filterable >
+                                    <el-select @change="discountCycle" v-model="save.obj.discountCycle" filterable >
                                 <el-option
                                     v-for="item in sels.discountCycle"
                                     :key="item.value"
@@ -206,11 +257,14 @@
                                     :value="item.value">
                                 </el-option>
                                 </el-select>
+                                 <span v-show="show.discountCycle" class="valid">请选择折扣周期</span>
                                 </div>
                             </el-col>
                             <el-col :span="6">
-                                <span>周期内打折次数： </span>
-                                <div><el-input v-model="save.obj.cycleDiscountTimes"></el-input></div>
+                                 <span style="color:red">*</span><span>周期内打折次数： </span>
+                                <div><el-input  @change="cycleDiscountTimes" v-model="save.obj.cycleDiscountTimes"></el-input>
+                                <span v-show="show.cycleDiscountTimes" class="valid">请输入周期内打折次数</span>
+                                </div>
                             </el-col>
                             <el-col :span="12">
                                 <span>状态： </span>
@@ -337,20 +391,29 @@
 import {
   reqbusinessAccountList,
   batchDeletebusinessAccountList,
-  reqSavebusinessAccountList,
+  reqAddbusinessAccountList, // 添加
+  reqModifybusinessAccountList, // 修改
   reqDeleteOnebusinessAccountList,
   reqmerchant // 获取所属商户
 } from "@/api/businessManage";
 export default {
   data() {
     return {
-        show:{
-            showFreeMinute:true,
-            showFreeMoney:true,
-            showFreeProportion:true
-        },
+      noshow: false,
+      show: {
+        showFreeMinute: true,
+        showFreeMoney: true,
+        showFreeProportion: true,
+
+        merchant: false,
+        businessAccountName: false,
+        businessAccountId: false,
+        businessAccountPwd: false,
+        discountCycle: false,
+        cycleDiscountTimes: false
+      },
       sels: {
-        discountCycle: [],
+        discountCycle: business.discountCycle,
         bussinessStatus: business.bussinessStatus
       },
       checkBoxs: [],
@@ -361,7 +424,10 @@ export default {
       filters: {
         park: "",
         bussinessName: "",
-        businessName: ""
+        merchant: "",
+        bussinessName: "",
+        bussinessAccount: "",
+        bussinessStatus: ""
       },
 
       businessAccountList: [
@@ -377,10 +443,10 @@ export default {
           duringMoreFree: 1,
           bussinessStatus: "1", //状态
           createTime: "2018-8-8", //创建时间
-          freeConsumption: 1, //
-          freeMinute: 1, //免分钟
-          isusefreeMoney: 1, //免金额
-          isusebyProportionFree: 1, //是否启用免费
+          freeConsumption: "1", //
+          freeMinute: "1", //免分钟
+          isusefreeMoney: "1", //免金额
+          isusebyProportionFree: "1", //是否启用免费
           customOption: ""
         }
       ],
@@ -396,7 +462,8 @@ export default {
           discountCycle: "",
           duringMoreFree: "1",
           freeConsumption: 1,
-          customOption: ""
+          customOption: "",
+          merchant: ""
         }
       }
     };
@@ -419,33 +486,40 @@ export default {
       };
       reqmerchant(para)
         .then(res => {
+          console.log(res);
           if (res.code === 1) {
-            var list = JSON.parse(res.list);
+            var list = res.shopNameList;
             list.forEach(item => {
               var temp = { value: item["shopId"], label: item["shopName"] };
               _this.merchant.push(temp);
             });
+          } else {
           }
         })
         .catch(() => {});
-    },
-    handlecurrentchange(val) {
-      this.totals.currentPage = val;
     },
     //添加商户信息展示
     addbusiness() {
       var obj = this.save.obj;
 
       this.save.saveVisible = true;
-      this.save.titles = "添加商户";
+      this.save.titles = "添加商户账号";
       for (var item in obj) {
         obj[item] = "";
       }
+      obj.isbatchQRcode = 1;
+      obj.isCreateSubAccount = 1;
+      obj.bussinessStatus = "1";
+      obj.freeConsumption = 1;
+      obj.freeMinute = 1;
+      obj.isusefreeMoney = 1;
+      obj.isusebyProportionFree = 1;
+      obj.duringMoreFree = 1;
     },
     //编辑商户信息展示
     handleedit(index, row) {
       this.save.saveVisible = true;
-      this.save.titles = "编辑商户";
+      this.save.titles = "编辑商户账号";
       this.save.obj = Object.assign({}, row);
     },
     //多选框选中
@@ -455,49 +529,95 @@ export default {
     },
     //添加或修改商户列表
     savebusiness() {
+      var v = this.common.valid(
+        this.save.obj,
+        this.show,
+        "businessAccountList"
+      );
       var save = this.save.obj;
       let para = {
         jwt: window.localStorage.getItem("jwt"),
-        businessName: save["businessName"],
-        doorNumber: save["doorNumber"],
-        contacts: save["contacts"],
-        contactNumber: save["contactNumber"],
-        isOpenLock: save["isOpenLock"],
-        customDiscounts: save["customDiscounts"]
+        shopId: save["merchant"],
+        shopNumName: save["name"],
+        shopNumber: save["businessAccount"],
+        shopPassword: save["password"], //账户密码
+        discountPeriod: save["discountCycle"], //折扣周期：
+        periodNum: save["cycleDiscountTimes"], //周期内打折次数：
+        shopNumStatus: save["bussinessStatus"], //状态
+        isBatch: parseInt(save["isbatchQRcode"]), //是否可以生成批量打折二维码：
+        isTrumpet: parseInt(save["isCreateSubAccount"]), //是否可创建子账号：
+        isFill: parseInt(save["freeConsumption"]), //免单
+        isExemptTime: parseInt(save["freeMinute"]), //免时间(分钟)
+        maxTime: save["maxFreeTime"], //单次最大可免时间(分钟)：
+        isExemptMoney: save["isusefreeMoney"], //免金额
+        maxMoney: parseInt(save["freeMoney"]), //freeMoney
+        minRatio: parseInt(save["isusebyProportionFree"]), //按比例(%)：
+        isRepeatedly: parseInt(save["duringMoreFree"]), //有效期内多次免单：
+        customOption: save["customOption"] //自定义选项的小时数：后端暂时没接受
       };
-      if (!save.businessId) {
-        para.title = "添加";
+      if (!save.businessAccountId) {
+        // 添加
+
+        reqAddbusinessAccountList(para).then(res => {
+          if (res.code === 1) {
+            this.$message({
+              message: "添加成功",
+              type: "success"
+            });
+          } else {
+            this.$message({
+              message: res.message,
+              type: "error"
+            });
+          }
+        });
       } else {
-        para.businessId = save["businessId"];
-        para.title = "修改";
+        para.shopNumId = save["businessAccountId"];
+        // para.title = "修改";
+        reqModifybusinessAccountList(para).then(res => {
+          if (res.code === 1) {
+            this.$message({
+              message: "修改成功",
+              type: "success"
+            });
+          } else {
+            this.$message({
+              message: res.message,
+              type: "error"
+            });
+          }
+        });
       }
-      reqSavebusinessAccountList(para).then(res => {
-        if (res.code === 1) {
-          this.$message({
-            message: "保存成功成功",
-            type: "success"
-          });
-          this.querybusiness();
-        }
-      });
+      this.save.saveVisible = false;
+      this.querybusiness();
     },
     //查询
     querybusiness() {
       var list = this.filters;
       var _this = this;
       let para = {
-        park: list.park,
-        businessName: list.businessName,
-        doorNumber: list.doorNumber,
+        parkId: list.park,
+        merchant: list.merchant,
+        bussinessName: list.bussinessName,
+        bussinessAccount: list.bussinessAccount,
+        bussinessStatus: list.bussinessStatus,
         jwt: window.localStorage.getItem("jwt"),
         currentPage: this.totals.currentPage,
         pageSize: this.totals.pageSize
       };
       reqbusinessAccountList(para).then(res => {
-        if (res.code === 1) {
+        console.log(res);
+        if (res.code == 1) {
           _this.totals.totalNum = res.totalNum;
-          var list = JSON.parse(res.list);
-          getRetList(list, _this);
+          var list = res.shopNumInfoList;
+          console.log("shopNumInfoList");
+          console.log(res);
+          _this.getRetList(list, _this);
+        } else {
+          this.$message({
+            message: res.message,
+            type: "error"
+          });
         }
       });
     },
@@ -507,25 +627,56 @@ export default {
     },
     //返回参数解析
     getRetList(retpara, _this) {
-      retpara.forEach(item => {
-        var temp = {
-          businessId: item["businessId"],
-          businessName: item["businessName"],
-          doorNumber: item["doorNumber"],
-          contacts: item["contacts"],
-          contactNumber: item["contactNumber"],
-          isOpenLock: item["isOpenLock"],
-          customDiscounts: item["customDiscounts"],
-          createTime: item["createTime"]
-        };
+      _this.businessAccountList = [];
+      if (retpara != null && typeof retpara == "object") {
+        retpara.forEach(item => {
+          var isfree = item["isFill"] == 1 ? "免单" : "";
+          var isfreeTime = item["isExemptTime"] == 1 ? "免时长" : "";
+          var minute =
+            item["maxTime"] == true
+              ? "（最高减免" + item["maxTime"] + "分钟）"
+              : "";
+          var isfreeMoney = item["isExemptMoney"] == 1 ? "免金额" : "";
+          var money =
+            item["maxMoney"] == true
+              ? "（最高减免" + item["maxMoney"] + "分钟）"
+              : "";
+          var isBili = item["isRatio"] == 1 ? "按比例" : "";
+          var minRatio =
+            item["minRatio"] == true
+              ? "（最低折扣" + item["minRatio"] + "%）"
+              : "";
+          var discountType = isfree + "|";
+          isfreeTime + minute + "|";
+          isfreeMoney + money + "|";
+          isBili + minRatio;
+          var temp = {
+            businessAccountId: item["shopNumId"],
+            businessName: item["shopName"],
+            name: item["shopNumName"],
+            businessAccount: item["shopNumber"],
+            discounts: item["periodNum"],
+            discountType: item["isOpenLock"],
+            customDiscounts: item["customDiscounts"],
+            discountType: discountType,
+            isCreateSubAccount: item["isCreateSubAccount"], //是否可创建子账号
+            isbatchQRcode: item["isbatchQRcode"], // 是否可以生成批量打折二维码
+            bussinessStatus: item["bussinessStatus"], //状态
+            discountedTimes: item["periodNums"], //已打折次数
+            freeConsumption: item["isFill"],
+            createTime: Date.parse(item["createDate"])
+          };
 
-        _this.businessAccountList.push(temp);
-      });
+          _this.businessAccountList.push(temp);
+        });
+      }
     },
     //批量删除
     batchdelete() {
-      var businessId = this.checkBoxs.map(item => item.businessId).toString();
-      if (businessId.length === 0) {
+      var businessAccountId = this.checkBoxs
+        .map(item => item.businessAccountId)
+        .toString();
+      if (businessAccountId.length === 0) {
         this.$alert("请选择要删除的行", "提示", {
           type: "warning"
         });
@@ -537,15 +688,20 @@ export default {
         .then(() => {
           this.listLoading = true;
           //NProgress.start();
-          let para = { businessId: businessId };
+          let para = { ids: businessAccountId };
           para.jwt = window.localStorage.getItem("jwt");
           batchDeletebusinessAccountList(para).then(res => {
             this.listLoading = false;
-            if (res.code === 1) {
+            if (res.code == 1) {
               //NProgress.done();
               this.$message({
                 message: "删除成功",
                 type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.message,
+                type: "error"
               });
             }
 
@@ -562,16 +718,24 @@ export default {
         .then(() => {
           this.listLoading = true;
           //NProgress.start();
-          let para = { id: row.businessId };
+          let para = { shopNumId: row.businessAccountId };
           para.jwt = window.localStorage.getItem("jwt");
           reqDeleteOnebusinessAccountList(para).then(res => {
             this.listLoading = false;
+            if (res.code === 1) {
+              this.$message({
+                message: "删除成功",
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.message,
+                type: "error"
+              });
+            }
             //NProgress.done();
-            this.$message({
-              message: "删除成功",
-              type: "success"
-            });
-            this.getParkingRate();
+
+            this.querybusiness();
           });
         })
         .catch(() => {});
@@ -583,29 +747,60 @@ export default {
       }
     },
     //免时间
-    changefreeminute(val){
-       console.log(val);
-       if(val==2){
-          this.show.showFreeMinute=false;
-       }else{
-         this.show.showFreeMinute=true;
-       }
+    changefreeminute(val) {
+      console.log(val);
+      if (val == 2) {
+        this.show.showFreeMinute = false;
+      } else {
+        this.show.showFreeMinute = true;
+      }
     },
     //免金额改变
-    changefreemoney(val){
-        if(val==2){
-            this.show.showFreeMoney=false;
-        }else{
-            this.show.showFreeMoney=true;
-        }
+    changefreemoney(val) {
+      if (val == 2) {
+        this.show.showFreeMoney = false;
+      } else {
+        this.show.showFreeMoney = true;
+      }
     },
     //按比例
-    changefreeproportion(val){
-        if(val===2){
-            this.show.showFreeProportion=true;
-        }else{
-            this.show.showFreeProportion=false;
-        }
+    changefreeproportion(val) {
+      if (val === 2) {
+        this.show.showFreeProportion = false;
+      } else {
+        this.show.showFreeProportion = true;
+      }
+    },
+    businessAccountName(val) {
+      this.show.businessAccountName = this.common.changevalid(
+        val,
+        this.show.businessAccountName
+      );
+    },
+    changemerchant(val) {
+      this.show.merchant = this.common.changevalid(val, this.show.merchant);
+    },
+    businessAccountId(val) {
+    this.show.businessAccountId=
+      this.common.changevalid(val, this.show.businessAccountId);
+    },
+    businessAccountPwd(val) {
+      this.show.businessAccountPwd = this.common.changevalid(
+        val,
+        this.show.businessAccountPwd
+      );
+    },
+    discountCycle(val) {
+      this.show.discountCycle = this.common.changevalid(
+        val,
+        this.show.discountCycle
+      );
+    },
+    cycleDiscountTimes(val) {
+      this.show.cycleDiscountTimes = this.common.changevalid(
+        val,
+        this.show.cycleDiscountTimes
+      );
     }
   }
 };
@@ -629,6 +824,10 @@ export default {
 .saveShow .el-row {
   margin-top: 10px;
   /* line-height: 30px; */
+}
+.business .valid {
+  color: red;
+  font-size: 9px;
 }
 </style>
 

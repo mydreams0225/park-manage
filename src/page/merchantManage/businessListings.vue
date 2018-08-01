@@ -5,7 +5,6 @@
             <div class="margin-tops">
                 <el-button type="primary" size="medium" @click="addbusiness"><i class="el-icon-plus"></i> 新增</el-button>
                 <el-button type="danger" size="medium" @click="batchdelete"><i class="el-icon-delete"></i> 删除</el-button>
-
             </div>
             <!-- 查询区 -->
             <div class="margin-tops querys">
@@ -69,7 +68,7 @@
                         prop="isOpenLock"
                         label="是否开启加密锁">
                         <template slot-scope="scoped">
-                            <span v-if="scoped.row.isOpenLock==0" style="color:red;"><i class="el-icon-error"></i></span>
+                            <span v-if="scoped.row.isOpenLock==2" style="color:red;"><i class="el-icon-error"></i></span>
                             <span v-if="scoped.row.isOpenLock==1" style="color:#32CD32;"><i class="el-icon-success"></i></span>
                         </template>
                     </el-table-column>
@@ -115,7 +114,6 @@
             </div>
             <div>
                  <el-pagination
-              
                     @current-change="handlecurrentchange"
                     :current-page.sync="totals.currentPage"
                     :page-size.sync="totals.pageSize"
@@ -128,24 +126,32 @@
 				  :title="save.titles"
 				  :visible.sync="save.saveVisible"
 				  width="40%"	>
-				     <div>
+				     <div class="business">
+                      
                         <el-row :gutter="20">
                             <el-col :span="12">
-                                <span style="color:red">*</span><span>停车场:</span>
-                                <div>
-                               <el-select v-model="save.obj.park" filterable >
-                                <el-option
-                                    v-for="item in park"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                                </el-select>
+                               
+                                <span class="mustshuru">*</span><span>停车场</span>
+                                <div style="display:block">
+                                    <el-select  @change="changepark" v-model="save.obj.park" filterable >
+                                        <el-option
+                                            v-for="item in park"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                        </el-option>
+                                        </el-select>
+                                        <span v-show="show.park" class="valid">请选择停车场</span>
                                 </div>
+                                
                             </el-col>
                             <el-col :span="12">
-                                <span style="color:red">*</span><span>商户名称:</span>
-                                <div><el-input placeholder="必填" v-model="save.obj.businessName"></el-input><span style="display:none">{{save.obj.businessId}}</span></div>
+                                <span class="mustshuru">*</span><span>商户名称</span>
+                                <div><el-input @change="changebusinessName" placeholder="必填" v-model="save.obj.businessName"></el-input>
+                                     <span style="display:none">{{save.obj.businessId}}</span>
+                                     <span v-show="show.businessName" class="valid">请填写商户名称</span>
+                                </div>
+                               
                             </el-col>
                         </el-row>
                          <el-row :gutter="20">
@@ -172,14 +178,16 @@
                             <el-col :span="12">
                                 <span style="color:red">*</span><span>是否开启加密锁：</span>
                                 <div>
-                               <el-select v-model="save.obj.isOpenLock" filterable >
+                               <el-select @change="changeisopenlock" v-model="save.obj.isOpenLock" filterable >
                                 <el-option
                                     v-for="item in isOpenLock"
                                     :key="item.value"
                                     :label="item.label"
                                     :value="item.value">
                                 </el-option>
-                                </el-select></div>
+                                </el-select>
+                                <span v-show="show.isOpenLock" class="valid">请选择是否开启加密锁</span>
+                                </div>
                             </el-col>
                             <el-col :span="12">
                                 <span>备注：</span>
@@ -192,6 +200,7 @@
                                 <div><el-input v-model="save.obj.customDiscounts"></el-input></div>
                             </el-col>  
                         </el-row>
+                   
 					 </div>
 				  <span slot="footer" class="dialog-footer">
 				    <el-button @click="save.saveVisible=false">取 消</el-button>
@@ -219,7 +228,7 @@ export default {
         park: "",
         bussinessName: "",
         businessName: "",
-        doorNumber:""
+        doorNumber: ""
       },
       isOpenLock: business.isOpenLock,
       businessList: [
@@ -237,12 +246,18 @@ export default {
       totals: {
         currentPage: 1,
         pageSize: 10,
-        totalNum: 1
+        totalNum: 12
       },
       save: {
         saveVisible: false,
         titles: "",
         obj: {}
+      },
+      common:this.common,
+      show:{
+          park:false,
+          businessName:false,
+          isOpenLock:false,
       }
     };
   },
@@ -255,9 +270,18 @@ export default {
     this.querybusiness();
   },
   methods: {
-    handlecurrentchange(val) {
-      this.totals.currentPage = val;
-    },
+      changepark(val){
+          val?this.show.park=false:this.show.park=true;  
+      },
+      changebusinessName(val){
+          val?this.show.businessName=false:this.show.businessName=true;  
+      },
+      changeisopenlock(val){
+        val?this.show.isOpenLock=false:this.show.isOpenLock=true;
+      },
+
+      
+   
     //添加商户信息展示
     addbusiness() {
       var obj = this.save.obj;
@@ -267,6 +291,7 @@ export default {
       for (var item in obj) {
         obj[item] = "";
       }
+    //   this.save.obj.
     },
     //编辑商户信息展示
     handleedit(index, row) {
@@ -281,57 +306,67 @@ export default {
     },
     //添加或修改商户列表
     savebusiness() {
-      var save = this.save.obj;
-      let para = {
-        jwt: window.localStorage.getItem("jwt"),
-        parkId:save["park"],//停车场编号
-        shopName: save["businessName"],//商户名称
-        shopNum: save["doorNumber"],//门牌号
-        contact: save["contacts"],//联系人
-        telePhone: save["contactNumber"],//手机号
-        isLock: save["isOpenLock"],//是否开启加锁
-        remark: save["customDiscounts"] ,//联系地址
-        address:save["address"],//地址
-        reason:save["memo"]//备注
-      };
-      if (!save.businessId) {
-          //添加
-            reqAddBusinessList(para).then(res => {
-                if (res.code === 1) {
-                this.$message({
-                    message: "添加成功",
-                    type: "success"
-                });
-                
-                }
-            }).catch(()=>{
-                console.log("错误")
-            });
-        // para.title = "添加";
-      } else {
-            para.shopId = save["businessId"];
-            reqModifyBusinessList(para).then(res => {
-                    if (res.code === 1) {
-                    this.$message({
-                        message: "修改成功",
-                        type: "success"
-                    });
-                    }else{
-                        this.$message({
-                        message: res.message,
-                        type: "error"
-                    }); 
-                    }
-                }).catch(()=>{
-                    console.log("错误");
-                });
-            // para.title = "修改";
+    var v=  this.common.valid(this.save.obj,this.show,"businessList");
+    alert(v);
+    if(v !=1){
+        return false;
+    }else{
+            var save = this.save.obj;
+                    let para = {
+                        jwt: window.localStorage.getItem("jwt"),
+                        parkId: save["park"], //停车场编号
+                        shopName: save["businessName"], //商户名称
+                        shopNum: save["doorNumber"], //门牌号
+                        contact: save["contacts"], //联系人
+                        telePhone: save["contactNumber"], //手机号
+                        isLock:  save["isOpenLock"], //是否开启加锁
+                        remark: save["customDiscounts"], //联系地址
+                        address: save["address"], //地址
+                        reason: save["memo"] //备注
+                    };
+                    if (!save.businessId) {
+                        //添加
+                        reqAddBusinessList(para)
+                        .then(res => {
+                            if (res.code == 1) {
+                            this.$message({
+                                message: "添加成功",
+                                type: "success"
+                            });
+                            }
+                        })
+                        .catch(() => {
+                            console.log("错误");
+                        });
+                        // para.title = "添加";
+                    } else {
+                        para.shopId = save["businessId"];
+                        reqModifyBusinessList(para)
+                        .then(res => {
+                            if (res.code === 1) {
+                            this.$message({
+                                message: "修改成功",
+                                type: "success"
+                            });
+                            } else {
+                            this.$message({
+                                message: res.message,
+                                type: "error"
+                            });
+                            }
+                        })
+                        .catch(() => {
+                            console.log("错误");
+                        });
+                // para.title = "修改";
+                        }
+                         this.save.saveVisible = false;
+                        this.querybusiness();
       }
-      this.querybusiness();
-      
     },
     //查询
     querybusiness() {
+
       var list = this.filters;
       var _this = this;
       let para = {
@@ -343,50 +378,53 @@ export default {
         pageSize: this.totals.pageSize
       };
       reqBusinessList(para).then(res => {
-          console.log(res);
+        console.log(res);
         if (res.code == 1) {
           _this.totals.totalNum = res.totalNum;
-          var list = JSON.parse(res.list);
-          console.log("333ddd");
-          console.log(res);
-          getRetList(list, _this);
-        }else{
-            this.$message({
-                    message: res.message,
-                    type: "error"
-                });
+          var list = res.shopInfoList;
+          this.getRetList(list, _this);
+        } else {
+          this.$message({
+            message: res.message,
+            type: "error"
+          });
         }
       });
     },
-    handlecurrentchange(val){
-       this.totals.currentPage=val;
-       this.querybusiness();
+    handlecurrentchange(val) {
+        this.common.handlecurrentchange(this.totals.currentPage,this.querybusiness,val);
     },
     //返回参数解析
     getRetList(retpara, _this) {
+         _this.businessList=[];
+        console.log(retpara);
       retpara.forEach(item => {
         var temp = {
+          park:item["parkId"],
           businessId: item["shopId"],
           businessName: item["shopName"],
           doorNumber: item["shopNum"],
           contacts: item["contact"],
           contactNumber: item["telePhone"],
-          isOpenLock:parseInt(item["isLock"]) ,
+          isOpenLock: parseInt(item["isLock"]),
           customDiscounts: item["remark"],
-          createTime: item["createDate"]
+          createTime: item["createDate"],
+          memo:item["reason"],
+          address:item ["address"]
         };
 
         _this.businessList.push(temp);
       });
     },
-    //批量删除
+    //批量删除批量删除
     batchdelete() {
       var businessId = this.checkBoxs.map(item => item.businessId).toString();
-      if(businessId.length===0){
-           this.$alert("请选择要删除的行", "提示", {
-        type: "warning"
-      })
-      return;
+      alert(businessId);
+      if (businessId.length === 0) {
+        this.$alert("请选择要删除的行", "提示", {
+          type: "warning"
+        });
+        return;
       }
       this.$confirm("确认删除选中记录吗？", "提示", {
         type: "warning"
@@ -394,27 +432,32 @@ export default {
         .then(() => {
           this.listLoading = true;
           //NProgress.start();
-          let para = { shopId: businessId };
+          let para = { ids: businessId };
           para.jwt = window.localStorage.getItem("jwt");
           batchDeleteBusinessList(para).then(res => {
             this.listLoading = false;
-            if (res.code === 1) {
+            console.log("shanchu")
+            console.log(res);
+            if (res.code == 1) {
               //NProgress.done();
               this.$message({
                 message: "删除成功",
                 type: "success"
               });
-            }else{
-               this.$message({
+            } else {
+              this.$message({
                 message: res.message,
                 type: "error"
-              }); 
+              });
             }
 
             this.querybusiness();
           });
         })
-        .catch(() => {});
+        .catch((err) => {
+            alert(err)
+            _this.$router.push({ path: "/login" });
+        });
     },
     //单行删除
     handledel(index, row) {
@@ -427,39 +470,50 @@ export default {
           let para = { shopId: row.businessId };
           para.jwt = window.localStorage.getItem("jwt");
           reqDeleteOneBusinessList(para).then(res => {
-              if(res.code==1){
-                    this.listLoading = false;
-                    //NProgress.done();
-                    this.$message({
-                    message: "删除成功",
-                    type: "success"
-                    });
-              }else{
-                  this.$message({
-                  message: res.message,
-                  type: "error"
-              }); 
-              }
-            
+            if (res.code == 1) {
+              this.listLoading = false;
+              //NProgress.done();
+              this.$message({
+                message: "删除成功",
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.message,
+                type: "error"
+              });
+            }
+
             this.querybusiness();
           });
         })
         .catch(() => {});
     },
-    clearquery(){
-        var filter = this.filters;
+    clearquery() {
+      var filter = this.filters;
       for (var item in filter) {
         filter[item] = "";
       }
-    },
+    }
   }
 };
 </script>
-<style  scoped>
+<style  >
 .showarea a {
   text-decoration: none;
   font-size: 9px;
 }
+ .business .el-form-item__label{
+    text-align: left;
+}
+.business .valid{
+   color:red;
+   font-size:9px;
+}
+.business .mustshuru{
+    color:red;
+}
+
 </style>
 
 

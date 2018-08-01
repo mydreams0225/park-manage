@@ -108,12 +108,15 @@ export default {
       })
         .then(() => {
           window.localStorage.removeItem("user");
-          window.localStorage.removeItem("userRole")
-          window.localStorage.removeItem("userInfo")
-          
+          window.localStorage.removeItem("userRole");
+          window.localStorage.removeItem("userInfo");
+          window.localStorage.removeItem("jwt");
+          window.localStorage.removeItem("isLoadNodes");
           _this.$router.push({ path: "/login" });
         })
-        .catch(() => {});
+        .catch((err) => {
+          alert(err);
+        });
     },
     //折叠导航栏
     collapse: function() {

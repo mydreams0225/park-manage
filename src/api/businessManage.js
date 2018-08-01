@@ -43,9 +43,9 @@ export const reqModifyBusinessList = params => {
        {  // 这里是跨域写法  
       headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
 }).then(res => res.data); }; 
-//1.6 reqmerchant 请求所属商户
+//2.6 reqmerchant 请求所属商户
 export const reqmerchant = params => {    
-    return $axios.post(`${base}/`,  
+    return $axios.post(`${base}/shopInfo/list`,  
      qs.stringify(params,{ indices: false }),  
        {  // 这里是跨域写法  
       headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
@@ -54,23 +54,31 @@ export const reqmerchant = params => {
 
 //2.1.reqbusinessAccountList 商户账号列表查询
 export const reqbusinessAccountList = params => {    
-    return $axios.post(`${base}/`,  
+    return $axios.post(`${base}/shopNumInfo/query/page`,  
      qs.stringify(params,{ indices: false }),  
        {  // 这里是跨域写法  
       headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
 }).then(res => res.data); }; 
 
-//2.2.reqSavebusinessAccountList 保存商户账号
-export const reqSavebusinessAccountList = params => {    
-    return $axios.post(`${base}/`,  
+//2.2.reqAddbusinessAccountList 添加商户账号
+export const reqAddbusinessAccountList = params => {    
+    return $axios.post(`${base}/shopNumInfo/insert`,  
      qs.stringify(params,{ indices: false }),  
        {  // 这里是跨域写法  
       headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
+}).then(res => res.data); }; 
+
+//2.5 reqModifybusinessAccountList 修改商户账号
+export const reqModifybusinessAccountList = params => {    
+  return $axios.post(`${base}/shopNumInfo/update`,  
+   qs.stringify(params,{ indices: false }),  
+     {  // 这里是跨域写法  
+    headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
 }).then(res => res.data); }; 
 
 //2.3.batchDeletebusinessAccountList 批量删除商户账号列表
 export const batchDeletebusinessAccountList = params => {    
-    return $axios.post(`${base}/`,  
+    return $axios.post(`${base}/shopNumInfo/delete/batch/ids`,  
      qs.stringify(params,{ indices: false }),  
        {  // 这里是跨域写法  
       headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
@@ -78,7 +86,7 @@ export const batchDeletebusinessAccountList = params => {
 
 //2.4.reqDeleteOnebusinessAccountList 单行删除商户账户列表
 export const reqDeleteOnebusinessAccountList = params => {    
-    return $axios.post(`${base}/`,  
+    return $axios.post(`${base}/shopNumInfo/delete`,  
      qs.stringify(params,{ indices: false }),  
        {  // 这里是跨域写法  
       headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
@@ -86,7 +94,7 @@ export const reqDeleteOnebusinessAccountList = params => {
 
 //3.1.reqbusinessqrcode 查询二维码信息
 export const reqbusinessqrcode = params => {    
-    return $axios.post(`${base}/`,  
+    return $axios.post(`${base}/couponInfo/query/page`,  
      qs.stringify(params,{ indices: false }),  
        {  // 这里是跨域写法  
       headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
@@ -95,7 +103,7 @@ export const reqbusinessqrcode = params => {
 //3.2.batchDeletebusinessqrcode 批量删除
 
 export const batchDeletebusinessqrcode = params => {    
-    return $axios.post(`${base}/`,  
+    return $axios.post(`${base}/couponInfo/delete/batch/ids`,  
      qs.stringify(params,{ indices: false }),  
        {  // 这里是跨域写法  
       headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
@@ -103,7 +111,7 @@ export const batchDeletebusinessqrcode = params => {
 
 //3.3.reqDeleteOnebusinessQrcode 单行删除
 export const reqDeleteOnebusinessQrcode = params => {    
-    return $axios.post(`${base}/`,  
+    return $axios.post(`${base}/couponInfo/delete`,  
      qs.stringify(params,{ indices: false }),  
        {  // 这里是跨域写法  
       headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
@@ -112,7 +120,7 @@ export const reqDeleteOnebusinessQrcode = params => {
 //3.4.reqSavebusinessQrcode 保存
 
 export const reqSavebusinessQrcode = params => {    
-    return $axios.post(`${base}/`,  
+    return $axios.post(`${base}/couponInfo/insert`,  
      qs.stringify(params,{ indices: false }),  
        {  // 这里是跨域写法  
       headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
