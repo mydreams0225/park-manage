@@ -15,7 +15,7 @@
         <div> -->
         <div class="parent">
           <form :model="filters" class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
-                    <span>所属客户</span>
+                    
                     <el-input clearable :value="filters.clientValue"   id="client" name="client" placeholder="点击选择" readonly="readonly"  v-on:click.native="dialogTableVisible = true" style="cursor:pointer" >
                       <template slot="prepend"> 所属客户</template>   
                     </el-input>

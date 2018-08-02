@@ -2,64 +2,66 @@
 	<section>
 		<div class="parent">
 			<div class="margin-tops ">
-        <span>所属停车场</span>
-				<el-select v-model="v_park"  filterable >
+                <span>所属停车场</span>
+				<el-select v-model="filters.park"  filterable >
 	                    <el-option
 	                      v-for="item in park"
 	                      :key="item.value"
 	                      :label="item.label"
 	                      :value="item.value">
 	                    </el-option>
-	      </el-select>
+	           </el-select>
 			</div>
-       <div>
+
+        <div>
          <el-button v-show="editBtn" type="primary" @click="editBtns()">修改配置信息</el-button>
          <el-button v-show="queryBtn"  @click="queryBtns()">返回浏览列表</el-button>
-      </div>
+       </div>
+       <!-- 编辑树 -->
       <div class="mainEdit" v-show="mainEdit">
           <div class="margin-tops treeBox">
             <div class="btnClose"><el-button  size="mini" icon="el-icon-caret-right" @click="btnClose"></el-button>  </div>
-            <el-tree
-              :data="treeData"
-              node-key="id"
-              default-expand-all
-              :expand-on-click-node="false"
-              highlight-current
-              @node-click="nodeClick"
-              :render-content="renderContentEdit"
-              >
-              
-            </el-tree>
+                <el-tree
+                :data="treeData"
+                node-key="id"
+                default-expand-all
+                :expand-on-click-node="false"
+                highlight-current
+                @node-click="nodeClick"
+                :render-content="renderContentEdit"
+                >
+                
+                </el-tree>
           </div>
           <div v-show="rightContent1" class="contentR right">
             
             <p style="color:red;" > > 以下设置会直接影响系统运行，请在修改前确认设置无误。</p>
             <el-row :gutter="20">
                 <el-col :span="12">
-                  <div class="panel">
-                      <p class="title">基本设置</p>
-                      <P><span>内网IP：</span>{{ ip}}</P>
-                      <p><span>默认计费车型：</span>{{ ip}}</p>
-                      <p><span>缴费后允许逗留时间(分钟)：</span>{{ ip}}</p>
-                      <p><span>有效期到期提醒（单位:天）：</span>{{ ip}}</p>
-                      <p><span>到期车辆延时收费时间（单位:天）：</span>{{ ip}}</p>
-                      <p><span>到期车辆处理方式：</span>{{ ip}}</p>
-                      <p><span>二次缴费规则：</span>{{ ip}}</p>
-                      <p><span>车牌识别结果比对规则：</span>{{ ip}}</p>
-                      <p><span>未找到在场车辆处理方式：</span>{{ ip}}</p>
-                      <p><span>车辆有效期播报方式：</span>{{ ip}}</p>
-                      <p><span>是否启用折扣：</span>{{ ip}}</p>
-                      <p><span>累加未确认收费金额：</span>{{ ip}}</p>
-                  </div>
-                </el-col>
-                <el-col :span="12">
-                  <div class="panel" >
-                      <p class="title">设备系统信息</p>
-                        <P>当前版本：{{ ip}}</P>
-                        <P>发现新版本：{{ ip}}</P>
-                        <P>新版本说明：{{ ip}}</P>
-                        <P>升级操作：{{ ip}}</P>
-                  </div>
+                    <div class="panel">
+                        <p class="title">基本设置</p>
+                        <P style="display:inline-block;width:100px"><span>内网IP：</span></P> <p style="width:100px;">333</p>
+                        <p><span>默认计费车型：</span>{{ ip}}</p>
+                        <p><span>缴费后允许逗留时间(分钟)：</span>{{ ip}}</p>
+                        <p><span>有效期到期提醒（单位:天）：</span>{{ ip}}</p>
+                        <p><span>到期车辆延时收费时间（单位:天）：</span>{{ ip}}</p>
+                        <p><span>到期车辆处理方式：</span>{{ ip}}</p>
+                        <p><span>二次缴费规则：</span>{{ ip}}</p>
+                        <p><span>车牌识别结果比对规则：</span>{{ ip}}</p>
+                        <p><span>未找到在场车辆处理方式：</span>{{ ip}}</p>
+                        <p><span>车辆有效期播报方式：</span>{{ ip}}</p>
+                        <p><span>是否启用折扣：</span>{{ ip}}</p>
+                        <p><span>累加未确认收费金额：</span>{{ ip}}</p>
+                    </div>
+                    </el-col>
+                    <el-col :span="12">
+                    <div class="panel" >
+                        <p class="title">设备系统信息</p>
+                            <P>当前版本：{{ ip}}</P>
+                            <P>发现新版本：{{ ip}}</P>
+                            <P>新版本说明：{{ ip}}</P>
+                            <P>升级操作：{{ ip}}</P>
+                    </div>
                 </el-col>
                 
             </el-row>
@@ -257,8 +259,14 @@
                     </el-row>
               </div>
               
-          </div>  
+          </div> 
+          <div v-show="rightContentCamera" class="contentR right">
+               <div class="panel">
+                   ddd
+               </div>
+          </div> 
       </div>
+      <!-- 查询树 -->
       <div class="main" v-show="mainQuery">
           <div class="margin-tops treeBox">
             <div class="btnClose"><el-button  size="mini" icon="el-icon-caret-right" @click="btnClose"></el-button>  </div>
@@ -281,27 +289,74 @@
                 <el-col :span="12">
                   <div class="panel">
                       <p class="title">基本设置</p>
-                      <P><span>内网IP：</span>{{ ip}}</P>
-                      <p><span>默认计费车型：</span>{{ ip}}</p>
-                      <p><span>缴费后允许逗留时间(分钟)：</span>{{ ip}}</p>
-                      <p><span>有效期到期提醒（单位:天）：</span>{{ ip}}</p>
-                      <p><span>到期车辆延时收费时间（单位:天）：</span>{{ ip}}</p>
-                      <p><span>到期车辆处理方式：</span>{{ ip}}</p>
-                      <p><span>二次缴费规则：</span>{{ ip}}</p>
-                      <p><span>车牌识别结果比对规则：</span>{{ ip}}</p>
-                      <p><span>未找到在场车辆处理方式：</span>{{ ip}}</p>
-                      <p><span>车辆有效期播报方式：</span>{{ ip}}</p>
-                      <p><span>是否启用折扣：</span>{{ ip}}</p>
-                      <p><span>累加未确认收费金额：</span>{{ ip}}</p>
+                       <div>
+                           <P ><span>内网IP：</span></P>
+                            <p>333</p>
+                       </div>
+                      <div>
+                          <p ><span>默认计费车型：</span></p>
+                           <p>333</p>
+                      </div>
+                      <div>
+                          <p ><span>缴费后允许逗留时间(分钟)：</span></p>
+                           <p>333</p>
+                    </div>
+                      <div>
+                          <p ><span>有效期到期提醒（单位:天）：</span></p>
+                           <p>333</p>
+                      </div>
+                      <div>
+                          <p ><span>到期车辆延时收费时间（单位:天）：</span></p>
+                           <p>333</p>
+                      </div>
+                      <div>
+                          <p ><span>到期车辆处理方式：</span></p>
+                           <p>333</p>
+                      </div>
+                      <div>
+                          <p ><span>二次缴费规则：</span></p>
+                           <p>333</p>
+                      </div>
+                      <div>
+                          <p ><span>车牌识别结果比对规则：</span></p>
+                           <p>333</p>
+                      </div>
+                      <div>
+                          <p ><span>未找到在场车辆处理方式：</span></p>
+                           <p>333</p>
+                      </div>
+                      <div>
+                          <p  ><span>车辆有效期播报方式：</span></p>
+                           <p>333</p>
+                      </div>
+                      <div>
+                          <p  ><span>是否启用折扣：</span></p>
+                           <p>333</p>
+                      </div>
+                      <div>
+                          <p  ><span>累加未确认收费金额：</span></p>
+                           <p>333</p>
+                      </div>
                   </div>
                 </el-col>
                 <el-col :span="12">
                   <div class="panel" >
                       <p class="title">设备系统信息</p>
-                        <P>当前版本：{{ ip}}</P>
-                        <P>发现新版本：{{ ip}}</P>
-                        <P>新版本说明：{{ ip}}</P>
-                        <P>升级操作：{{ ip}}</P>
+                        <div>
+                            <P >当前版本：</P>
+                            <p>333</p>
+                        </div>
+                        <div>
+                            <P>发现新版本：</P>
+                            <p>333</p>
+                        </div>
+                        <div>
+                            <P>新版本说明：{{ ip}}</P>
+
+                        </div>
+                        <div>
+                            <P>升级操作：{{ ip}}</P>
+                        </div>
                   </div>
                 </el-col>
                 
@@ -469,7 +524,7 @@
             </el-row>
           </div>
           <div v-show="rightContent2" class="contentR right">
-             <div class="panel">
+             <div class="panel panel2" >
                     <p class="title">属性信息</p>
                      <el-row :gutter="20">
                         <el-col :span="8">
@@ -499,19 +554,44 @@
                         </el-col>
                     </el-row>
               </div>
-              
           </div>
+          <div v-show="rightContentCamera" class="contentR right">
+               <div class="panel panel2">
+                 <p class="title cameraTitle">属性信息</p>
+                    <el-row  :gutter="20">
+                        <el-col :span="8">
+                            <div>
+                                <P ><span> 内网IP地址：</span></P>
+                               <p> <span>{{query.passageway.ip}}</span> </p>
+                            </div>
+                          
+                            <div>
+                              <p ><span>关联通道：</span>    </p>
+                              <p> <span>{{query.passageway.type}}</span> </p>
+                          </div>
+                           
+                        </el-col>
+                        <el-col :span="10">
+                            <p style="width:100%;"> 
+                                <el-button type="success" size="mini" icon="el-icon-view"> 抓拍现场照片</el-button> 
+                                <el-button type="success" size="mini" ><i>|||</i> 设置识别区域</el-button> 
+                                <el-button type="primary" size="mini" icon="el-icon-refresh">刷新</el-button> 
+                            </p>
+                            <div class="imgBox">
+                                <img src="../../../static/img/car.jpg" alt="">
+                            </div>
+                        </el-col>
+                    </el-row>
+               </div>
+          </div> 
       </div>
-     
-				
-         
-			
-			
 		</div>
 	</section>
 </template>
 <script>
 let id = 1000;
+
+import camera from "@/assets/img/camera.png";
 
 export default {
   data() {
@@ -542,8 +622,7 @@ export default {
       },
       {
         id: 3,
-        label: "收费手持机",
-        
+        label: "收费手持机"
       },
       {
         id: 4,
@@ -560,30 +639,29 @@ export default {
           {
             id: 60,
             label: "入口通道-入口",
-           
+
             children: [
-          {
-            id: 600,
-            label: "入口摄像机",
-            type: "edrere",
-            ip: "192.178.4.4",
-            
-          }]
+              {
+                id: 600,
+                label: "入口摄像机",
+                type: "入口通道",
+                ip: "192.168.0.225"
+              }
+            ]
           },
-           {
+          {
             id: 61,
             label: "出口通道-出口",
-           
+
             children: [
-          {
-            id: 611,
-            label: "出口摄像机",
-            type: "edrere",
-            ip: "192.178.4.4",
-            
-          }]
-          },
-          
+              {
+                id: 611,
+                label: "出口摄像机",
+                type: "出口通道",
+                ip: "192.178.0.136"
+              }
+            ]
+          }
         ]
       },
       {
@@ -596,36 +674,51 @@ export default {
       }
     ];
     return {
-      mainQuery:true,
-      mainEdit:false,
-      editBtn:true,
-      queryBtn:false,
+      mainQuery: true,
+      mainEdit: false,
+      editBtn: true,
+      queryBtn: false,
       data4: JSON.parse(JSON.stringify(data)),
       treeData: JSON.parse(JSON.stringify(data)),
-      v_park: "",
+      filters: {
+        park: ""
+      },
       park: [{}],
       nodeLabel: "",
       showType: false,
       rightContent1: false,
       rightContent2: false,
-      ip: "192.168.0.225",
-      type: "nt999"
+      editrightContent1: false,
+      editrightContent1: false,
+      rightContentCamera: false,
+      ip: "",
+      type: "",
+      query: {
+        passageway: {
+          ip: "",
+          type: ""
+        }
+      }
       // url:'1'
     };
   },
-
+  mounted() {
+    $(".showType").toggle();
+    $(".showIp").toggle();
+    $(".right").remove("right");
+  },
   methods: {
-    editBtns(){
-      this.editBtn=false;
-      this.queryBtn=true;
-      this.mainEdit=true;
-      this.mainQuery=false;
+    editBtns() {
+      this.editBtn = false;
+      this.queryBtn = true;
+      this.mainEdit = true;
+      this.mainQuery = false;
     },
-    queryBtns(){
-      this.editBtn=true;
-      this.queryBtn=false;
-      this.mainEdit=false;
-      this.mainQuery=true;
+    queryBtns() {
+      this.editBtn = true;
+      this.queryBtn = false;
+      this.mainEdit = false;
+      this.mainQuery = true;
     },
     btnClose() {
       $(".showType").toggle();
@@ -648,17 +741,26 @@ export default {
     },
     nodeClick(obj, node, zujian) {
       console.log("obj");
-      console.log(node.parent.label);
+      console.log(node);
       if (node.parent.label === "物联网关") {
         this.rightContent1 = true;
+        this.rightContentCamera = false;
         this.rightContent2 = false;
       } else if (node.parent.label === "收费机顶盒") {
         this.rightContent1 = false;
         this.rightContent2 = true;
+        this.rightContentCamera = false;
+      } else if (node.parent.parent.label === "通道管理") {
+        this.rightContentCamera = true;
+        this.rightContent1 = false;
+        this.rightContent2 = false;
+        this.query.passageway.type = node.data.type;
+        this.query.passageway.ip = node.data.ip;
       }
+
       this.nodeLabel = node.label;
     },
-    
+
     renderContent(h, { node, data, store }) {
       console.log(node);
       if (node.data.id < 10) {
@@ -672,109 +774,102 @@ export default {
         );
 
         //  return false;
-      } else if(node.childNodes.length!=0){
-         return (
+      } else if (node.childNodes.length != 0) {
+        return (
           <span class="custom-tree-node">
             <span>
               {" "}
               <strong>{node.label} </strong>
-              
             </span>
           </span>
-        );  
-      }
-      else {
+        );
+      } else {
         return (
           <span class="custom-tree-node">
-            <span style="padding:10px;margin-right:40px">{node.label} </span>
-            <span class="showType" style="padding-right:130px ">
-              型号: {node.data.type}
-            </span>
-            <span class="showIp" style="padding-right:130px ;">
+            <span class="nodelabel">{node.label} </span>
+            <span class="showType showModel">型号: {node.data.type}</span>
+            <span class="showIp showModel showips">
               ip:
               {node.data.ip}
             </span>
-            <span>
-            <el-button size="mini" type="primary" icon="el-icon-document" />
+            <span class="queryBtns">
+              <el-button size="mini" type="primary" icon="el-icon-document" />
             </span>
-            
           </span>
         );
       }
     },
-    renderContentEdit(h,{node,data,store}){
+    renderContentEdit(h, { node, data, store }) {
       console.log(node);
-     if(node.data.id < 10 && node.data.id==="1"){
-       <span class="custom-tree-node">
-            <span>
-              {" "}
-              <strong>{node.label} </strong>
-               
-            </span>
+      if (node.data.id < 10 && node.data.id === "1") {
+        <span class="custom-tree-node">
+          <span class="nodelabel">
+            <strong>{node.label} </strong>
           </span>
-       
-     }
-      else if ( node.data.id < 10 && node.data.id!=1 ) {
+        </span>;
+      } else if (node.data.id < 10 && node.data.id != 1) {
         return (
           <span class="custom-tree-node">
             <span>
-              {" "}
               <strong>{node.label} </strong>
-               <span  class="addP">
-                  <a href="#" onclick="alert(`fff`) "><strong>+添加</strong></a>
-             
-               </span>
+              <span class="addP">
+                <a href="#" onclick="alert(`fff`) ">
+                  <strong>+添加</strong>
+                </a>
+              </span>
             </span>
           </span>
         );
 
         //  return false;
-      }else if(!node.isLeaf && node.parent && node.data.id!=1 ){
-          return (
+      } else if (!node.isLeaf && node.parent && node.data.id != 1) {
+        return (
           <span class="custom-tree-node">
-            <span>
-              {" "}
+            <span class="nodelabel">
               <strong>{node.label} </strong>
-                <span  class="addP">
-                  <a href="#" ><strong>+添加</strong></a>&nbsp;
-                   <el-button onclick="alert(`删除`)" size="mini"type="danger" icon="el-icon-delete"  />
-               </span>
-               
-
+              <span class="addP ">
+                <a href="#">
+                  <strong>+添加</strong>
+                </a>&nbsp;
+                <el-button
+                  onclick="alert(`删除`)"
+                  size="mini"
+                  type="danger"
+                  icon="el-icon-delete"
+                />
+              </span>
             </span>
           </span>
         );
-      }
-      else if(node.childNodes.length!=0){
-         return (
-          <span class="custom-tree-node">
-            <span>
-              {" "}
-              <strong>{node.label} </strong>
-              
-            </span>
-          </span>
-        );  
-      }
-       else {
+      } else if (node.childNodes.length != 0) {
         return (
           <span class="custom-tree-node">
-            <span style="padding:10px;margin-right:40px">{node.label} </span>
-            <span class="showType" style="padding-right:130px ">
-              型号: {node.data.type}
+            <span class="nodelabel">
+              <strong>{node.label} </strong>
             </span>
-            <span class="showIp" style="padding-right:130px ;">
+          </span>
+        );
+      } else {
+        return (
+          <span class="custom-tree-node">
+            <span class="nodelabel">{node.label} </span>
+            <span class="showType showModel">型号: {node.data.type}</span>
+            <span class="showIp showModel">
               ip:
               {node.data.ip}
             </span>
 
-            <el-button size="mini"type="primary" icon="el-icon-document" />
-            <el-button size="mini"type="primary" icon="el-icon-edit" />
-            <el-button size="mini"type="danger" onclick="alert(`删除`)"  icon="el-icon-delete" />
+            <el-button size="mini" type="primary" icon="el-icon-document" />
+            <el-button size="mini" type="primary" icon="el-icon-edit" />
+            <el-button
+              size="mini"
+              type="danger"
+              onclick="alert(`删除`)"
+              icon="el-icon-delete"
+            />
           </span>
         );
       }
-
     }
   }
 };
@@ -785,15 +880,21 @@ export default {
   height: 40px;
 }
 .custom-tree-node {
-  
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 12px;
   padding-right: 8px;
+  /* position: relative; */
 }
-.main ,
-.mainEdit{
+.queryBtns {
+  position: absolute;
+  top: 0;
+
+  right: 5px;
+}
+.main,
+.mainEdit {
   position: relative;
   display: flex;
   height: 100%;
@@ -814,30 +915,46 @@ export default {
   width: 1500px;
   height: 750px;
   -ms-scroll-snap-y: auto;
-  overflow:auto;
+  overflow: auto;
 }
-.panel{
-  border:1px solid #ddd;
-  margin:15px 10px;
+.panel {
+  border: 1px solid #ddd;
+  margin: 15px 10px;
   /* height: 350px; */
   border-radius: 5px;
 }
-.panel .title{
+.panel2 {
+  border-radius: 0px;
+  margin: 0px;
+  border: 0px;
+}
+.panel .title {
+  position: relative;
   margin-bottom: 10px;
-   text-align: left;
+  text-align: left;
   font-weight: bold;
-  padding:5px;
+  padding: 5px;
   background-color: #eee;
   border-bottom: 1px solid #ccc;
 }
-.panel p span{
-  color:red;
+.panel .cameraTitle {
+  text-align: right;
 }
-.panel p{
+.panel p span {
+  color: red;
+}
+.panel2 p span {
+  color: #000;
+}
+.panel2 p .el-button span {
+  color: #fff;
+}
+.panel p {
   height: 25px;
-  text-align: center;
+  text-align: right;
 }
-.panel .content2left{
+
+.panel .content2left {
   float: left;
   width: 100px;
 }
@@ -850,13 +967,52 @@ export default {
   right: -13px;
   z-index: 999;
 }
-.addP{
-  position:absolute;
-  top:0;
-  right:10px;
-  padding:5px;
+.addP {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  padding: 5px;
 }
-.addP a{
+.addP a {
   text-decoration: none;
+  color: #09c;
+}
+.nodelabel {
+  padding: 10px;
+  /* margin-right: 40px; */
+  width: 150px;
+}
+.showModel {
+  padding-right: 80px;
+  display: inline-block;
+  width: 100px;
+}
+.panel2 .imgBox {
+  margin: 20px 40px 0px 0px;
+  width: 450px;
+  height: 230px;
+}
+.panel2 .imgBox img {
+  width: 100%;
+}
+.panel .psetlabel {
+  display: inline-block;
+  width: 50%;
+  text-align: right;
+}
+.panel .psetvalue {
+  display: inline-block;
+  width: 40%;
+  text-align: left;
+}
+.panel div > p {
+  display: inline-block;
+  width: 50%;
+  text-align: right;
+}
+.panel div p:nth-child(2) {
+  display: inline-block;
+  width: 40%;
+  text-align: left;
 }
 </style>

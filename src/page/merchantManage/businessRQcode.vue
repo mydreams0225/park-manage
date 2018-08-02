@@ -93,6 +93,12 @@
                         prop="couponId"
                         label="编号">
                     </el-table-column>
+                    <!-- cc strBackUrl -->
+                    <el-table-column
+                        prop="strBackUrl"
+                        v-if="noshow"
+                        label="二维码链接地址">
+                    </el-table-column>
                     <el-table-column
                         prop="businessName"
                         label="商户名称">
@@ -144,6 +150,15 @@
                                 circle 
                                 size="mini" 
                                 @click="handledel(scopes.$index, scopes.row)">
+                                
+                            </el-button>
+                            <el-button 
+                               type="success"
+                                icon="el-icon-printer" 
+                                circle 
+                                size="mini" 
+                                @click="print(scopes.$index, scopes.row)">
+                                
                             </el-button>
                         </template>      
                     </el-table-column>
@@ -253,8 +268,17 @@
                         <el-row :gutter="20">
                             <el-col  v-show="show.freelist" :span="24">
                                 <span style="color:red">*</span> <span>{{save.obj.freeListTitle}}</span>
-                                  <el-input v-model="save.obj.freeList"></el-input>
+                                  <el-input v-show="show.nodate" v-model="save.obj.freeList"></el-input>
+                                  <div><el-date-picker v-show="show.date"
+                                    v-model="save.obj.duringDateTimeStart"
+                                    type="datetime"
+                                    placeholder="选择日期时间"
+                                    format="yyyy-MM-dd HH:mm:ss"
+                                    value-format="yyyyMMddHHmmss"
+                                    >
+                                    </el-date-picker> </div>
                             </el-col>
+                           
                         </el-row>
                         <el-row :gutter="20">
                             <el-col  v-show="show.batchNum" :span="24">
@@ -283,39 +307,39 @@ import {
 export default {
   data() {
     return {
-        sels:{
-            discountCycle:[],
-            // useState: business.useState,
-        },
-        useState: business.useState,
-        checkBoxs: [],
-        merchant:[],
-        bussinessStatus:[],
-        preferentialType:[],
-        dialogVisible: false,
+        noshow:true,
+      sels: {
+        discountCycle: []
+        // useState: business.useState,
+      },
+      useState: business.useState,
+      checkBoxs: [],
+      merchant: [],
+      bussinessStatus: [],
+      preferentialType: [],
+      dialogVisible: false,
       // park:[],
       filters: {
         park: "",
         merchant: "",
-        preferentialType:"",
-        duringDateTimeFrom:"",
-        duringDateTimeTo:"",
-        createDataTimeFrom:"",
-        createDataTimeTo:"",
-        useState:""
+        preferentialType: "",
+        duringDateTimeFrom: "",
+        duringDateTimeTo: "",
+        createDataTimeFrom: "",
+        createDataTimeTo: "",
+        useState: ""
       },
-      
+
       businessQRcode: [
         {
-          couponId:"1",//couponId,
+          couponId: "1", //couponId,
           businessName: "shanhu", //商户名称
-          preferentialInformation:"",//商户信息
-          duringDateTime:"",//有效期
-          useState:1,//使用状态
-          publisher:"",//发行人
-          createTime:"2018-8-8",//创建时间
-          useDateTime:"2018-9-9",//使用时间,
-          
+          preferentialInformation: "", //商户信息
+          duringDateTime: "", //有效期
+          useState: 1, //使用状态
+          publisher: "", //发行人
+          createTime: "2018-8-8", //创建时间
+          useDateTime: "2018-9-9" //使用时间,
         }
       ],
       totals: {
@@ -327,19 +351,21 @@ export default {
         saveVisible: false,
         titles: "",
         obj: {
-            discountCycle:"",
-            duringMoreFree:"1",
-            freeConsumption:1,
-            customOption:"",
-            preferentialType:1,
-            distributionMode:1
+          discountCycle: "",
+          duringMoreFree: "1",
+          freeConsumption: 1,
+          customOption: "",
+          preferentialType: 1,
+          distributionMode: 1
         }
       },
-      show:{
-          batchNum:false,
-          freelist:false
+      show: {
+        batchNum: false,
+        freelist: false,
+        nodate: false,
+        date: false
       },
-      user:window.localStorage.getItem("user")
+      user: window.localStorage.getItem("user")
     };
   },
   created() {
@@ -352,7 +378,7 @@ export default {
     this.getmerchant();
   },
   methods: {
-      //商户列表请求
+    //商户列表请求
     getmerchant() {
       var _this = this;
       var para = {
@@ -372,13 +398,13 @@ export default {
         })
         .catch(() => {});
     },
-      distributionModechange(val){
-         if(val==2){
-             this.show.batchNum=true;
-         }else{
-              this.show.batchNum=false;
-         }
-      },
+    distributionModechange(val) {
+      if (val == 2) {
+        this.show.batchNum = true;
+      } else {
+        this.show.batchNum = false;
+      }
+    },
 
     //添加商户信息展示
     addbusiness() {
@@ -386,12 +412,11 @@ export default {
 
       this.save.saveVisible = true;
       this.save.titles = "商户二维码的优惠券";
-    //   for (var item in obj) {
-    //     obj[item] = "";
-    //   }
-    //   obj.preferentialType=1;
-    //   obj.distributionMode=1;
-
+      //   for (var item in obj) {
+      //     obj[item] = "";
+      //   }
+      //   obj.preferentialType=1;
+      //   obj.distributionMode=1;
     },
     // //编辑商户信息展示
     // handleedit(index, row) {
@@ -407,42 +432,48 @@ export default {
     //添加列表
     savebusiness() {
       var save = this.save.obj;
-    //   var start= new Date(save["duringDateTimeStart"]).getFullYear;
+      //   var start= new Date(save["duringDateTimeStart"]).getFullYear;
       let para = {
         jwt: window.localStorage.getItem("jwt"),
-        parkNo:save["park"],
+        parkNo: save["park"],
         distribution: save["distributionMode"],
         merchantNo: save["merchant"],
-        startDate:save["duringDateTimeStart"],
+        startDate: save["duringDateTimeStart"],
         endDate: save["duringDateTimeEnd"],
         couponType: save["preferentialType"],
         customDiscounts: save["customDiscounts"],
-        numerical:save["freeList"],
-        printNum:save["printCount"],
-        publisher:JSON.parse(this.user)["username"]
+        numerical: save["freeList"],
+        printNum: save["printCount"],
+        publisher: JSON.parse(this.user)["username"]
       };
-    
-      if (!save.couponId) {
-        para.title = "添加";
-      } else {
-        para.couponNo = save["couponId"];
-        para.title = "修改";
-      }
+
+      //   if (!save.couponId) {
+      //     para.title = "添加";
+      //   } else {
+      //     para.couponNo = save["couponId"];
+      //     para.title = "修改";
+      //   }
       reqSavebusinessQrcode(para).then(res => {
         if (res.code === 1) {
           this.$message({
             message: "保存成功",
             type: "success"
           });
-          this.querybusinessqrcode();
+        } else {
+          this.$message({
+            message: res.message,
+            type: "error"
+          });
         }
+        this.save.saveVisible = false;
+        this.querybusinessqrcode();
       });
     },
     //查询
     querybusinessqrcode() {
       var list = this.filters;
       var _this = this;
-      
+
       let para = {
         parkNo: list.park,
         merchantNo: list.merchant,
@@ -452,13 +483,13 @@ export default {
         minCreateDate: list.createDataTimeFrom,
         maxCreateDate: list.createDataTimeTo,
         useState: list.useState,
-       
+
         jwt: window.localStorage.getItem("jwt"),
         currentPage: this.totals.currentPage,
         pageSize: this.totals.pageSize
       };
       reqbusinessqrcode(para).then(res => {
-          console.log(res);
+        console.log(res);
         if (res.code === 1) {
           _this.totals.totalNum = res.totalNum;
           var list = res.couponInfoList;
@@ -466,33 +497,46 @@ export default {
         }
       });
     },
-    handlecurrentchange(val){
-       this.totals.currentPage=val;
-       this.querybusinessqrcode();
+    handlecurrentchange(val) {
+      this.totals.currentPage = val;
+      this.querybusinessqrcode();
     },
     //返回参数解析
     getRetList(retpara, _this) {
-        _this.businessQRcode=[];
+      _this.businessQRcode = [];
       retpara.forEach(item => {
-          var couponTypeId=item["couponType"];
-          var couponType="";
-         if(couponType==1){
-          couponType="免单";
-         } 
-         var numerical=item["numerical"];
+        var couponTypeId = item["couponType"];
+        var couponType = "";
+        var numerical = item["numerical"];
+        if (couponTypeId == 1) {
+          couponType = "免单";
+          numerical = "";
+        } else if (couponTypeId == 2) {
+          couponType = "免时常";
+          numerical = numerical + "分钟";
+        } else if (couponTypeId == 3) {
+          couponType = "免金额";
+          numerical = numerical + "元";
+        } else if (couponTypeId == 4) {
+          couponType = "免金按比例额";
+          numerical = numerical + "%";
+        } else if (couponTypeId == 5) {
+          couponType = "有效期内多次免单";
+          numerical = numerical;
+        }
 
-         var couponmessage=couponType+numerical;
+        var couponmessage = couponType + numerical;
         var temp = {
           couponId: item["couponNo"],
           businessName: item["merchantName"],
           preferentialInformation: couponmessage,
           duringDateTime: item["startDate"],
-          preferentialInformation:preferentialInformation,
+          preferentialInformation: preferentialInformation,
           useState: item["useState"],
           publisher: item["publisher"],
           createTime: item["createDate"],
           useDateTime: item["useDate"],
-
+          strBackUrl:item["strBackUrl"]//二维码连接地址
         };
 
         _this.businessQRcode.push(temp);
@@ -501,11 +545,11 @@ export default {
     //批量删除
     batchdelete() {
       var couponNo = this.checkBoxs.map(item => item.couponId).toString();
-      if(couponNo.length===0){
-           this.$alert("请选择要删除的行", "提示", {
-        type: "warning"
-      })
-      return;
+      if (couponNo.length === 0) {
+        this.$alert("请选择要删除的行", "提示", {
+          type: "warning"
+        });
+        return;
       }
       this.$confirm("确认删除选中记录吗？", "提示", {
         type: "warning"
@@ -552,30 +596,62 @@ export default {
         })
         .catch(() => {});
     },
-    clearquery(){
-        var filter = this.filters;
+    clearquery() {
+      var filter = this.filters;
       for (var item in filter) {
         filter[item] = "";
       }
     },
-    freetypechange(val){
-        if(val==1){
-           this.save.obj.freeList="";
-           this.show.freelist=false;
-        }else if(val==2){
-            this.save.obj.freeListTitle="免时常";
-            this.show.freelist=true;
-        }else if(val==3){
-            this.save.obj.freeListTitle="免金额";
-             this.show.freelist=true;
-        }else if(val==4){
-             this.save.obj.freeListTitle="按比例";
-             this.show.freelist=true;
-        }else if(val==5){
-             this.save.obj.freeListTitle="有效期内多次免单";
-             this.show.freelist=true;
-        }
-    }
+    freetypechange(val) {
+      if (val == 1) {
+        this.save.obj.freeList = "";
+        this.show.freelist = false;
+        this.show.date = false;
+      } else if (val == 2) {
+        this.save.obj.freeListTitle = "免时常";
+        this.show.freelist = true;
+        this.show.nodate = true;
+        this.show.date = false;
+      } else if (val == 3) {
+        this.save.obj.freeListTitle = "免金额";
+        this.show.freelist = true;
+        this.show.nodate = true;
+        this.show.date = false;
+      } else if (val == 4) {
+        this.save.obj.freeListTitle = "按比例";
+        this.show.freelist = true;
+        this.show.nodate = true;
+        this.show.date = false;
+      } else if (val == 5) {
+        this.save.obj.freeListTitle = "有效期内多次免单";
+        this.show.freelist = true;
+        this.show.nodate = false;
+        this.show.date = true;
+      }
+    },
+    print(index,row){
+        var printpage= `<div>11</div>`
+        
+        var headhtml = "<html><head><title></title></head><body>";
+        var foothtml = "</body>";
+        // 获取div中的html内容
+        var newhtml=`strBackUrl: ${row.strBackUrl}`;
+        // var newhtml = document.all.item(printpage).innerHTML;
+        // 获取div中的html内容，jquery写法如下
+        // var newhtml= $("#" + printpage).html();
+
+        // 获取原来的窗口界面body的html内容，并保存起来
+        // var oldhtml = document.body.innerHTML;
+
+        // 给窗口界面重新赋值，赋自己拼接起来的html内容
+        document.body.innerHTML = headhtml + newhtml + foothtml;
+        // 调用window.print方法打印新窗口
+        window.print();
+
+        // 将原来窗口body的html值回填展示
+        // document.body.innerHTML = oldhtml;
+        return false;
+    },
   }
 };
 </script>
@@ -584,17 +660,21 @@ export default {
   text-decoration: none;
   font-size: 9px;
 }
-.showStatus1{
-    color:#fff;
-    background-color:#32CD32;
-    padding:5px;border-radius:3px;
+.showStatus1 {
+  color: #fff;
+  background-color: #32cd32;
+  padding: 5px;
+  border-radius: 3px;
 }
-.showStatus2{
-    color:#fff;background-color:red;padding:5px;
+.showStatus2 {
+  color: #fff;
+  background-color: red;
+  padding: 5px;
+  border-radius: 3px;
 }
-.saveShow .el-row{
-    margin-top:10px;
-    /* line-height: 30px; */
+.saveShow .el-row {
+  margin-top: 10px;
+  /* line-height: 30px; */
 }
 </style>
 

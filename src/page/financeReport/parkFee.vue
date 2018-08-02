@@ -824,8 +824,8 @@ export default {
               },
               { value: this.mychart.byDate.alldelay_sum1, name: "月票车延期金额" },
 							{ value: this.mychart.byDate.alldelay_sum2, name: "车位池车延期金额" },
-							{ value: this.mychart.byDate.charge, name: "储值票车实收金额" },
-							{ value: this.mychart.byDate.recharge_amount, name: "储值票车充值金额" },
+							{ value: this.mychart.byDate.allcharge, name: "储值票车实收金额" },
+							{ value: this.mychart.byDate.allrecharge_amount, name: "储值票车充值金额" },
             ],
             itemStyle: {
               emphasis: {

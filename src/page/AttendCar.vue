@@ -147,7 +147,7 @@
       </div>
       <!-- 分页end -->
       <!--编辑界面-->
-    <el-dialog class="diaCommon" title="纠正车牌号" v-model="editFormVisible" :close-on-click-modal="false" :visible="editFormVisible"  width="800px">
+    <el-dialog class="diaCommon" title="纠正车牌号" v-model="editFormVisible" :close-on-click-modal="true" :visible.sync="editFormVisible"  width="800px">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm" >
           <el-row :gutter="24">
             <el-col :span="14">
