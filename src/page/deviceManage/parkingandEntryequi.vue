@@ -526,33 +526,96 @@
           <div v-show="rightContent2" class="contentR right">
              <div class="panel panel2" >
                     <p class="title">属性信息</p>
-                     <el-row :gutter="20">
-                        <el-col :span="8">
-                           <P>内网IP地址：{{ ip}}</P>
-                        </el-col>
-                        <el-col :span="8">
-                           <P> <strong>关联的通道: </strong> </P>
-                        </el-col>
-                        <el-col :span="8">
-                           <P> <strong> 可登陆的值班员：</strong></P>
-                        </el-col>
-                    </el-row>
-                  <el-row :gutter="20">
-                        <el-col :span="8">
-                           <P>工作模式：{{ ip}}</P>
-                        </el-col>
-                        <el-col :span="8">
-                           <P>{{ip}}</P>
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="20">
-                        <el-col :span="24">
-                           <P>工作模式：{{ ip}}</P>
-                        </el-col>
-                        <el-col :span="8">
-                           <P>{{ip}}</P>
-                        </el-col>
-                    </el-row>
+                    <div>
+                         <el-row  :gutter="20">
+                             <el-col :span="12">
+                                 <div>
+                                     <p>内网IP地址：</p>
+                                     <p>ip</p>
+                                 </div>
+                                 <div>
+                                     <p>工作模式：</p>
+                                     <p>{{query.tollTerminal.workMode}}</p>
+                                 </div>
+                                 <div>
+                                     <p>免费放行：</p>
+                                     <p>{{query.tollTerminal.isfreeRelease}}</p>
+                                 </div>
+                                 <div>
+                                     <p>取消收费：</p>
+                                     <p>{{query.tollTerminal.iscancelCharge}}</p>
+                                 </div>
+                                 <div>
+                                     <p>显示累计收费金额：</p>
+                                     <p>{{query.tollTerminal.isShowCharge}}</p>
+                                 </div>
+                                 <div>
+                                     <p>是否填写免费放行原因：</p>
+                                     <p>{{query.tollTerminal.isfillFreeReason}}</p>
+                                 </div>
+                                 <div>
+                                     <p>0元自动放行：</p>
+                                     <p>{{query.tollTerminal.iszeroAutoRelease}}</p>
+                                 </div>
+                                 <div>
+                                     <p>0元自动放行针对车辆：</p>
+                                     <p>{{query.tollTerminal.isAutoReleaseCar}}</p>
+                                 </div>
+                                 <div>
+                                     <p>手动开闸：</p>
+                                     <p>{{query.tollTerminal.isManualASwitchOff}}</p>
+                                 </div>
+                                 <div>
+                                     <p>手动关闸：</p>
+                                     <p>{{query.tollTerminal.isManualAShutOff}}</p>
+                                 </div>
+                                 <div>
+                                     <p>出口视频位置：</p>
+                                     <p>{{query.tollTerminal.isexitVideoPosition}}</p>
+                                 </div>
+                                 <div>
+                                     <p>信息是否排队：</p>
+                                     <p>{{query.tollTerminal.isInfoLineUp}}</p>
+                                 </div>
+                                 <div>
+                                     <p>异常处理：</p>
+                                     <p>{{query.tollTerminal.isExceptionHandling}}</p>
+                                 </div>
+                                 <div>
+                                     <p>是否显示业主信息：</p>
+                                     <p>{{query.tollTerminal.isShowOwnerInfo}}</p>
+                                 </div>
+                                 <div>
+                                     <p>确认收费时是否自动打印小票：</p>
+                                     <p>{{query.tollTerminal.isSureAutoPrint}}</p>
+                                 </div>
+                                 <div>
+                                     <p>是否开启桌面刷卡入场：</p>
+                                     <p>{{query.tollTerminal.isOpenentrance}}</p>
+                                 </div>
+                                 <div>
+                                     <p>描述信息：</p>
+                                     <p>{{query.tollTerminal.descInfo}}</p>
+                                 </div>
+                             </el-col>
+                             <el-col :span="6">
+                                 <div>
+                                     <p> <strong>关联的通道：</strong>  </p>
+                                 </div>
+                                 <div>
+                                     <p>入口通道</p>
+                                </div>
+                             </el-col>
+                             <el-col :span="6">
+                                 <div>
+                                     <p><strong>可登陆的值班员：</strong></p>
+                                 </div>
+                                 <div>
+                                     <p>全部可登陆</p>
+                                 </div>
+                             </el-col>
+                         </el-row>
+                    </div>
               </div>
           </div>
           <div v-show="rightContentCamera" class="contentR right">
@@ -578,7 +641,7 @@
                                 <el-button type="primary" size="mini" icon="el-icon-refresh">刷新</el-button> 
                             </p>
                             <div class="imgBox">
-                                <img src="../../../static/img/car.jpg" alt="">
+                                <img :src="query.passageway.url" alt="">
                             </div>
                         </el-col>
                     </el-row>
@@ -645,7 +708,8 @@ export default {
                 id: 600,
                 label: "入口摄像机",
                 type: "入口通道",
-                ip: "192.168.0.225"
+                ip: "192.168.0.225",
+                url:"../../../static/img/car.jpg"
               }
             ]
           },
@@ -658,7 +722,8 @@ export default {
                 id: 611,
                 label: "出口摄像机",
                 type: "出口通道",
-                ip: "192.178.0.136"
+                ip: "192.178.0.136",
+                url:"../../../static/img/car.jpg"
               }
             ]
           }
@@ -697,6 +762,26 @@ export default {
         passageway: {
           ip: "",
           type: ""
+        },
+        tollTerminal:{
+            ip:"",
+            workMode:"出口收费",
+            isfreeRelease:"启用",
+            iscancelCharge:"启用",
+            isShowCharge:"启用",
+            isfillFreeReason:"启用",
+            iszeroAutoRelease:"启用",
+            isAutoReleaseCar:"全部车辆",
+            isManualASwitchOff:"启用",
+            isManualAShutOff:"启用",
+            isexitVideoPosition:"左",
+            isInfoLineUp:"否",
+            isExceptionHandling:"启用",
+            isShowOwnerInfo:"显示",
+            isSureAutoPrint:"否",
+            isOpenentrance:"是",
+            descInfo:"11"
+
         }
       }
       // url:'1'
@@ -742,20 +827,26 @@ export default {
     nodeClick(obj, node, zujian) {
       console.log("obj");
       console.log(node);
-      if (node.parent.label === "物联网关") {
+      if(node.parent!=null  &&   node.parent.label === "物联网关") {
         this.rightContent1 = true;
         this.rightContentCamera = false;
         this.rightContent2 = false;
-      } else if (node.parent.label === "收费机顶盒") {
+
+      } else if (node.parent!=null  && node.parent.label === "收费机顶盒") {
         this.rightContent1 = false;
         this.rightContent2 = true;
         this.rightContentCamera = false;
-      } else if (node.parent.parent.label === "通道管理") {
+      } else if (node.parent.parent!=null && node.parent.parent.label === "通道管理") {
         this.rightContentCamera = true;
         this.rightContent1 = false;
         this.rightContent2 = false;
-        this.query.passageway.type = node.data.type;
-        this.query.passageway.ip = node.data.ip;
+        this.query.passageway={
+            type:node.data.type,
+            ip:node.data.ip,
+            url:node.data.url
+        };
+      }else if(node.parent.parent!=null && node.parent.label==="通道管理"){
+          
       }
 
       this.nodeLabel = node.label;
@@ -889,8 +980,7 @@ export default {
 }
 .queryBtns {
   position: absolute;
-  top: 0;
-
+  top: 5px;
   right: 5px;
 }
 .main,
@@ -903,7 +993,7 @@ export default {
   height: 100%;
   display: inline-block;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  /* border-radius: 5px; */
   position: relative;
   height: 750px;
 }
@@ -1010,9 +1100,14 @@ export default {
   width: 50%;
   text-align: right;
 }
+.panel div {
+    height: 40px;
+}
 .panel div p:nth-child(2) {
   display: inline-block;
   width: 40%;
   text-align: left;
 }
+
+
 </style>

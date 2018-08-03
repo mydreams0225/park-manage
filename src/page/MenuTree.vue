@@ -7,7 +7,7 @@
         <menu-tree :nodes="node.children"></menu-tree>
       </el-submenu>
       <!-- 这里是用:route="{name:node.name}，如果不使用name跳转的话，可以在数据源那里把path写成全路径即可 -->
-      <el-menu-item v-if="!nodes[index].hasChildren" :index="node.path" :route="{name:node.name}" :key="node.path">
+      <el-menu-item  v-if="!nodes[index].hasChildren" :index="node.path" :route="{name:node.name}" :key="node.path">
         <i :class="node.iconCls"></i>{{node.name}}</el-menu-item>
     </template>
   </div>
@@ -42,7 +42,8 @@ export default {
   //background-color: #222;
   background: rgba(0,0,0,0.8);
   color: #fff;
-  text-align: right;
+  text-align: left;
+  // padding-left:10px;
 }
 .el-menu-item.is-active{
   background: #09c;

@@ -104,7 +104,7 @@
 								</el-table>
 								</template>
 				</div>
-			   <!-- 费率测试界面 -->
+			  <!-- 费率测试界面 -->
 			  <el-dialog 
 				  title="费率测试"
 				  :visible.sync="test.testVisible"
@@ -161,6 +161,7 @@
 		                <span >
 											<el-date-picker
 											v-model="test.start_date"
+											value-format="yyyyMMddHHmmss"
 											type="datetime"
 											placeholder="选择日期时间">
 										</el-date-picker>
@@ -172,6 +173,7 @@
 		                <span >	<el-date-picker
 											v-model="test.end_date"
 											type="datetime"
+											value-format="yyyyMMddHHmmss"
 											placeholder="选择日期时间">
 										</el-date-picker></span>
 		              </div>
@@ -196,6 +198,7 @@
 											<el-date-picker
 											v-model="test.sumStartDate"
 											type="datetime"
+											value-format="yyyyMMddHHmmss"
 											placeholder="选择日期时间">
 										</el-date-picker>
 										</span>
@@ -206,6 +209,7 @@
 		                <span >	<el-date-picker
 											v-model="test.sumEndDate"
 											type="datetime"
+											value-format="yyyyMMddHHmmss"
 											placeholder="选择日期时间">
 										</el-date-picker></span>
 		              </div>
@@ -222,17 +226,17 @@
 							    <el-col :span="18">
 		                <div >
 		                <span style="color:red; font-size:18px;" >
-										   应付金额:
+										   应付金额:{{test.payableMoney}}
 										</span>
 		              </div>
 									<div >
 		                <span style="color:red; font-size:18px; " >
-										   折扣金额:
+										   折扣金额:{{test.discountMoney}}
 										</span>
 		              </div>
 									<div >
 		                <span style="color:red; font-size:18px; " >
-										   折后金额:
+										   折后金额:{{test.accountAfterMoney}}
 										</span>
 		              </div>
 		             </el-col>    
@@ -240,7 +244,7 @@
 					 </div>
 				  <span slot="footer" class="dialog-footer">
 				    
-				    <el-button type="primary" >计算</el-button>
+				    <el-button type="primary" @click="calculationtariff">计算</el-button>
 				  </span>
 	      </el-dialog>
 		   	<!-- 设置费率 dialog界面-->
@@ -622,16 +626,17 @@ import {
   reqDeleteOne,
   batchDeleteMore,
   reqParkRate,
-  reqAddorEditRate,
+	reqAddorEditRate,
+	reqTestTariff,
   reqshowRate
 } from "@/api/rateManage";
 export default {
   data() {
     return {
-			testResult:false,
-			showsunGarage:false,
-			noshow: false, //table不显示的列
-			//编辑或新增的集合
+      testResult: false,
+      showsunGarage: false,
+      noshow: false, //table不显示的列
+      //编辑或新增的集合
       edit: {
         editVisible: false,
         titles: "",
@@ -642,20 +647,23 @@ export default {
           algorithmType: "",
           parkNo: ""
         }
-			},
-			//费率测试
+      },
+      //费率测试
       test: {
         testVisible: false,
-        testObj: {
-					
+				testObj: {},
+				reqPara:{
+					payableMoney:"",
+					discountMoney:"",
+					accountAfterMoney:""
 				},
-				isused:"no",
-				sumEndDate:new Date(),
-				sumStartDate:new Date(new Date().getTime() - 1 * 60 * 60 * 1000),
+        isused: "no",
+        sumEndDate: new Date(),
+        sumStartDate: new Date(new Date().getTime() - 1 * 60 * 60 * 1000),
         start_date: new Date(new Date().getTime() - 1 * 60 * 60 * 1000),
         end_date: new Date()
-			},
-			//设置费率的数据
+      },
+      //设置费率的数据
       setting: {
         settingVisible: false,
         selSuanfa: "",
@@ -709,14 +717,14 @@ export default {
     this.getParkList();
   },
   methods: {
-		sunChange(val){
-			console.log(val);
-			if(val==="yes"){
-				this.showsunGarage=true;
-			}else{
-				this.showsunGarage=false;
-			}
-		},
+    sunChange(val) {
+      console.log(val);
+      if (val === "yes") {
+        this.showsunGarage = true;
+      } else {
+        this.showsunGarage = false;
+      }
+    },
     //获取park信息
     getParkList() {
       var _this = this;
@@ -789,9 +797,9 @@ export default {
     },
     getParkingRate() {
       let para = {
-				parkNo: this.filters.park,
-				currentPage:this.totals.currentPage,
-				pageSize:this.totals.pageSize
+        parkNo: this.filters.park,
+        currentPage: this.totals.currentPage,
+        pageSize: this.totals.pageSize
       };
       para.jwt = window.localStorage.getItem("jwt");
       // Object.assign({}, this.filters);
@@ -871,8 +879,10 @@ export default {
     },
     //费率测试界面显示
     rateTest(index, row) {
+      this.testResult = false;
       this.test.testVisible = true;
-      this.test.testObj = Object.assign({}, row);discValue
+      this.test.testObj = Object.assign({}, row);
+      discValue;
     },
     changelSuanfa(val) {
       alert(val);
@@ -913,6 +923,30 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页${val}`);
+    },
+    calculationtariff() {
+      var para = {
+        algorithmType: this.test.testObj.algorithmType,  //
+        chargeType: this.test.testObj.chargeType, // 计费类型
+        vehicleType: this.test.testObj.vehicleType,
+        start_date: this.test.start_date,
+        end_date: this.test.end_date,
+        sumStartDate: this.test.sumStartDate,
+        sumEndDate: this.test.sumEndDate,
+				jwt: window.localStorage.getItem("jwt")
+				 
+      };
+      reqTestTariff(para).then(res=>{
+         if(res.code===1){
+						this.test.payableMoney=res.payableMoney;
+						this.test.discountMoney=res.discountMoney;
+						this.test.accountAfterMoney=res.accountAfterMoney;
+				 }else{
+					 console.log("请求错误！");
+				 }
+			});
+      //显示计算结果
+      this.testResult = true;
     },
     addChange(val) {
       console.log(`当前值${val}`);

@@ -44,5 +44,17 @@ export const reqshowRate = params => {
             }).then(res => res.data);
         };
 
+// 6.reqTestTariff 测试费率
+export const reqTestTariff = params => {
+          
+          return $axios.post(`${base}/rate/operateRate`,
+            qs.stringify(params, { indices: false }),
+            {  // 这里是跨域写法  
+              headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8", }  // 这里是跨域的写法  
+            }).then(res => res.data);
+        };
+
+
+
 
 

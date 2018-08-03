@@ -107,13 +107,14 @@
 }
 .el-submenu .el-menu-item{
     min-width:200px !important;
+    padding-left: 60px !important;
   }
   .el-menu-item-group__title{
     padding:0 0 0 40px !important;
   }
   /*home里面的新增三级菜单样式*/
   .xz .el-submenu__title{
-    padding-left: 40px !important;
+    padding-left: 60px !important;
     background-color:#F4F6F8 !important;
     color:#000 !important;
     
@@ -139,4 +140,9 @@
 
   width: 200px;
 }
-
+.custom-tree-node .el-button--mini,
+.custom-tree-node .el-button--mini
+.is-round,
+{
+   padding: 4px 4px !important;
+}
