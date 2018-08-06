@@ -4,7 +4,7 @@
 				<!-- 工具条 -->
 	    	<div class="margin-tops">
 	    		<el-button @click="addRateShow" type="primary" size="medium"><i class="el-icon-plus" ></i>新增</el-button>
-	    		<el-button @click="batchRemove" type="danger" size="medium"><i class="el-icon-delete"></i>删除</el-button>
+	    		<el-button @click="batchRemove()" type="danger" size="medium"><i class="el-icon-delete"></i>删除</el-button>
 	    	</div>
 				<!-- 查询区 -->
 	    	<div class="margin-tops">
@@ -108,7 +108,7 @@
 			  <el-dialog 
 				  title="费率测试"
 				  :visible.sync="test.testVisible"
-				  width="30%">
+				  width="600px">
 				   <div class="add">
 						  <el-row :gutter="20">
 		              <el-col :span="12">
@@ -161,6 +161,7 @@
 		                <span >
 											<el-date-picker
 											v-model="test.start_date"
+											format="yyyy-MM-dd HH:mm:ss"
 											value-format="yyyyMMddHHmmss"
 											type="datetime"
 											placeholder="选择日期时间">
@@ -173,6 +174,7 @@
 		                <span >	<el-date-picker
 											v-model="test.end_date"
 											type="datetime"
+											format="yyyy-MM-dd HH:mm:ss"
 											value-format="yyyyMMddHHmmss"
 											placeholder="选择日期时间">
 										</el-date-picker></span>
@@ -226,17 +228,21 @@
 							    <el-col :span="18">
 		                <div >
 		                <span style="color:red; font-size:18px;" >
-										   应付金额:{{test.payableMoney}}
+										   应付金额:  
+											 {{test.payableMoney}}
+											 <!-- <el-input v-model="test.payableMoney"></el-input> -->
 										</span>
 		              </div>
 									<div >
 		                <span style="color:red; font-size:18px; " >
-										   折扣金额:{{test.discountMoney}}
+										   折扣金额: 
+											 <el-input v-model="test.discountMoney"></el-input>
 										</span>
 		              </div>
 									<div >
 		                <span style="color:red; font-size:18px; " >
-										   折后金额:{{test.accountAfterMoney}}
+										   折后金额: 
+											 <el-input v-model="test.accountAfterMoney"></el-input>
 										</span>
 		              </div>
 		             </el-col>    
@@ -264,6 +270,7 @@
 						 </el-select>
 						 <span style="display:none">{{setting.leftobj.rateId}}</span>
 						  <p><strong>当前车库：</strong></p>
+							
 							<label >{{setting.leftobj.garageName}}</label>
 							 <p><strong>当前计费类型：</strong></p>
 							 <label >{{setting.leftobj.chargeType}}</label>
@@ -626,8 +633,8 @@ import {
   reqDeleteOne,
   batchDeleteMore,
   reqParkRate,
-	reqAddorEditRate,
-	reqTestTariff,
+  reqAddorEditRate,
+  reqTestTariff,
   reqshowRate
 } from "@/api/rateManage";
 export default {
@@ -651,17 +658,17 @@ export default {
       //费率测试
       test: {
         testVisible: false,
-				testObj: {},
-				reqPara:{
-					payableMoney:"",
-					discountMoney:"",
-					accountAfterMoney:""
-				},
+        testObj: {},
+        reqPara: {
+          payableMoney: "",
+          discountMoney: "",
+          accountAfterMoney: ""
+        },
         isused: "no",
         sumEndDate: new Date(),
         sumStartDate: new Date(new Date().getTime() - 1 * 60 * 60 * 1000),
-        start_date: new Date(new Date().getTime() - 1 * 60 * 60 * 1000),
-        end_date: new Date()
+        start_date: "",
+        end_date: ""
       },
       //设置费率的数据
       setting: {
@@ -671,6 +678,7 @@ export default {
         isTwo: false,
         chargeJson: {},
         leftobj: {
+          rateId: "",
           garageName: "",
           chargeType: "",
           vehicleType: "",
@@ -692,6 +700,11 @@ export default {
           parkNo: "parkNo1"
         }
       ],
+      changeTypeName: {
+        feetypeName: "",
+        carTypeName: "",
+        suanfaTypeName: ""
+      },
       filters: {
         park: "停车场1"
       },
@@ -714,7 +727,9 @@ export default {
     this.getParkingRate();
   },
   created() {
-    this.getParkList();
+    var park = this.common.getParkList();
+    this.sels.park = park;
+    // this.getParkList();
   },
   methods: {
     sunChange(val) {
@@ -725,37 +740,7 @@ export default {
         this.showsunGarage = false;
       }
     },
-    //获取park信息
-    getParkList() {
-      var _this = this;
-      var userInfo = window.localStorage.getItem("user");
-      // var parks = [
-      //   {
-      //     parkName: "林芝停车场",
-      //     parkNo: "1",
-      //     entryPassway: "林芝入口通道1-林芝入口通道2"
-      //     // entrychildren : [{  },{  }],
-      //     // outChildren:[{},{}]
-      //   },
-      //   {
-      //     parkName: "正佳停车场",
-      //     parkNo: "2",
-      //     entryPassway: "正佳入口通道"
-      //   }
-      // ];
-      if (typeof userInfo.parks == "object") {
-        userInfo.parks.forEach(item => {
-          var park1 = {
-            value: item["parkNo"],
-            label: item["parkName"],
-            entryPassway: item["entryPassway"],
-            outPassway: item["outPassway"]
-          };
-          _this.sels.park.push(park1);
-          console.log(_this.sels.park);
-        });
-      }
-    },
+
     cancel() {
       var obj = this.edit.editObj;
       for (var item in obj) {
@@ -779,23 +764,33 @@ export default {
       this.edit.editObj = Object.assign({}, row);
     },
     saveRate() {
-      let para = Object.assign({}, this.edit);
+      let para = {
+        garageName: this.edit.editObj.garageName,
+        chargeType: this.edit.editObj.chargeType,
+        vehicleType: this.edit.editObj.vehicleType,
+        algorithmType: this.edit.editObj.algorithmType,
+        parkNo: this.filters.park
+      };
+
       para.jwt = window.localStorage.getItem("jwt");
       reqAddorEditRate(para).then(res => {
+        console.log(res);
         if (res.code === 1) {
           this.$message({
             message: "添加或修改成功",
             type: "success"
           });
         }
-        this.edit.editObj.forEach(item => {
-          item = "";
-        });
+        // this.edit.editObj.forEach(item => {
+        //   item = "";
+        // });
         this.edit.editVisible = false;
         this.getParkingRate();
       });
     },
     getParkingRate() {
+      var _this = this;
+      this.tableData = [];
       let para = {
         parkNo: this.filters.park,
         currentPage: this.totals.currentPage,
@@ -808,11 +803,70 @@ export default {
       reqParkRate(para)
         .then(res => {
           if (res.code === 1) {
-            this.tableData = res.parkRateInfos;
+            res.parkRateInfos.forEach(item => {
+              var chargeTypeName = this.getChargeType(item["chargeType"]);
+              this.getcarType(item["vehicleType"]);
+              this.getSuanfaType(item["algorithmType"]);
+
+              var temp = {
+                chargeType: this.changeTypeName.feetypeName,
+                vehicleType: this.changeTypeName.carTypeName,
+                // this.changeTypeName.algorithmType
+                algorithmType: this.changeTypeName.suanfaTypeName,
+                parkNo: item["parkNo"],
+                garageName: item["garageName"],
+                rateId: item["rateId"],
+                chargeJson: JSON.parse(item["chargeJson"])
+              };
+              this.tableData.push(temp);
+            });
+            // 			  tableData: [
+            //   {
+            //     garageName: "1",
+            //     chargeType: "3",
+            //     vehicleType: "car",
+            //     algorithmType: "按24小时累计时收费",
+            //     parkNo: "parkNo1"
+            //   }
+            // ],
+            console.log(res);
+            // this.tableData = res.parkRateInfos;
+
             this.totals.totalNum = res.totalNum;
           }
         })
         .catch(() => {});
+    },
+    //转换计费类型
+    getChargeType(chargeTypevalue) {
+      var feetype = this.sels.feetype;
+      feetype.forEach(feetypeitem => {
+        console.log(feetypeitem.value);
+        if (feetypeitem.value == chargeTypevalue) {
+          this.changeTypeName.feetypeName = feetypeitem.label;
+        }
+        // return chargeTypeName;
+      });
+    },
+    //转换车类型
+    getcarType(carTypeValue) {
+      var carType = this.sels.carType;
+      carType.forEach(item => {
+        if (item.value == carTypeValue) {
+          this.changeTypeName.carTypeName = item.label;
+        }
+      });
+    },
+    //转换收费类型
+    getSuanfaType(suanfaTypeValue) {
+			
+			var suanfaType = this.sels.selSuanfa;
+			console.log("suanfa"+suanfaType)
+      suanfaType.forEach(item => {
+        if (item.value == suanfaTypeValue) {
+          this.changeTypeName.suanfaTypeName = item.label;
+        }
+      });
     },
     selsChange: function(sels) {
       console.log(sels);
@@ -822,26 +876,41 @@ export default {
     //批量删除
     batchRemove: function() {
       //能判断的唯一值
-      var parkNo = this.checkBoxs.map(item => item.rateId).toString();
+      var rateId = this.checkBoxs.map(item => item.rateId).toString();
       this.$confirm("确认删除选中记录吗？", "提示", {
         type: "warning"
       })
         .then(() => {
           this.listLoading = true;
           //NProgress.start();
-          let para = { ids: rateId };
+          let para = { rateIds: rateId };
           para.jwt = window.localStorage.getItem("jwt");
+          console.log(para);
           batchDeleteMore(para).then(res => {
-            this.listLoading = false;
-            //NProgress.done();
-            this.$message({
-              message: "删除成功",
-              type: "success"
-            });
+            console.log("fff");
+            if (res.code === 1) {
+              this.listLoading = false;
+              //NProgress.done();
+              this.$message({
+                message: "删除成功",
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.message,
+                type: "errror"
+              });
+            }
+
             this.getParkingRate();
           });
         })
-        .catch(() => {});
+        .catch(err => {
+          this.$message({
+            message: err,
+            type: "errror"
+          });
+        });
     },
     //单行删除
     //删除
@@ -852,15 +921,25 @@ export default {
         .then(() => {
           this.listLoading = true;
           //NProgress.start();
-          let para = { id: row.rateId };
+          let para = { rateId: row.rateId };
           para.jwt = window.localStorage.getItem("jwt");
           reqDeleteOne(para).then(res => {
-            this.listLoading = false;
-            //NProgress.done();
-            this.$message({
-              message: "删除成功",
-              type: "success"
-            });
+            console.log(res);
+
+            if (res.code === 1) {
+              this.listLoading = false;
+              //NProgress.done();
+              this.$message({
+                message: "删除成功",
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.message,
+                type: "errror"
+              });
+            }
+
             this.getParkingRate();
           });
         })
@@ -868,24 +947,31 @@ export default {
     },
     //设置费率界面显示
     handleSetting(index, row) {
+      console.log(row);
       this.setting.settingVisible = true;
       this.setting.leftobj = Object.assign({}, row);
-      var para = row.rateId;
-      reqshowRate(para).then(res => {
-        if (res.code === 1) {
-          this.setting.chargeJson = res.chargeJson;
-        }
-      });
+      this.setting.leftobj.rateId = row.rateId;
+      this.setting.chargeJson = row.chargeJson || {};
+      var para = {
+        rateId: row.rateId,
+        jwt: window.localStorage.getItem("jwt")
+      };
+      console.log("fff");
+      console.log(row);
+
+      // reqshowRate(para).then(res => {
+      //   if (res.code === 1) {
+      //     this.setting.chargeJson = res.chargeJson;
+      //   }
+      // });
     },
-    //费率测试界面显示
+    //费率测试请求
     rateTest(index, row) {
       this.testResult = false;
       this.test.testVisible = true;
       this.test.testObj = Object.assign({}, row);
-      discValue;
     },
     changelSuanfa(val) {
-      alert(val);
       var rightd = document.getElementsByClassName("rightd")[0];
       if (val === "按24小时累计时收费") {
         this.setting.isOne = true;
@@ -898,13 +984,14 @@ export default {
     //设置费率保存请求
     settingRateSaves() {
       let para = {
-        chargeJson: this.setting.chargeJson,
+        rateId: this.setting.leftobj.rateId,
+        chargeJson: JSON.stringify(this.setting.chargeJson),
         freeParkTime: this.setting.oneForm.freeparkMin,
-        rateId: this.leftobj.algorithmType,
-        chargeType: this.leftobj.chargeType,
-        vehicleType: this.leftobj.vehicleType,
-        discountType: this.oneForm.discType,
-        discountValue: this.oneForm.discValue
+        algorithmType: this.setting.leftobj.algorithmType || "",
+        chargeType: this.setting.leftobj.chargeType || "",
+        vehicleType: this.setting.leftobj.vehicleType || "",
+        discountType: this.setting.oneForm.discType || "",
+        discountValue: this.setting.oneForm.discValue || ""
       };
       para.jwt = window.localStorage.getItem("jwt");
       reqSettingRate(para).then(res => {
@@ -914,6 +1001,8 @@ export default {
             type: "success"
           });
         }
+        this.setting.settingVisible = false;
+        this.getParkingRate();
       });
     },
     callbackSelTenant() {
@@ -923,30 +1012,33 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页${val}`);
+      this.totals.currentPage = val;
+      this.getParkingRate();
     },
+    //计算费率计算费率
     calculationtariff() {
       var para = {
-        algorithmType: this.test.testObj.algorithmType,  //
+        rateId: this.test.testObj.rateId, //
         chargeType: this.test.testObj.chargeType, // 计费类型
         vehicleType: this.test.testObj.vehicleType,
-        start_date: this.test.start_date,
-        end_date: this.test.end_date,
-        sumStartDate: this.test.sumStartDate,
-        sumEndDate: this.test.sumEndDate,
-				jwt: window.localStorage.getItem("jwt")
-				 
+        startTime: this.test.start_date,
+        endTime: this.test.end_date,
+        // sumStartDate: this.test.sumStartDate,
+        // sumEndDate: this.test.sumEndDate,
+        jwt: window.localStorage.getItem("jwt")
       };
-      reqTestTariff(para).then(res=>{
-         if(res.code===1){
-						this.test.payableMoney=res.payableMoney;
-						this.test.discountMoney=res.discountMoney;
-						this.test.accountAfterMoney=res.accountAfterMoney;
-				 }else{
-					 console.log("请求错误！");
-				 }
-			});
-      //显示计算结果
-      this.testResult = true;
+      reqTestTariff(para).then(res => {
+        //显示计算结果
+        this.testResult = true;
+        console.log(res);
+        if (res.code === 1) {
+          this.test.payableMoney = JSON.parse(res.receivablePrice);
+          this.test.discountMoney = JSON.parse(res.discountPrice);
+          this.test.accountAfterMoney = JSON.parse(res.paymentPrice);
+        } else {
+          console.log("请求错误！");
+        }
+      });
     },
     addChange(val) {
       console.log(`当前值${val}`);

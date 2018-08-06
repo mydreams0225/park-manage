@@ -11,9 +11,30 @@ export const reqSettingRate = params => {
                 }).then(res => res.data);
       };
 //2.reqDeleteOne
-export const reqDeleteOne = params => { return $axios.get(`${base}/recordQuery/incar.json`, { params: params }).then(res => res.data); };
+// export const reqDeleteOne = params => { return $axios.get(`${base}/recordQuery/incar.json`, { params: params }).then(res => res.data); };
+export const reqDeleteOne = params => {          
+  return $axios.post(`${base}/rate/delRate`,
+    qs.stringify(params, { indices: false }),
+    {  // 这里是跨域写法  
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8", }  // 这里是跨域的写法  
+    }).then(res => res.data);
+};
+
+
 //3.batchDeleteMore
-export const batchDeleteMore = params => { return $axios.get(`${base}/recordQuery/incar.json`, { params: params }).then(res => res.data); };
+// export const batchDeleteMore = params => { return $axios.get(`${base}/recordQuery/incar.json`, { params: params }).then(res => res.data); };
+
+///rate/delRate
+export const batchDeleteMore = params => {         
+  return $axios.post(`${base}/rate/batchDelRate`,
+    qs.stringify(params, { indices: false }),
+    {  // 这里是跨域写法  
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8", }  // 这里是跨域的写法  
+    }).then(res => res.data).catch(err=>
+      console.log(err)
+    );
+};
+
 //4.reqParkRate查看费率
 //export const reqParkRate = params => {  return $axios.get(`${base}/recordQuery/incar.json`, { params: params }).then(res => res.data); };
 export const reqParkRate = params => {
@@ -47,7 +68,7 @@ export const reqshowRate = params => {
 // 6.reqTestTariff 测试费率
 export const reqTestTariff = params => {
           
-          return $axios.post(`${base}/rate/operateRate`,
+          return $axios.post(`${base}/rate/testCharge`,
             qs.stringify(params, { indices: false }),
             {  // 这里是跨域写法  
               headers: { "Content-Type": "application/x-www-form-urlencoded;charset=utf-8", }  // 这里是跨域的写法  

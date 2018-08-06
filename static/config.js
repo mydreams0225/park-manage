@@ -14,7 +14,9 @@ const business={
 
 };
 const configs = {
-    base: "http://192.168.0.105:8081/park",
+    // sy   base: "http://192.168.0.105:8081/park",
+     //正佳
+    base: "http://192.168.0.32:8081/park",
     //地区
     options: [
         {
@@ -14827,33 +14829,33 @@ const configs = {
     //计费类型
     chargeType: [
         {
-            value: "临时车",
+            value: "1",
             label: "临时车"
         },
         {
-            value: "月票车",
+            value: "2",
             label: "月票车"
         },
         {
-            value: "免费车",
+            value: "3",
             label: "免费车"
         },
         {
-            value: "贵宾车",
+            value: "4",
             label: "贵宾车"
         },
         {
-            value: "政务车",
+            value: "5",
             label: "政务车"
         },
     ],
     //算法
     selSuanfa: [
-        { value: "按24小时累计时收费", label: "按24小时累计时收费" },
-        { value: "按连续累计时收费", label: "按连续累计时收费" }
+        { value: "1", label: "按24小时累计时收费" },
+        { value: "2", label: "按连续累计时收费" }
     ],
     //车类型
-    carType: [{ value: "小型车", label: "小型车" }],
+    carType: [{ value: "1", label: "小型车" }],
     //信誉度
     plateRelia: [
         {

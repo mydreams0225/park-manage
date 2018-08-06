@@ -103,7 +103,9 @@
     changevalid(val,rulevalue){
      var rule=  val?rulevalue=false:rulevalue=true; 
      return rule;
-    }
+    },
+      
+    
         
   
 }
