@@ -1,21 +1,12 @@
 <template>
 	<el-row class="container">
 		<el-col :xs="24" :sm="24" :md="24" :lg="24"  class="header" >
-			<!-- <el-col :xs="10" :sm="10" :md="10" :lg="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'"> -->
 				<el-col :xs="10" :sm="10" :md="10" :lg="10" class="logo" :class="'logo-collapse-width'">
-				<!-- <img :src="this.sysUserAvatar" alt=""> -->
 				{{sysName}}
 			</el-col>
-			<!-- <el-col :xs="4" :sm="4" :md="4" :lg="4" >
-				<div class="tools" @click.prevent="collapse">
-					<i>|||</i>
-
-				</div>
-			</el-col> -->
 			<el-col :xs="10" :sm="10" :md="10" :lg="10"  class="userinfo">
 				<el-dropdown trigger="hover">
 					<span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /> {{sysUserName}}</span>
-					<!-- <span class="el-dropdown-link userinfo-inner"><img :src="logo.png" /> {{sysUserName}}</span> -->
 					<el-dropdown-menu slot="dropdown">
 						<el-dropdown-item>我的消息</el-dropdown-item>
 						<el-dropdown-item>设置</el-dropdown-item>
@@ -24,18 +15,23 @@
 				</el-dropdown>
 			</el-col>
 		</el-col>
-
 		<el-col :xs="24" :sm="24" :md="24" :lg="24" class="main">
 			<aside >
 				<!--导航菜单-->
-        <el-menu   :default-active="$route.path" class="el-menu-vertical-demo el-menus" @open="handleopen" @close="handleclose" @select="handleselect" theme="dark" unique-opened router>
+        <el-menu   
+            :default-active="$route.path" class="el-menu-vertical-demo el-menus" 
+            @open="handleopen" 
+            @close="handleclose" 
+            :collapse-transition="true"
+            @select="handleselect" theme="dark" 
+            unique-opened 
+            router>
         	<menu-tree :nodes="$router.options.routes"></menu-tree>
 				</el-menu>			
 			</aside>
 			<section class="content-container">
 				<div class="grid-content bg-purple-light">
-					<el-col :xs="24" :sm="24" :md="24" :lg="24" class="breadcrumb-container">
-                        
+					<el-col :xs="24" :sm="24" :md="24" :lg="24" class="breadcrumb-container">          
 						<el-breadcrumb separator="/" class="breadcrumb-inner">
 							<el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
 								{{ item.name }}
@@ -46,24 +42,26 @@
 						<transition name="fade" mode="out-in">
 							<router-view></router-view>
 						</transition>
-
 					</el-col>
-
 				</div>
 			</section>
 		</el-col>
 	</el-row>
 </template>
-
 <script>
-import { requestLogin ,requestMenu,requestLogin1 ,requestMenu1} from "@/api/api";
+import {
+  requestLogin,
+  requestMenu,
+  requestLogin1,
+  requestMenu1
+} from "@/api/api";
 import { getRole } from "../api/api";
 import parkFee from "@/page/financeReport/parkFee";
 import MenuTree from "@/page/MenuTree";
 export default {
   data() {
     return {
-      isCollapse:true,
+      isCollapse: true,
       nodes: this.$router.options.routes,
       sysName: "logos",
       w:
@@ -73,7 +71,7 @@ export default {
       collapsed: false,
       sysUserName: "",
       sysUserAvatar:
-        "https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png",
+        "",
       form: {
         name: "zlz",
         region: "",
@@ -87,14 +85,13 @@ export default {
     };
   },
 
-
   methods: {
     onSubmit() {
       console.log("submit!");
     },
     handleopen() {
       console.log("handleopen");
-     console.log( this.nodes)
+      console.log(this.nodes);
     },
     handleclose() {
       console.log("handleclose");
@@ -114,7 +111,7 @@ export default {
           window.localStorage.removeItem("isLoadNodes");
           _this.$router.push({ path: "/login" });
         })
-        .catch((err) => {
+        .catch(err => {
           alert(err);
         });
     },
@@ -144,7 +141,6 @@ export default {
       console.log(this.nodes);
       window.localStorage.setItem("isLoadNodes", "true");
     }
-  
   },
   mounted() {
     // this.getMenu();
@@ -165,19 +161,19 @@ export default {
 html body {
   width: 100%;
   height: 100%;
-  overflow:auto
+  overflow: auto;
 }
 .el-menu {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 1);
 }
 .el-menu-item {
   //background-color: #222;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 1);
   color: #fff;
   text-align: left;
 }
 .el-menu-item:hover {
-  background-color: #333;
+  background-color: #000;
 }
 .is-active {
   //background-color: #09c;
@@ -259,11 +255,11 @@ html body {
     bottom: 0px;
     overflow: hidden;
     aside {
-      flex: 0 0 230px;
-      width: 230px;
+      flex: 0 0 180px;
+      width: 180px;
       /*新增样式*/
       .el-menus {
-        width: 230px;
+        width: 180px;
         background-color: #222;
         color: #fff;
         overflow-y: auto;
@@ -291,8 +287,8 @@ html body {
       width: 60px;
     }
     .menu-expanded {
-      flex: 0 0 230px;
-      width: 230px;
+      flex: 0 0 130px;
+      width: 130px;
     }
     .content-container {
       flex: 1;

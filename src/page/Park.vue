@@ -34,7 +34,7 @@
                       </el-table>
                     </el-dialog>
                     <span>系统类型</span>
-                    <el-select v-model="filters.v_sys_type" id="types"  filterable placeholder="系统类型">
+                    <el-select v-model="filters.sysType" id="types"  filterable placeholder="系统类型">
                       <!-- <el-option selected="selected">全部</el-option> -->
                         <el-option
                           v-for="item in types"
@@ -61,45 +61,20 @@
                         :value="item.value">
                       </el-option>
                     </el-select>
-                   <!--  <div class="demo" v-on:click="areaLists">hhda1</div> -->
-                         <div style="display:inline-block ;font-size:14px;">
+                         <div class="areas">
                       <span class="demonstration">地区</span>
-                      <el-cascader style="font-size:14px; text-align:center;"   
+                      <el-cascader class="areaCascader"  
 
                         :options="area"
                         expand-trigger="hover"
-                        v-model="filters.v_area"
+                        v-model="filters.area"
                         @change="handleChange">
                       </el-cascader>
                     </div>
-                   <!--  <el-select v-model="v_provice" filterable placeholder="--选择省份--">
-                      <el-option
-                        v-for="item in provice"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                    <el-select v-model="v_city" filterable placeholder="--选择城市--" disabled="disabled">
-                      <el-option
-                        v-for="item in city"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                    <el-select v-model="v_area" filterable placeholder="--区/县--" disabled="disabled">
-                      <el-option
-                        v-for="item in area"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select> -->
                     <span>工程状态</span>
-                     <el-select v-model="filters.v_project_statu" filterable placeholder="工程状态">
+                     <el-select v-model="filters.projectStatus" filterable placeholder="工程状态">
                       <el-option
-                        v-for="item in project_status"
+                        v-for="item in projectStatus"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -110,7 +85,7 @@
            </form>
         </div>
         <!-- gridview -->
-        <div class="margin-tops" style="font-size:12px;" >
+        <div class="margin-tops"  >
               <template>
                     <el-table
                       :loading="listLoading"
@@ -162,40 +137,18 @@
                         label="操作"
                         width="250px">
                          <template slot-scope="scope">
-                          <div style="display:inline-block;vertical-align:top ">
+                          <div class="operates">
                              <a href="#" class="el-icon-upload operate green"></a>
                              <a href="#" class="el-icon-setting operate blue" @click="$router.push('/deviceManage/parkingandEntryequi')">设备管理</a>
-                          </div >
-                         
-                          <div style="display:inline-block;position:relative">
-                            <!-- <a href="#" class="el-icon-caret-bottom operate blue after" >操作更多</a> -->
-                           
-                           <!--  <ul class="dropdown-menu">
-                             <li>强制出场</li>
-                             <li>强制出场</li>
-                             <li>强制出场</li>
-                              
-                           </ul> -->
-                           
-                          
-                          </div>
-                          
+                          </div >                       
                         </template>
                       </el-table-column>
                       
                     </el-table>
               </template>
               </div>
-
-       <!--  分页 -->
-        <!-- 分页 -->
-        <!-- <div>
-            <Paging v-bind:total="totals"  v-on:btn-click="handleCurrentChange"></Paging>           
-        </div> -->
          <div class="block">
-
             <el-pagination
-              
               @current-change="handleCurrentChange"
               :current-page.sync="totals.currentPage"
               :page-size.sync="totals.pageSize"
@@ -205,9 +158,7 @@
           </div>
              <!-- 分页end -->
         </section>
-
       </template>
-
 <script>
 import { getParklist1 } from "@/api/api";
 export default {
@@ -231,53 +182,41 @@ export default {
         code: this.filters.codes,
         type: this.filters.types,
         address: this.filters.address,
-        area:this.filters.v_area[2],
-        sys_type: this.filters.v_sys_type ,
+        area: this.filters.area[2],
+        sys_type: this.filters.sysType,
         online_status: this.filters.online_status,
         clientValue: this.filters.clientValue,
-        v_project_statu:this.filters.v_project_statu,
+        projectStatus: this.filters.projectStatus,
         currentPage: this.totals.currentPage,
-        pageSize:this.totals.pageSize
-
+        pageSize: this.totals.pageSize,
+        jwt:window.localStorage.getItem("jwt")
       };
       this.listLoading = true;
       //NProgress.start();
       console.log("para", para);
 
       getParklist1(para).then(res => {
-        // this.$axios.get('../../static/json/park.json',{ para: para }).then((res) => {
-        //本地写法
-        this.parkList = eval(res).data;
-        this.totals.totalNum = eval(res).total;
-        //请求后端写法
-        // this.parkList = res;
-        //this.totalnum=(eval(res)).total;
+        this.parkList = res.data;
+        this.totals.totalNum = res.total;
         console.log("fff" + res);
-
         this.listLoading = false;
-        //NProgress.done();
       });
     },
-    // handleSizeChange(val) {
-    //   console.log(`每页 ${val} 条`);
-    // },
+
     handleCurrentChange(val) {
-      
-      this.totals.currentPage=val;
+      this.totals.currentPage = val;
       this.getPark();
       console.log(`当前页: ${val}`);
     },
     callbackSelTenant: function() {
-      var $filter=this.filters
-      
-    for(var item in $filter){
-      if(typeof ($filter[item]) =="object"){
-        $filter[item]=[]
-          
-      }else{
-        $filter[item]=""
-      }   
-    }
+      var $filter = this.filters;
+      for (var item in $filter) {
+        if (typeof $filter[item] == "object") {
+          $filter[item] = [];
+        } else {
+          $filter[item] = "";
+        }
+      }
     },
     getUrl() {
       for (item in $router.options.routes) {
@@ -285,14 +224,9 @@ export default {
       }
     }
   },
-
   mounted() {
     this.getPark();
   },
-  // watch:{
-  //   $('.demo').areaCon()
-  // },
-
   data() {
     return {
       clientValue: "",
@@ -309,20 +243,19 @@ export default {
         codes: "",
         address: "",
         online_status: "",
-        v_area: [],
-        v_sys_type: "",
-        v_project_statu: ""
+        area: [],
+        sysType: "",
+        projectStatus: ""
       },
-      totals:{
+      totals: {
         totalNum: 15,
         currentPage: 2,
-        pageSize:10,
+        pageSize: 10
       },
       parkList: configs.parkList,
       types: configs.parksys,
       online: configs.online,
-      project_status: configs.project_status,
-      
+      projectStatus: configs.projectStatus
     };
   }
 };
@@ -463,7 +396,19 @@ a:hover {
 .red {
   background-color: #d9534f;
 }
-.form-inline span{
+.form-inline span {
   font-size: 12px;
 }
+.operates {
+  display:inline-block;
+  vertical-align:top ;
+}
+.areas{
+  display:inline-block ;
+  font-size:14px;
+}
+ .areas .areaCascader{
+    font-size:14px; 
+    text-align:center;
+  }
 </style>

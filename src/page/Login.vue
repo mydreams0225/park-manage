@@ -1,9 +1,6 @@
 <template>
 	<transition name="form-fade" mode="in-out">
 	<div class="wrapper">
-		
-	
-	
 	  <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width=   "0px" class="demo-ruleForm login-container">
 		    <h3 class="title">系统登录</h3>
 		    <el-form-item prop="account">
@@ -36,7 +33,6 @@
 </template>
 
 <script>
-// import $ from '../../static/js/jquery-1.9.1.min.js'
 import {
   requestLogin,
   requestMenu,
@@ -58,10 +54,12 @@ export default {
       rules2: {
         account: [
           { required: true, message: "请输入账号", trigger: "blur" }
+          //暂时注释
           //{ validator: validaePass }
         ],
         checkPass: [
           { required: true, message: "请输入密码", trigger: "blur" }
+          //暂时注释
           //{ validator: validaePass2 }
         ],
         yzm: [{ required: true, message: "请输入验证码", trigger: "blur" }]
@@ -70,7 +68,6 @@ export default {
       verifyCode: "1"
     };
   },
-
   mounted() {
     this.gv();
   },
@@ -110,10 +107,10 @@ export default {
            $.ajax({
               type: "get",
                data: { username: _this.ruleForm2.account, password: _this.ruleForm2.checkPass },
-              // url: "../../static/json/login.json",
-              url: `${configs.base}/login`,
-              jsonpCallback: "showData",
-              dataType: "jsonp",
+               url: "../../static/json/login.json",
+              // url: `${configs.base}/login`,
+              // jsonpCallback: "showData",
+              // dataType: "jsonp",
               success: function(data) {
                 this.logining = false;
                 console.log(data);
@@ -122,9 +119,9 @@ export default {
                 $.ajax({
                   type: "get",
                   data:{a:"111"},
-                  //  url: "../../static/json/rolelist.json",
-                  url:`${configs.base}/index` ,
-                  dataType: "jsonp",
+                    url: "../../static/json/rolelist.json",
+                  // url:`${configs.base}/index` ,
+                  // dataType: "jsonp",
                   success: function(data) {
                     // console.log(data);
                     window.localStorage.setItem("user",JSON.stringify(data.userInfo));

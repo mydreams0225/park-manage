@@ -14811,7 +14811,7 @@ const configs = {
         value: '离线',
         label: '离线'
     }],
-    project_status: [{
+    projectStatus: [{
         value: '1',
         label: '新建'
     }],
