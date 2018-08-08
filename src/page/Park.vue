@@ -14,6 +14,9 @@
 
         <div> -->
         <div class="parent">
+          <div class="margin-tops">
+             <el-button type="primary" size="medium" icon="el-icon-plus">新增停车场</el-button>
+          </div>
           <form :model="filters" class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
                     
                     <el-input clearable :value="filters.clientValue"   id="client" name="client" placeholder="点击选择" readonly="readonly"  v-on:click.native="dialogTableVisible = true" style="cursor:pointer" >
