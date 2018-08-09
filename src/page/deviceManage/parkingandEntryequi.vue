@@ -1,6 +1,7 @@
 <template>
 	<section>
 		<div class="parent">
+
 			<div class="margin-tops ">
                 <span>所属停车场</span>
 				<el-select v-model="filters.park"  filterable >
@@ -30,7 +31,6 @@
                 @node-click="nodeClick"
                 :render-content="renderContentEdit"
                 >
-                
                 </el-tree>
           </div>
           <div v-show="rightContent1" class="contentR right">
@@ -648,14 +648,108 @@
                </div>
           </div> 
       </div>
-		</div>
+       <el-dialog
+                title="添加设备"
+                :visible.sync="addVisible"
+                width="700px"
+                :before-close="handleClose">
+                
+                  <form >
+                    <el-row :gutter="20">
+                      
+                      <el-col :span="12">
+                                <div>
+                                  <label for=""><span style="color:red">*</span> 设备类型：（添加后不可修改）</label>
+                                </div>
+                                <el-select v-model="add.deviceType"  filterable >
+                                        <el-option
+                                        v-for="item in deviceType"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                        </el-option>
+                            </el-select>    
+                        </el-col>        
+                        <el-col :span="12">
+                                <div>
+                                  <label for=""><span style="color:red">*</span> 设备IP ：</label>
+                                </div>
+                                  <el-input v-model="add.deviceIP" ></el-input>
+                        </el-col>
+                        
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                                <div>
+                                  <label for=""><span style="color:red">*</span> 别名：</label>
+                                </div>
+                                  <el-input v-model="add.deviceOtherName" ></el-input>
+                        </el-col>        
+                        <el-col :span="12">
+                                <div>
+                                  <label for=""> 设备SN：</label>
+                                </div>
+                                  <el-input v-model="add.deviceSN" ></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                                <div>
+                                  <label for=""> 编码：</label>
+                                </div>
+                                  <el-input v-model="add.deviceID" placeholder="同一停车场的唯一值"></el-input>
+                        </el-col>        
+                        <el-col :span="12">
+                                <div>
+                                  <label for=""> 型号：</label>
+                                </div>
+                                  <el-input v-model="add.deviceModel" placeholder=""></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                                <div>
+                                  <label for="">版本号：</label>
+                                </div>
+                                  <el-input v-model="add.deviceVersion" ></el-input>
+                        </el-col>        
+                        <el-col :span="12">
+                                <div>
+                                  <label for=""> 二进制位数：值范围（0-255）</label>
+                                </div>
+                                  <el-input v-model="add.deviceTwoBinary" placeholder=""></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                                <div>
+                                  <label for=""> 使用状态：</label>
+                                </div>
+                                  <el-select v-model="add.deviceUseStatus"  filterable >
+                                        <el-option
+                                        v-for="item in deviceUseStatus"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                        </el-option>
+                            </el-select>    
+                        </el-col>        
+                        
+                    </el-row>
+                  </form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="addVisible = false">取 消</el-button>
+              <el-button type="primary" @click="savedevice">保 存</el-button>
+            </span> 
+         </el-dialog>
+		</div>  
 	</section>
 </template>
 <script>
 let id = 1000;
 
 import camera from "@/assets/img/camera.png";
-
+import {reqSaveDevice,reqDeviceInfo} from "@/api/deviceManage"
 export default {
   data() {
     const data = [
@@ -709,7 +803,7 @@ export default {
                 label: "入口摄像机",
                 type: "入口通道",
                 ip: "192.168.0.225",
-                url:"../../../static/img/car.jpg"
+                url: "../../../static/img/car.jpg"
               }
             ]
           },
@@ -723,7 +817,7 @@ export default {
                 label: "出口摄像机",
                 type: "出口通道",
                 ip: "192.178.0.136",
-                url:"../../../static/img/car.jpg"
+                url: "../../../static/img/car.jpg"
               }
             ]
           }
@@ -739,6 +833,20 @@ export default {
       }
     ];
     return {
+      addVisible: false,
+      add: {
+        deviceType: "",
+        deviceIP: "",
+        deviceOtherName: "",
+        deviceSN: "",
+        deviceID: "",
+        deviceModel: "", //型号
+        deviceVersion: "",
+        deviceTwoBinary: "", //二进制位数：值范围（0-255）
+        deviceUseStatus: "" //使用状态
+      },
+      deviceType: [],
+      deviceUseStatus: [],
       mainQuery: true,
       mainEdit: false,
       editBtn: true,
@@ -763,25 +871,24 @@ export default {
           ip: "",
           type: ""
         },
-        tollTerminal:{
-            ip:"",
-            workMode:"出口收费",
-            isfreeRelease:"启用",
-            iscancelCharge:"启用",
-            isShowCharge:"启用",
-            isfillFreeReason:"启用",
-            iszeroAutoRelease:"启用",
-            isAutoReleaseCar:"全部车辆",
-            isManualASwitchOff:"启用",
-            isManualAShutOff:"启用",
-            isexitVideoPosition:"左",
-            isInfoLineUp:"否",
-            isExceptionHandling:"启用",
-            isShowOwnerInfo:"显示",
-            isSureAutoPrint:"否",
-            isOpenentrance:"是",
-            descInfo:"11"
-
+        tollTerminal: {
+          ip: "",
+          workMode: "出口收费",
+          isfreeRelease: "启用",
+          iscancelCharge: "启用",
+          isShowCharge: "启用",
+          isfillFreeReason: "启用",
+          iszeroAutoRelease: "启用",
+          isAutoReleaseCar: "全部车辆",
+          isManualASwitchOff: "启用",
+          isManualAShutOff: "启用",
+          isexitVideoPosition: "左",
+          isInfoLineUp: "否",
+          isExceptionHandling: "启用",
+          isShowOwnerInfo: "显示",
+          isSureAutoPrint: "否",
+          isOpenentrance: "是",
+          descInfo: "11"
         }
       }
       // url:'1'
@@ -791,8 +898,87 @@ export default {
     $(".showType").toggle();
     $(".showIp").toggle();
     $(".right").remove("right");
+    this.getDeviceInfo();
+  },
+  created() {
+    this.park=  this.common.getParkList()
+    // this.addDevice();
   },
   methods: {
+      //请求左树控控件
+      getDeviceInfo(){
+    //       this.treeData=[{
+    //     id: 1,
+    //     label: "物联网关",
+    //     children: [
+    //       {
+    //         id: 10,
+    //         label: "停车场物联网关",
+    //         type: "edrere",
+    //         ip: "192.178.4.4"
+    //       }
+    //     ]
+    //   }];
+          let para={
+              jwt:window.localStorage.getItem("jwt"),
+              parkNo:this.filters.park
+          }
+          reqDeviceInfo(para).then(res=>{
+             if(res.code===1){
+                this.treeData= res.deviceInfo;
+             }else{
+                 console.log("获取数据失败");
+             }
+          })
+      },
+    //添加设备信息
+    savedevice() {
+      var obj = this.add;
+      let para = {
+        //         add: {
+        //     deviceType: "",
+        //     deviceUseStatus: "",
+        //     deviceIP: "",
+        //     deviceOtherName: "",
+        //     deviceSN: "",
+        //     deviceID: "",
+        //     deviceModel: "", //型号
+        //     deviceVersion: "",
+        //     deviceTwoBinary: "", //二进制位数：值范围（0-255）
+        //   },
+        deviceType: obj.deviceType,//设备类型
+        deviceUseStatus:obj.deviceUseStatus,//设备使用状态
+        diviceIP:obj.deviceIP,//设备ip
+        deviceOtherName:obj.deviceOtherName,//别名
+        deviceSN:obj.deviceSN,//设备sn
+        deviceID:obj.deviceID,//编号
+        deviceModel:obj.deviceModel,//型号
+        deviceVersion:obj.deviceVersion,//版本号
+        deviceTwoBinary:obj.deviceTwoBinary,//二进制位数
+        jwt:window.localStorage.getItem("jwt")
+      };
+      reqSaveDevice(para).then(res=>{
+           if(res.code===1){
+               this.$message({
+                  message:res.message,
+                  type:"success"
+               })
+           }else{
+               this.$message({
+                   message:res.message,
+                   type:"success"
+               })
+           }
+      })
+    },
+    handleClose(done) {
+      // this.$confirm("确认关闭？")
+      //   .then(_ => {
+      //     done();
+      //   })
+      //   .catch(_ => {});
+      done();
+    },
     editBtns() {
       this.editBtn = false;
       this.queryBtn = true;
@@ -827,26 +1013,30 @@ export default {
     nodeClick(obj, node, zujian) {
       console.log("obj");
       console.log(node);
-      if(node.parent!=null  &&   node.parent.label === "物联网关") {
+      if (node.parent != null && node.parent.label === "物联网关") {
         this.rightContent1 = true;
         this.rightContentCamera = false;
         this.rightContent2 = false;
-
-      } else if (node.parent!=null  && node.parent.label === "收费机顶盒") {
+      } else if (node.parent != null && node.parent.label === "收费机顶盒") {
         this.rightContent1 = false;
         this.rightContent2 = true;
         this.rightContentCamera = false;
-      } else if (node.parent.parent!=null && node.parent.parent.label === "通道管理") {
+      } else if (
+        node.parent.parent != null &&
+        node.parent.parent.label === "通道管理"
+      ) {
         this.rightContentCamera = true;
         this.rightContent1 = false;
         this.rightContent2 = false;
-        this.query.passageway={
-            type:node.data.type,
-            ip:node.data.ip,
-            url:node.data.url
+        this.query.passageway = {
+          type: node.data.type,
+          ip: node.data.ip,
+          url: node.data.url
         };
-      }else if(node.parent.parent!=null && node.parent.label==="通道管理"){
-          
+      } else if (
+        node.parent.parent != null &&
+        node.parent.label === "通道管理"
+      ) {
       }
 
       this.nodeLabel = node.label;
@@ -890,6 +1080,12 @@ export default {
         );
       }
     },
+    addDevice(data) {
+      for (var item in this.add) {
+        this.add[item] = "";
+      }
+        this.addVisible = true;
+    },
     renderContentEdit(h, { node, data, store }) {
       console.log(node);
       if (node.data.id < 10 && node.data.id === "1") {
@@ -904,24 +1100,27 @@ export default {
             <span>
               <strong>{node.label} </strong>
               <span class="addP">
-                <a href="#" onclick="alert(`fff`) ">
-                  <strong>+添加</strong>
-                </a>
+                <el-button
+                  on-click={() => this.addDevice(data)}
+                  size="mini"
+                  icon="el-icon-plus"
+                />
               </span>
             </span>
           </span>
         );
-
         //  return false;
       } else if (!node.isLeaf && node.parent && node.data.id != 1) {
         return (
           <span class="custom-tree-node">
             <span class="nodelabel">
               <strong>{node.label} </strong>
-              <span class="addP ">
-                <a href="#">
-                  <strong>+添加</strong>
-                </a>&nbsp;
+              <span class="addP">
+                <el-button
+                  on-click={() => this.addDevice(data)}
+                  size="mini"
+                  icon="el-icon-plus"
+                />
                 <el-button
                   onclick="alert(`删除`)"
                   size="mini"
@@ -949,15 +1148,16 @@ export default {
               ip:
               {node.data.ip}
             </span>
-
-            <el-button size="mini" type="primary" icon="el-icon-document" />
-            <el-button size="mini" type="primary" icon="el-icon-edit" />
-            <el-button
-              size="mini"
-              type="danger"
-              onclick="alert(`删除`)"
-              icon="el-icon-delete"
-            />
+            <span style="margin-right:6px;float:right;">
+              <el-button size="mini" type="primary" icon="el-icon-document" />
+              <el-button size="mini" type="primary" icon="el-icon-edit" />
+              <el-button
+                size="mini"
+                type="danger"
+                onclick="alert(`删除`)"
+                icon="el-icon-delete"
+              />
+            </span>
           </span>
         );
       }
@@ -969,6 +1169,7 @@ export default {
 .el-tree-node__content {
   position: relative;
   height: 40px;
+  padding-left: 36px !important;
 }
 .custom-tree-node {
   display: flex;
@@ -1063,10 +1264,7 @@ export default {
   right: 10px;
   padding: 5px;
 }
-.addP a {
-  text-decoration: none;
-  color: #09c;
-}
+
 .nodelabel {
   padding: 10px;
   /* margin-right: 40px; */
@@ -1101,13 +1299,11 @@ export default {
   text-align: right;
 }
 .panel div {
-    height: 40px;
+  height: 40px;
 }
 .panel div p:nth-child(2) {
   display: inline-block;
   width: 40%;
   text-align: left;
 }
-
-
 </style>

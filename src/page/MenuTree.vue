@@ -54,4 +54,7 @@ export default {
 .el-menu-item:hover {
   background: rgba(1, 153, 204, 0.8);
 }
+.el-submenu__title i{
+  margin-right: 15px;
+}
 </style>

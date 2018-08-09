@@ -986,18 +986,18 @@ export default {
       let para = {
         rateId: this.setting.leftobj.rateId,
         chargeJson: JSON.stringify(this.setting.chargeJson),
-        freeParkTime: this.setting.oneForm.freeparkMin,
-        algorithmType: this.setting.leftobj.algorithmType || "",
-        chargeType: this.setting.leftobj.chargeType || "",
-        vehicleType: this.setting.leftobj.vehicleType || "",
-        discountType: this.setting.oneForm.discType || "",
-        discountValue: this.setting.oneForm.discValue || ""
+        freeParkTime: this.setting.oneForm.freeparkMin || "0",
+        algorithmType: this.setting.leftobj.algorithmType || "1",
+        chargeType: this.setting.leftobj.chargeType || "1",
+        vehicleType: this.setting.leftobj.vehicleType || "0",
+        discountType: this.setting.oneForm.discType || "1",
+        discountValue: this.setting.oneForm.discValue || "0"
       };
       para.jwt = window.localStorage.getItem("jwt");
       reqSettingRate(para).then(res => {
         if (res.code === 1) {
           this.$message({
-            message: "恭喜你，这是一条成功消息",
+            message: "费率设置成功！",
             type: "success"
           });
         }

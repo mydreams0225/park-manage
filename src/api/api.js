@@ -66,6 +66,14 @@ export const requestMenu1 = params => { return $axios.get(`../../static/json/rol
 //mock本地请求 获取停车场
 export const getParklist1 = params => { return $axios.get(`../../static/json/park.json`, { params: params }).then(res => res.data); };
 
+//停车场列表新增停车场 reqSavePark
+export const reqSavePark=params=>{
+  return $axios.post(`${base}`,
+  qs.stringify(params,{indices:false}),
+  {
+    headers:{"Content-Type":"application/x-www-form-urlencoded;charset=utf-8"}
+  }).then(res=>res.data);};
+
 //mock本地请求获取在场车辆
 export const requestAttendCar1 = params => { return $axios.get(`../../static/json/attendcar.json`, { params: params }).then(res => res.data); };
 //export const requestAttendCar = params => { return $axios.get(`${base}`, { params: params }).then(res => res.data); };

@@ -9,7 +9,7 @@
             "path": "",
             "name": "停车场管理",
             "hasChildren":true,
-            "iconCls": "el-icon-goods",
+            "iconCls": "icon-park-tingchechang",
             "children": [
                 {
                     "meta": {
@@ -35,7 +35,7 @@
             "path": "",
             "name": "车辆管理",
             "hasChildren":true,
-            "iconCls": "el-icon-tickets",
+            "iconCls": "icon-park-cheliang",
             "children": [
                 {
                     "path": "/carManage/carinfoList",
@@ -91,7 +91,7 @@
             "path": "/parkingManage",
             "name": "车位管理",
             "hasChildren":true,
-            "iconCls": "el-icon-star-on",
+            "iconCls": "icon-park-tingchewei",
             "children": [
                 {
                     "path": "/parkingManage/parkPoolSetting",
@@ -117,7 +117,7 @@
             "path": "/deviceManage",
             "hasChildren":true,
             "name": "设备管理",
-            "iconCls": "el-icon-view",
+            "iconCls": "icon-park-shebei",
             "children": [
                 {
                     "path": "/deviceManage/parkingandEntryequi",
@@ -137,7 +137,7 @@
             "path": "/garageManage",
             "hasChildren":true,
             "name": "车库管理",
-            "iconCls": "el-icon-mobile-phone",
+            "iconCls": "icon-park-cheku",
             "children": [
                 {
                     "path": "/garageManage/garageList",
@@ -163,7 +163,7 @@
             "path": "/tariffManage",
             "hasChildren":true,
             "name": "费率管理",
-            "iconCls": "el-icon-check",
+            "iconCls": "icon-park-tixianfeishuai",
             "children": [
                 {
                     "path": "/tariffManage/parkingRate",
@@ -189,7 +189,7 @@
             "path": "",
             "hasChildren":true,
             "name": "记录查询",
-            "iconCls": "el-icon-search",
+            "iconCls": "icon-park-msnui-task-search",
             "children": [
                 {
                     "path": "carRecord",
@@ -265,7 +265,7 @@
             "path": "/statisticsReport",
             "hasChildren":true,
             "name": "统计报表",
-            "iconCls": "el-icon-more",
+            "iconCls": "icon-park-tongjibaobiao",
             "children": [
                 {
                     "path": "/statisticsReport/trafficflowAnalysisReport",
@@ -285,7 +285,7 @@
             "path": "/financeReport",
             "hasChildren":true,
             "name": "财务报表",
-            "iconCls": "el-icon-circle-plus",
+            "iconCls": "icon-park-drxx94",
             "children": [
                 {
                     "path": "/financeReport/parkFee",
@@ -337,7 +337,7 @@
             "path": "/merchantManage",
             "hasChildren":true,
             "name": "商户管理",
-            "iconCls": "el-icon-check",
+            "iconCls": "icon-park-shanghu",
             "children": [
                 {
                     "path": "/merchantManage/businessListings",

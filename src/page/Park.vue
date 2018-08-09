@@ -15,7 +15,53 @@
         <div> -->
         <div class="parent">
           <div class="margin-tops">
-             <el-button type="primary" size="medium" icon="el-icon-plus">新增停车场</el-button>
+             <el-button type="primary" @click="openAddPark()" size="medium" icon="el-icon-plus">新增停车场</el-button>
+             <el-dialog
+                title="添加停车场"
+                :visible.sync="addVisible"
+                width="700px"
+                :before-close="handleClose">
+                
+                  <form >
+                    <el-row :gutter="20">
+                      
+                      <el-col :span="12">
+                                <div>
+                                  <label for=""><span style="color:red">*</span> 停车场编号</label>
+                                </div>
+                                <el-input v-model="add.parkNo"></el-input>    
+                        </el-col>        
+                        <el-col :span="12">
+                                <div>
+                                  <label for=""><span style="color:red">*</span> 停车场名称</label>
+                                </div>
+                                  <el-input v-model="add.parkName" placeholder="请输入内容"></el-input>
+                        </el-col>
+                        <el-col :span="12">
+                                <div>
+                                  <label for=""><span style="color:red">*</span> 选择地区</label>
+                                </div>
+                                  <el-cascader class="areaCascader"  
+
+                                  :options="area"
+                                  expand-trigger="hover"
+                                  v-model="add.area"
+                                  @change="handleChange">
+                                </el-cascader>   
+                        </el-col>        
+                        <el-col :span="12">
+                                <div>
+                                  <label for=""><span style="color:red">*</span> 具体地址</label>
+                                </div>
+                                  <el-input v-model="add.detailArea" placeholder="请输入内容"></el-input>
+                        </el-col>
+                    </el-row>
+                  </form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="addVisible = false">取 消</el-button>
+              <el-button type="primary" @click="savePark">保 存</el-button>
+            </span> 
+        </el-dialog>
           </div>
           <form :model="filters" class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
                     
@@ -163,9 +209,54 @@
         </section>
       </template>
 <script>
-import { getParklist1 } from "@/api/api";
+import { getParklist1,reqSavePark } from "@/api/api";
 export default {
   methods: {
+    openAddPark(){
+     
+    //  add: {
+    //     parkNo: "",
+    //     parkName: "",
+    //     area:"",
+    //     detailArea:""
+    //   },
+      this.addVisible=true;
+      this.add.parkNo="";
+
+    },
+     handleClose(done) {
+      // this.$confirm("确认关闭？")
+      //   .then(_ => {
+      //     done();
+      //   })
+      //   .catch(_ => {});
+       done();
+    },
+    savePark(){
+      this.addVisible=false;
+      let para={
+        parkNo:this.add.parkNo,
+        parkName:this.add.parkName,
+        area:this.add.area,
+        detailArea:this.add.detailArea,
+        jwt:window.localStorage.getItem("jwt")
+      };
+      //停车场请求
+      reqSavePark(para).then(res=>{
+         if(res.code===1){
+            this.$message({
+            message: "添加成功！",
+            type: "success"
+          });
+         }else{
+           this.$message({
+            message: res.message,
+            type: "error"
+            });
+         }
+      });
+
+    },
     handleChange(value) {
       console.log(value);
     },
@@ -192,16 +283,21 @@ export default {
         projectStatus: this.filters.projectStatus,
         currentPage: this.totals.currentPage,
         pageSize: this.totals.pageSize,
-        jwt:window.localStorage.getItem("jwt")
+        jwt: window.localStorage.getItem("jwt")
       };
       this.listLoading = true;
       //NProgress.start();
       console.log("para", para);
 
       getParklist1(para).then(res => {
+        if(res.code===1){
         this.parkList = res.data;
         this.totals.totalNum = res.total;
         console.log("fff" + res);
+        }else{
+          console.log("暂无数据");
+        }
+        
         this.listLoading = false;
       });
     },
@@ -232,6 +328,13 @@ export default {
   },
   data() {
     return {
+      addVisible: false,
+      add: {
+        parkNo: "",
+        parkName: "",
+        area:"",
+        detailArea:""
+      },
       clientValue: "",
       clientData: [{ clientName: "酒店一" }, { clientName: "酒店二" }],
       dialogTableVisible: false,
@@ -403,15 +506,15 @@ a:hover {
   font-size: 12px;
 }
 .operates {
-  display:inline-block;
-  vertical-align:top ;
+  display: inline-block;
+  vertical-align: top;
 }
-.areas{
-  display:inline-block ;
-  font-size:14px;
+.areas {
+  display: inline-block;
+  font-size: 14px;
 }
- .areas .areaCascader{
-    font-size:14px; 
-    text-align:center;
-  }
+.areaCascader {
+  font-size: 12px;
+  text-align: center;
+}
 </style>

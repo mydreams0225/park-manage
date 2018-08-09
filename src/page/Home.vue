@@ -1,10 +1,17 @@
 <template>
 	<el-row class="container">
-		<el-col :xs="24" :sm="24" :md="24" :lg="24"  class="header" >
-				<el-col :xs="10" :sm="10" :md="10" :lg="10" class="logo" :class="'logo-collapse-width'">
+		<el-col :span=24  class="header" >
+				<el-col :span=5 class="logo" :class="'logo-collapse-width'">
 				{{sysName}}
 			</el-col>
-			<el-col :xs="10" :sm="10" :md="10" :lg="10"  class="userinfo">
+      <el-col :span=15>
+        <!-- <div class="tenet-lnav">
+           <li><a >停车管理</a> </li>
+           <li><a >物业管理</a></li>
+        </div> -->
+       
+      </el-col>
+			<el-col :span=4 class="userinfo">
 				<el-dropdown trigger="hover">
 					<span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /> {{sysUserName}}</span>
 					<el-dropdown-menu slot="dropdown">
@@ -15,7 +22,7 @@
 				</el-dropdown>
 			</el-col>
 		</el-col>
-		<el-col :xs="24" :sm="24" :md="24" :lg="24" class="main">
+		<el-col :span=24 class="main">
 			<aside >
 				<!--导航菜单-->
         <el-menu   
@@ -31,14 +38,14 @@
 			</aside>
 			<section class="content-container">
 				<div class="grid-content bg-purple-light">
-					<el-col :xs="24" :sm="24" :md="24" :lg="24" class="breadcrumb-container">          
+					<el-col :span=24 class="breadcrumb-container">          
 						<el-breadcrumb separator="/" class="breadcrumb-inner">
 							<el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
 								{{ item.name }}
 							</el-breadcrumb-item>
 						</el-breadcrumb>
 					</el-col>
-					<el-col :xs="24" :sm="24" :md="24" :lg="24" class="content-wrapper">
+					<el-col :span=24 class="content-wrapper">
 						<transition name="fade" mode="out-in">
 							<router-view></router-view>
 						</transition>
@@ -58,6 +65,8 @@ import {
 import { getRole } from "../api/api";
 import parkFee from "@/page/financeReport/parkFee";
 import MenuTree from "@/page/MenuTree";
+//引入图标库
+import iconfont from "@/assets/icon/iconfont.css";
 export default {
   data() {
     return {
@@ -70,8 +79,7 @@ export default {
         document.body.clientWidth,
       collapsed: false,
       sysUserName: "",
-      sysUserAvatar:
-        "",
+      sysUserAvatar: "",
       form: {
         name: "zlz",
         region: "",
@@ -193,6 +201,29 @@ html body {
     line-height: 60px;
     background: #09c;
     color: #fff;
+    .tenet-lnav {
+      margin: 0 200px 0 122px;
+      line-height: 40px;
+      padding: 10px 0 0 0;
+      font-size: 13px;
+      background-color: #09c;
+      overflow: hidden;
+      zoom: 1;
+      li {
+        float: left;
+         margin: 0 18px;
+        list-style: none;
+        
+      }
+      li a:hover {
+        border-bottom: 2px solid #fff;
+        cursor: pointer;
+      }
+      li a:active {
+         border-bottom: 2px solid #fff;
+      }
+    }
+
     .userinfo {
       text-align: right;
       padding-right: 35px;
@@ -211,14 +242,15 @@ html body {
       }
     }
     .logo {
+      width: 100px;
       height: 60px;
       font-size: 22px;
       padding-left: 20px;
-      padding-right: 20px;
+      padding-right: 80px;
       border-color: rgba(238, 241, 146, 0.3);
 
       img {
-        width: 40px;
+        width: 120px;
         float: left;
         margin: 10px 10px 10px 18px;
       }
@@ -255,14 +287,38 @@ html body {
     bottom: 0px;
     overflow: hidden;
     aside {
-      flex: 0 0 180px;
+      flex: 0 0 230px;
       width: 180px;
       /*新增样式*/
       .el-menus {
-        width: 180px;
+        width: 230px;
         background-color: #222;
         color: #fff;
+        overflow-y: hidden;
+      }
+      .el-menus:hover {
         overflow-y: auto;
+      }
+
+      /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+        background-color: #666;
+      }
+
+      /*定义滚动条轨道 内阴影+圆角*/
+      ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        background-color: #666;
+      }
+
+      /*定义滑块 内阴影+圆角*/
+      ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        background-color: #555;
       }
       .el-menu {
         height: 100%;
@@ -287,8 +343,8 @@ html body {
       width: 60px;
     }
     .menu-expanded {
-      flex: 0 0 130px;
-      width: 130px;
+      flex: 0 0 230px;
+      width: 230px;
     }
     .content-container {
       flex: 1;
