@@ -107,7 +107,7 @@ export default {
            $.ajax({
               type: "get",
                data: { username: _this.ruleForm2.account, password: _this.ruleForm2.checkPass },
-               url: "../../static/json/login.json",
+                url: "../../static/json/login.json",
               // url: `${configs.base}/login`,
               // jsonpCallback: "showData",
               // dataType: "jsonp",
@@ -119,7 +119,7 @@ export default {
                 $.ajax({
                   type: "get",
                   data:{a:"111"},
-                    url: "../../static/json/rolelist.json",
+                     url: "../../static/json/rolelist.json",
                   // url:`${configs.base}/index` ,
                   // dataType: "jsonp",
                   success: function(data) {

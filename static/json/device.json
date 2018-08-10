@@ -1,0 +1,43 @@
+{
+    "equipmentInfoMap": {
+        "1": [
+            {
+                "equipmentNo": "1533866523297",
+                "equipmentName": "停车场入场摄像机",
+                "equipmentType": "1",
+                "parkNo": "113",
+                "parkName": "Xy停车场",
+                "passway": "入口通道1",
+                "passwayType": "1",
+                "equipmentSn": null,
+                "equipmentIp": null,
+                "equipmentMAC": null,
+                "equipmentModel": "CM-502",
+                "version": "1.03",
+                "status": "1",
+                "createDate": "1533866523297",
+                "modifyDate": "1533866523297"
+            }
+        ],
+        "2": [
+            {
+                "equipmentNo": "1533866539756",
+                "equipmentName": "停车场入场摄像机",
+                "equipmentType": "2",
+                "parkNo": "113",
+                "parkName": "Xy停车场",
+                "passway": "出口通道1",
+                "passwayType": "2",
+                "equipmentSn": null,
+                "equipmentIp": null,
+                "equipmentMAC": null,
+                "equipmentModel": "CM-502",
+                "version": "1.03",
+                "status": "1",
+                "createDate": "1533866539756",
+                "modifyDate": "1533866539756"
+            }
+        ]
+    },
+    "code": 1
+}

@@ -4,7 +4,7 @@
 
 			<div class="margin-tops ">
                 <span>所属停车场</span>
-				<el-select v-model="filters.park"  filterable >
+				<el-select @change="parkchange" v-model="filters.park"  filterable >
 	                    <el-option
 	                      v-for="item in park"
 	                      :key="item.value"
@@ -18,255 +18,7 @@
          <el-button v-show="editBtn" type="primary" @click="editBtns()">修改配置信息</el-button>
          <el-button v-show="queryBtn"  @click="queryBtns()">返回浏览列表</el-button>
        </div>
-       <!-- 编辑树 -->
-      <div class="mainEdit" v-show="mainEdit">
-          <div class="margin-tops treeBox">
-            <div class="btnClose"><el-button  size="mini" icon="el-icon-caret-right" @click="btnClose"></el-button>  </div>
-                <el-tree
-                :data="treeData"
-                node-key="id"
-                default-expand-all
-                :expand-on-click-node="false"
-                highlight-current
-                @node-click="nodeClick"
-                :render-content="renderContentEdit"
-                >
-                </el-tree>
-          </div>
-          <div v-show="rightContent1" class="contentR right">
-            
-            <p style="color:red;" > > 以下设置会直接影响系统运行，请在修改前确认设置无误。</p>
-            <el-row :gutter="20">
-                <el-col :span="12">
-                    <div class="panel">
-                        <p class="title">基本设置</p>
-                        <P style="display:inline-block;width:100px"><span>内网IP：</span></P> <p style="width:100px;">333</p>
-                        <p><span>默认计费车型：</span>{{ ip}}</p>
-                        <p><span>缴费后允许逗留时间(分钟)：</span>{{ ip}}</p>
-                        <p><span>有效期到期提醒（单位:天）：</span>{{ ip}}</p>
-                        <p><span>到期车辆延时收费时间（单位:天）：</span>{{ ip}}</p>
-                        <p><span>到期车辆处理方式：</span>{{ ip}}</p>
-                        <p><span>二次缴费规则：</span>{{ ip}}</p>
-                        <p><span>车牌识别结果比对规则：</span>{{ ip}}</p>
-                        <p><span>未找到在场车辆处理方式：</span>{{ ip}}</p>
-                        <p><span>车辆有效期播报方式：</span>{{ ip}}</p>
-                        <p><span>是否启用折扣：</span>{{ ip}}</p>
-                        <p><span>累加未确认收费金额：</span>{{ ip}}</p>
-                    </div>
-                    </el-col>
-                    <el-col :span="12">
-                    <div class="panel" >
-                        <p class="title">设备系统信息</p>
-                            <P>当前版本：{{ ip}}</P>
-                            <P>发现新版本：{{ ip}}</P>
-                            <P>新版本说明：{{ ip}}</P>
-                            <P>升级操作：{{ ip}}</P>
-                    </div>
-                </el-col>
-                
-            </el-row>
-            <el-row :gutter="20">
-                <el-col :span="24">
-                  <div class="panel">
-                    <p class="title">高级设置</p>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>是否允许锁车：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>储值卡余额不足是否扣除余额：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>向广告屏发空车位信息：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>储值卡扣费自动放行：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>停车时间较长需值班员确认(单位:天)：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>车卡是否绑定：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>语音大小：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>设定音量开始时间：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>语言：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>设定音量结束时间：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>控制器心跳间隔：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>军警等特殊车辆是否自动放行：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>黄牌车默认车型：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>分配IP方式：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>是否定时重启摄像机：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>停车场类型：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>判定单通道重复最小间隔(单位:秒)：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>入口延时关闸(单位:秒)：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                       <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>判定单通道重复最大间隔(单位:秒)：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>出口延时关闸(单位:秒)：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>未授权的主库是否收费：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>进场车辆卡机处理方式：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                       <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>是否开启稽查：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>识别后是否需要刷卡或取票卡出入：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                       <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>LED屏是否显示支付二维码：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>注册车辆是否需要刷卡：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>最高收费计费方式：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>达到最高收费后收费0元是否提醒：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>达到一天最高消费不再计费：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>车位满后通行方式：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>月票车：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>月票车：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                  </div>
-                </el-col>
-                
-            </el-row>
-            <el-row :gutter="20">
-                <el-col :span="24">
-                  <div class="panel">
-                    <p class="title">纸票信息</p>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>纸票标题：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>纸票的提示语/广告语：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      
-                  </div>
-                </el-col>
-                
-            </el-row>
-            <el-row :gutter="20">
-                <el-col :span="24">
-                  <div class="panel">
-                    <p class="title">是否开启出场限行提醒：未开启</p>
-                  </div>
-                </el-col>
-                
-            </el-row>
-          </div>
-          <div v-show="rightContent2" class="contentR right">
-             <div class="panel">
-                    <p class="title">属性信息</p>
-                     <el-row :gutter="20">
-                        <el-col :span="8">
-                           <P>内网IP地址：{{ ip}}</P>
-                        </el-col>
-                        <el-col :span="8">
-                           <P> <strong>关联的通道: </strong> </P>
-                        </el-col>
-                        <el-col :span="8">
-                           <P> <strong> 可登陆的值班员：</strong></P>
-                        </el-col>
-                    </el-row>
-                  <el-row :gutter="20">
-                        <el-col :span="8">
-                           <P>工作模式：{{ ip}}</P>
-                        </el-col>
-                        <el-col :span="8">
-                           <P>{{ip}}</P>
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="20">
-                        <el-col :span="24">
-                           <P>工作模式：{{ ip}}</P>
-                        </el-col>
-                        <el-col :span="8">
-                           <P>{{ip}}</P>
-                        </el-col>
-                    </el-row>
-              </div>
-              
-          </div> 
-          <div v-show="rightContentCamera" class="contentR right">
-               <div class="panel">
-                   ddd
-               </div>
-          </div> 
-      </div>
-      <!-- 查询树 -->
+       <!-- 查询树 -->
       <div class="main" v-show="mainQuery">
           <div class="margin-tops treeBox">
             <div class="btnClose"><el-button  size="mini" icon="el-icon-caret-right" @click="btnClose"></el-button>  </div>
@@ -648,6 +400,323 @@
                </div>
           </div> 
       </div>
+       <!-- 编辑树 -->
+      <div class="mainEdit" v-show="mainEdit">
+          <div class="margin-tops treeBox">
+            <div class="btnClose"><el-button  size="mini" icon="el-icon-caret-right" @click="btnClose"></el-button>  </div>
+                <el-tree
+                :data="treeDataEdit"
+                node-key="id"
+                default-expand-all
+                :expand-on-click-node="false"
+                highlight-current
+                @node-click="nodeClick"
+                :render-content="renderContentEdit"
+                >
+                </el-tree>
+          </div>
+          <!-- 编辑物联网关 -->
+          <div v-show="rightContent1" class="contentR right">
+            
+             <p  class="titleTop" >
+                  <el-button type="primary" size="small" class="el-icon-document">保存</el-button>
+                  <el-button type="success" size="small" class="el-icon-refresh">重启网关系统</el-button>
+                  <el-button  size="small" >恢复默认设置</el-button>
+                  <el-button  size="small" >重置管理密码</el-button>
+            </p>
+            <el-row :gutter="20">
+                <el-col :span="12">
+                  <div class="panel">
+                      <p class="title">基本设置</p>
+                       <div>
+                           <P ><span>内网IP：</span></P>
+                            <p><el-input v-model="query.wbGateway.ip"></el-input></p>
+                       </div>
+                      <div>
+                          <p ><span>默认计费车型：</span></p>
+                           <p><el-select v-model="query.wbGateway.feeType"  filterable >
+                            <el-option
+                                    v-for="item in feeType"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                    </el-option>
+                           </el-select>
+                        </p>
+                      </div>
+                      <div>
+                          <p ><span>缴费后允许逗留时间(分钟)：</span></p>
+                           <p><el-input v-model="query.json.stopTime"></el-input></p>
+                    </div>
+                      <div>
+                          <p ><span>有效期到期提醒（单位:天）：</span></p>
+                           <p><el-input v-model="query.json.duringDay"></el-input></p>
+                      </div>
+                      <div>
+                          <p ><span>到期车辆延时收费时间（单位:天）：</span></p>
+                           <p><el-input v-model="query.json.delayFeeTime"></el-input></p>
+                      </div>
+                      
+                      <div>
+                          <p ><span>二次缴费规则：</span></p>
+                           <p>
+                                <el-radio v-model="query.json.twoFeeRule" label="补缴"></el-radio>
+                                <el-radio v-model="query.json.twoFeeRule" label="重缴"></el-radio>
+                                </p>
+                                
+                           
+                      </div>
+                      <div>
+                          <p ><span>到期车辆处理方式：</span></p>
+                           <p><el-radio v-model="query.json.twoFeeRule" label="收费"></el-radio>
+                              <el-radio v-model="query.json.twoFeeRule" label="不收费"></el-radio></p>
+                      </div>
+                      <div>
+                          <p ><span>车牌识别结果比对规则：</span></p>
+                           <p>333</p>
+                      </div>
+                      <div>
+                          <p ><span>未找到在场车辆处理方式：</span></p>
+                           <p>333</p>
+                      </div>
+                      <div>
+                          <p  ><span>车辆有效期播报方式：</span></p>
+                           <p>333</p>
+                      </div>
+                      <div>
+                          <p  ><span>是否启用折扣：</span></p>
+                           <p>333</p>
+                      </div>
+                      <div>
+                          <p  ><span>累加未确认收费金额：</span></p>
+                           <p>333</p>
+                      </div>
+                  </div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="panel" >
+                      <p class="title">设备系统信息</p>
+                        <div>
+                            <P >当前版本：</P>
+                            <p>333</p>
+                        </div>
+                        <div>
+                            <P>发现新版本：</P>
+                            <p>333</p>
+                        </div>
+                        <div>
+                            <P>新版本说明：{{ ip}}</P>
+
+                        </div>
+                        <div>
+                            <P>升级操作：{{ ip}}</P>
+                        </div>
+                  </div>
+                </el-col>
+                
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="24">
+                  <div class="panel">
+                    <p class="title">高级设置</p>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>是否允许锁车：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>储值卡余额不足是否扣除余额：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>向广告屏发空车位信息：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>储值卡扣费自动放行：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>停车时间较长需值班员确认(单位:天)：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>车卡是否绑定：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>语音大小：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>设定音量开始时间：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>语言：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>设定音量结束时间：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>控制器心跳间隔：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>军警等特殊车辆是否自动放行：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>黄牌车默认车型：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>分配IP方式：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>是否定时重启摄像机：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>停车场类型：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>判定单通道重复最小间隔(单位:秒)：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>入口延时关闸(单位:秒)：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                       <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>判定单通道重复最大间隔(单位:秒)：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>出口延时关闸(单位:秒)：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>未授权的主库是否收费：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>进场车辆卡机处理方式：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                       <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>是否开启稽查：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>识别后是否需要刷卡或取票卡出入：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                       <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>LED屏是否显示支付二维码：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>注册车辆是否需要刷卡：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>最高收费计费方式：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>达到最高收费后收费0元是否提醒：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>达到一天最高消费不再计费：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>车位满后通行方式：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>月票车：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>月票车：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                  </div>
+                </el-col>
+                
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="24">
+                  <div class="panel">
+                    <p class="title">纸票信息</p>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>纸票标题：{{ ip}}</P>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>纸票的提示语/广告语：{{ ip}}</P>
+                          </el-col>
+                      </el-row>
+                      
+                  </div>
+                </el-col>
+                
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="24">
+                  <div class="panel">
+                    <p class="title">是否开启出场限行提醒：未开启</p>
+                  </div>
+                </el-col>
+                
+            </el-row>
+          </div>
+          <div v-show="rightContent2" class="contentR right">
+             <div class="panel">
+                    <p class="title">属性信息</p>
+                     <el-row :gutter="20">
+                        <el-col :span="8">
+                           <P>内网IP地址：{{ ip}}</P>
+                        </el-col>
+                        <el-col :span="8">
+                           <P> <strong>关联的通道: </strong> </P>
+                        </el-col>
+                        <el-col :span="8">
+                           <P> <strong> 可登陆的值班员：</strong></P>
+                        </el-col>
+                    </el-row>
+                  <el-row :gutter="20">
+                        <el-col :span="8">
+                           <P>工作模式：{{ ip}}</P>
+                        </el-col>
+                        <el-col :span="8">
+                           <P>{{ip}}</P>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="24">
+                           <P>工作模式：{{ ip}}</P>
+                        </el-col>
+                        <el-col :span="8">
+                           <P>{{ip}}</P>
+                        </el-col>
+                    </el-row>
+              </div>
+              
+          </div> 
+          <div v-show="rightContentCamera" class="contentR right">
+               <div class="panel">
+                   ddd
+               </div>
+          </div> 
+      </div>
+      
        <el-dialog
                 title="添加设备"
                 :visible.sync="addVisible"
@@ -746,36 +815,37 @@
 	</section>
 </template>
 <script>
-let id = 1000;
+// let id = 1000;
 
 import camera from "@/assets/img/camera.png";
-import {reqSaveDevice,reqDeviceInfo} from "@/api/deviceManage"
+import { reqSaveDevice, reqDeviceInfo,reqDeviceInfo1 } from "@/api/deviceManage";
 export default {
   data() {
-    const data = [
+    const datas =  [
       {
-        id: 1,
+        id: 9,
         label: "物联网关",
         children: [
           {
             id: 10,
             label: "停车场物联网关",
             type: "edrere",
-            ip: "192.178.4.4"
+            ip: "192.178.4.4",
+            json:{},
           }
         ]
       },
       {
-        id: 2,
+        id: 11,
         label: "收费机顶盒",
-        children: [
-          {
-            id: 20,
-            label: "收费终端",
-            type: "edrere",
-            ip: "192.178.4.4"
-          }
-        ]
+        // children: [
+        //   {
+        //     id: 20,
+        //     label: "收费终端",
+        //     type: "edrere",
+        //     ip: "192.178.4.4"
+        //   }
+        // ]
       },
       {
         id: 3,
@@ -794,32 +864,101 @@ export default {
         label: "通道管理",
         children: [
           {
-            id: 60,
+            id: 1,
             label: "入口通道-入口",
-
+            // children:[]
             children: [
-              {
-                id: 600,
-                label: "入口摄像机",
-                type: "入口通道",
-                ip: "192.168.0.225",
-                url: "../../../static/img/car.jpg"
-              }
+              
             ]
           },
           {
-            id: 61,
+            id: 2,
             label: "出口通道-出口",
-
+            children:[]
+            // children: [
+            //   {
+            //     id: 611,
+            //     label: "出口摄像机",
+            //     type: "出口通道",
+            //     ip: "192.178.0.136",
+            //     url: "../../../static/img/car.jpg"
+            //   }
+            // ]
+          }
+        ]
+      },
+      {
+        id: 7,
+        label: "显示屏管理"
+      },
+      {
+        id: 8,
+        label: "未分配设备"
+      }
+    ];
+    const data = [
+      {
+        id: 9,
+        label: "物联网关",
+        children: [
+          {
+            id: 10,
+            label: "停车场物联网关",
+            type: "edrere",
+            ip: "192.178.4.4",
+            json:{},
+          }
+        ]
+      },
+      {
+        id: 11,
+        label: "收费机顶盒",
+        // children: [
+        //   {
+        //     id: 20,
+        //     label: "收费终端",
+        //     type: "edrere",
+        //     ip: "192.178.4.4"
+        //   }
+        // ]
+      },
+      {
+        id: 3,
+        label: "收费手持机"
+      },
+      {
+        id: 4,
+        label: "自动缴费机"
+      },
+      {
+        id: 5,
+        label: "无线出入控制机"
+      },
+      {
+        id: 6,
+        label: "通道管理",
+        children: [
+          {
+            id: 1,
+            label: "入口通道-入口",
+            // children:[]
             children: [
-              {
-                id: 611,
-                label: "出口摄像机",
-                type: "出口通道",
-                ip: "192.178.0.136",
-                url: "../../../static/img/car.jpg"
-              }
+              
             ]
+          },
+          {
+            id: 2,
+            label: "出口通道-出口",
+            children:[]
+            // children: [
+            //   {
+            //     id: 611,
+            //     label: "出口摄像机",
+            //     type: "出口通道",
+            //     ip: "192.178.0.136",
+            //     url: "../../../static/img/car.jpg"
+            //   }
+            // ]
           }
         ]
       },
@@ -851,11 +990,13 @@ export default {
       mainEdit: false,
       editBtn: true,
       queryBtn: false,
-      data4: JSON.parse(JSON.stringify(data)),
-      treeData: JSON.parse(JSON.stringify(data)),
+    //   data4: JSON.parse(JSON.stringify(data)),
+      treeData: data,
+      treeDataEdit:datas,
       filters: {
         park: ""
       },
+      feeType:[],
       park: [{}],
       nodeLabel: "",
       showType: false,
@@ -871,6 +1012,10 @@ export default {
           ip: "",
           type: ""
         },
+        wbGateway:{
+          feeType:""
+        },
+        json: {},
         tollTerminal: {
           ip: "",
           workMode: "出口收费",
@@ -898,39 +1043,88 @@ export default {
     $(".showType").toggle();
     $(".showIp").toggle();
     $(".right").remove("right");
-    this.getDeviceInfo();
+   
   },
   created() {
-    this.park=  this.common.getParkList()
+    this.park = this.common.getParkList();
+     this.getDeviceInfo();
     // this.addDevice();
   },
   methods: {
-      //请求左树控控件
-      getDeviceInfo(){
-    //       this.treeData=[{
-    //     id: 1,
-    //     label: "物联网关",
-    //     children: [
-    //       {
-    //         id: 10,
-    //         label: "停车场物联网关",
-    //         type: "edrere",
-    //         ip: "192.178.4.4"
-    //       }
-    //     ]
-    //   }];
-          let para={
-              jwt:window.localStorage.getItem("jwt"),
-              parkNo:this.filters.park
-          }
-          reqDeviceInfo(para).then(res=>{
-             if(res.code===1){
-                this.treeData= res.deviceInfo;
-             }else{
-                 console.log("获取数据失败");
-             }
-          })
+      parkchange(){
+          this.getDeviceInfo();
       },
+    //请求左树控控件
+    getDeviceInfo() {
+      //       this.treeData=[{
+      //     id: 1,
+      //     label: "物联网关",
+      //     children: [
+      //       {
+      //         id: 10,
+      //         label: "停车场物联网关",
+      //         type: "edrere",
+      //         ip: "192.178.4.4"
+      //       }
+      //     ]
+      //   }];
+      let para = {
+        jwt: window.localStorage.getItem("jwt"),
+        parkNo: this.filters.park || "111"
+      };
+      reqDeviceInfo1(para).then(res => {
+          console.log(res);
+        if (res.code === 1) {
+        //   this.treeData = res.equipmentInfoMap;
+          this.getRenderData(res.equipmentInfoMap,this.treeData);
+          this.getRenderData(res.equipmentInfoMap,this.treeDataEdit);
+        } else {
+          console.log("获取数据失败");
+        }
+      });
+    },
+    //树控件请求的数据解析
+    getRenderData(equipmentInfoList,treeData) {
+      var data = treeData;
+      for (var item in equipmentInfoList) {
+        treeData.forEach(items => {
+          //  items["children"] = [];
+          if (items.label == "通道管理") {
+            items.children.forEach(itemss => {
+              // itemss.children=[];
+              if (itemss.id == item) {
+                console.log(itemss);
+                equipmentInfoList[item].forEach(elementss => {
+                  var temp = {
+                    id: elementss.equipmentNo,
+                    label: elementss.equipmentName,
+                    ip:elementss.ip ||"",
+                    type:elementss.type|| ""
+                  };
+                  itemss.children.push(temp);
+                  console.log(itemss.children);
+                });
+              }
+            });
+          } else if (items["id"] == item) {
+            items.children = [];
+            equipmentInfoList[item].forEach(elements => {
+              var temp = {
+                id: elements.equipmentNo,
+                label: elements.equipmentName,
+                  ip:elementss.ip ||"",
+                  type:elementss.type|| ""
+              };
+              items.children.push(temp);
+            });
+            // items["children"]=equipmentInfoList[item]
+          }
+        });
+        console.log("zlzlz");
+        
+      }
+      console.log(this.treeData);
+    },
     //添加设备信息
     savedevice() {
       var obj = this.add;
@@ -946,30 +1140,31 @@ export default {
         //     deviceVersion: "",
         //     deviceTwoBinary: "", //二进制位数：值范围（0-255）
         //   },
-        deviceType: obj.deviceType,//设备类型
-        deviceUseStatus:obj.deviceUseStatus,//设备使用状态
-        diviceIP:obj.deviceIP,//设备ip
-        deviceOtherName:obj.deviceOtherName,//别名
-        deviceSN:obj.deviceSN,//设备sn
-        deviceID:obj.deviceID,//编号
-        deviceModel:obj.deviceModel,//型号
-        deviceVersion:obj.deviceVersion,//版本号
-        deviceTwoBinary:obj.deviceTwoBinary,//二进制位数
-        jwt:window.localStorage.getItem("jwt")
+        parkNo:this.filters.park,
+        deviceType: obj.deviceType, //设备类型
+        deviceUseStatus: obj.deviceUseStatus, //设备使用状态
+        diviceIP: obj.deviceIP, //设备ip
+        deviceOtherName: obj.deviceOtherName, //别名
+        deviceSN: obj.deviceSN, //设备sn
+        deviceID: obj.deviceID, //编号
+        deviceModel: obj.deviceModel, //型号
+        deviceVersion: obj.deviceVersion, //版本号
+        deviceTwoBinary: obj.deviceTwoBinary, //二进制位数
+        jwt: window.localStorage.getItem("jwt")
       };
-      reqSaveDevice(para).then(res=>{
-           if(res.code===1){
-               this.$message({
-                  message:res.message,
-                  type:"success"
-               })
-           }else{
-               this.$message({
-                   message:res.message,
-                   type:"success"
-               })
-           }
-      })
+      reqSaveDevice(para).then(res => {
+        if (res.code === 1) {
+          this.$message({
+            message: res.message,
+            type: "success"
+          });
+        } else {
+          this.$message({
+            message: res.message,
+            type: "success"
+          });
+        }
+      });
     },
     handleClose(done) {
       // this.$confirm("确认关闭？")
@@ -996,20 +1191,6 @@ export default {
       $(".showIp").toggle();
       $(".right").toggleClass("right");
     },
-    append(data) {
-      const newChild = { id: id++, label: "testtest", children: [] };
-      if (!data.children) {
-        this.$set(data, "children", []);
-      }
-      data.children.push(newChild);
-    },
-
-    remove(node, data) {
-      const parent = node.parent;
-      const children = parent.data.children || parent.data;
-      const index = children.findIndex(d => d.id === data.id);
-      children.splice(index, 1);
-    },
     nodeClick(obj, node, zujian) {
       console.log("obj");
       console.log(node);
@@ -1017,6 +1198,10 @@ export default {
         this.rightContent1 = true;
         this.rightContentCamera = false;
         this.rightContent2 = false;
+        this.query.wbGateway={
+            ip:node.data.ip,
+            type:node.data.type,
+        }
       } else if (node.parent != null && node.parent.label === "收费机顶盒") {
         this.rightContent1 = false;
         this.rightContent2 = true;
@@ -1042,9 +1227,16 @@ export default {
       this.nodeLabel = node.label;
     },
 
+    addDevice(data) {
+      for (var item in this.add) {
+        this.add[item] = "";
+      }
+      this.addVisible = true;
+    },
     renderContent(h, { node, data, store }) {
+        console.log("ffffffffff");
       console.log(node);
-      if (node.data.id < 10) {
+      if (!node.parent.label) {
         return (
           <span class="custom-tree-node">
             <span>
@@ -1053,9 +1245,14 @@ export default {
             </span>
           </span>
         );
-
         //  return false;
-      } else if (node.childNodes.length != 0) {
+      }  if (node.label == "停车场物联网关") {
+        return (
+          <span class="custom-tree-node">
+            <span> {node.label}</span>
+          </span>
+        );
+      } if (node.childNodes.length != 0) {
         return (
           <span class="custom-tree-node">
             <span>
@@ -1080,21 +1277,33 @@ export default {
         );
       }
     },
-    addDevice(data) {
-      for (var item in this.add) {
-        this.add[item] = "";
-      }
-        this.addVisible = true;
-    },
     renderContentEdit(h, { node, data, store }) {
+         console.log("eeeeeeeeeeeee")
       console.log(node);
-      if (node.data.id < 10 && node.data.id === "1") {
-        <span class="custom-tree-node">
-          <span class="nodelabel">
-            <strong>{node.label} </strong>
+      //   if (node.data.id < 10 && node.data.id === "1") {
+      if (!node.isLeaf && node.label == "物联网关") {
+        // <span class="custom-tree-node">
+        //   <span class="nodelabel">
+        //     <strong>{node.label} </strong>
+        //   </span>
+        // </span>;
+        return (
+          <span class="custom-tree-node">
+            <span>
+              {" "}
+              <strong>{node.label} </strong>
+            </span>
           </span>
-        </span>;
-      } else if (node.data.id < 10 && node.data.id != 1) {
+        );
+      }
+      if (node.isLeaf && node.label == "停车场物联网关") {
+        return (
+          <span class="custom-tree-node">
+            <span> {node.label}</span>
+          </span>
+        );
+      }
+      if (!node.parent.label && node.label != "物联网关") {
         return (
           <span class="custom-tree-node">
             <span>
@@ -1110,7 +1319,8 @@ export default {
           </span>
         );
         //  return false;
-      } else if (!node.isLeaf && node.parent && node.data.id != 1) {
+      }
+      if (!node.isLeaf && node.parent && node.label != "物联网关") {
         return (
           <span class="custom-tree-node">
             <span class="nodelabel">
@@ -1131,7 +1341,8 @@ export default {
             </span>
           </span>
         );
-      } else if (node.childNodes.length != 0) {
+      }
+      if (node.childNodes.length != 0) {
         return (
           <span class="custom-tree-node">
             <span class="nodelabel">
@@ -1213,6 +1424,11 @@ export default {
   margin: 15px 10px;
   /* height: 350px; */
   border-radius: 5px;
+}
+.titleTop {
+  padding: 5px;
+  height: 30px;
+  background-color: #eee;
 }
 .panel2 {
   border-radius: 0px;
