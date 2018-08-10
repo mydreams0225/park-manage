@@ -299,7 +299,7 @@
 										</el-form-item>
 									 </el-form>
                    <el-tabs >
-												<el-tab-pane label="按小时收费" class="chargeJson">
+												<el-tab-pane label="按小时收费" class="chargeJsonJson">
                             <el-row :gutter="20" >
 															<el-col :span="6"><div >0~1小时收费：</div></el-col>
 															<el-col :span="6"><div class="grid-content "><el-input ></el-input></div></el-col>
