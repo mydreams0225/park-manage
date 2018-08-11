@@ -416,7 +416,7 @@
                 </el-tree>
           </div>
           <!-- 编辑物联网关 -->
-          <div v-show="rightContent1" class="contentR right">
+          <div v-show="rightContent1" class="contentR right" >
             
              <p  class="titleTop" >
                   <el-button type="primary" size="small" class="el-icon-document">保存</el-button>
@@ -446,50 +446,59 @@
                       </div>
                       <div>
                           <p ><span>缴费后允许逗留时间(分钟)：</span></p>
-                           <p><el-input v-model="query.json.stopTime"></el-input></p>
+                           <p><el-input v-model="query.wbGateway.stopTime"></el-input></p>
                     </div>
                       <div>
                           <p ><span>有效期到期提醒（单位:天）：</span></p>
-                           <p><el-input v-model="query.json.duringDay"></el-input></p>
+                           <p><el-input v-model="query.wbGateway.duringDay"></el-input></p>
                       </div>
                       <div>
                           <p ><span>到期车辆延时收费时间（单位:天）：</span></p>
-                           <p><el-input v-model="query.json.delayFeeTime"></el-input></p>
+                           <p><el-input v-model="query.wbGateway.delayFeeTime"></el-input></p>
                       </div>
                       
                       <div>
                           <p ><span>二次缴费规则：</span></p>
                            <p>
-                                <el-radio v-model="query.json.twoFeeRule" label="补缴"></el-radio>
-                                <el-radio v-model="query.json.twoFeeRule" label="重缴"></el-radio>
+                                <el-radio v-model="query.wbGateway.twoFeeRule" label="补缴"></el-radio>
+                                <el-radio v-model="query.wbGateway.twoFeeRule" label="重缴"></el-radio>
                                 </p>
                                 
                            
                       </div>
                       <div>
                           <p ><span>到期车辆处理方式：</span></p>
-                           <p><el-radio v-model="query.json.twoFeeRule" label="收费"></el-radio>
-                              <el-radio v-model="query.json.twoFeeRule" label="不收费"></el-radio></p>
+                           <p>  
+                               <el-radio v-model="query.wbGateway.maturingVehicle" label="收费"></el-radio>
+                              <el-radio v-model="query.wbGateway.maturingVehicle" label="不收费"></el-radio>
+                        
+                             
+                            </p>
                       </div>
                       <div>
                           <p ><span>车牌识别结果比对规则：</span></p>
-                           <p>333</p>
+                           <p><el-radio v-model="query.wbGateway.lpr" label="模糊匹配"></el-radio>
+                              <el-radio v-model="query.wbGateway.lpr" label="精准匹配"></el-radio></p>
                       </div>
                       <div>
                           <p ><span>未找到在场车辆处理方式：</span></p>
-                           <p>333</p>
+                           <p><el-radio v-model="query.wbGateway.noSpotVehicleFound" label="异常处理"></el-radio>
+                              <el-radio v-model="query.wbGateway.noSpotVehicleFound" label="自动免费放行"></el-radio></p>
                       </div>
                       <div>
                           <p  ><span>车辆有效期播报方式：</span></p>
-                           <p>333</p>
+                           <p><el-radio v-model="query.wbGateway.broadcastMethod" label="按天播报"></el-radio>
+                              <el-radio v-model="query.wbGateway.broadcastMethod" label="按年月日播报"></el-radio></p>
                       </div>
                       <div>
                           <p  ><span>是否启用折扣：</span></p>
-                           <p>333</p>
+                           <p><el-radio v-model="query.wbGateway.isUseDisc" label="启用"></el-radio>
+                              <el-radio v-model="query.wbGateway.isUseDisc" label="不启用"></el-radio></p>
                       </div>
                       <div>
                           <p  ><span>累加未确认收费金额：</span></p>
-                           <p>333</p>
+                           <p><el-radio v-model="query.wbGateway.summationChargeMoney" label="启用"></el-radio>
+                              <el-radio v-model="query.wbGateway.summationChargeMoney" label="不启用"></el-radio></p>
                       </div>
                   </div>
                 </el-col>
@@ -498,18 +507,20 @@
                       <p class="title">设备系统信息</p>
                         <div>
                             <P >当前版本：</P>
-                            <p>333</p>
+                            <p>{{query.wbGateway.currentVersion}}1</p>
                         </div>
                         <div>
                             <P>发现新版本：</P>
-                            <p>333</p>
+                            <p>{{query.wbGateway.newVersion}}</p>
                         </div>
                         <div>
-                            <P>新版本说明：{{ ip}}</P>
+                            <P>新版本说明：</P>
+                            <p>{{query.wbGateway.newVersionDesc}}</p>
 
                         </div>
                         <div>
-                            <P>升级操作：{{ ip}}</P>
+                            <P >升级操作：</P>
+                            <p><el-button type="success" size="mini">点击升级到最新版本</el-button></p>
                         </div>
                   </div>
                 </el-col>
@@ -517,118 +528,255 @@
             </el-row>
             <el-row :gutter="20">
                 <el-col :span="24">
-                  <div class="panel">
+                  <div class="panel" >
                     <p class="title">高级设置</p>
                       <el-row :gutter="20">
                           <el-col :span="12">
-                              <P>是否允许锁车：{{ ip}}</P>
+                              <P>是否允许锁车：</P>
+                              <p>
+                                <el-radio v-model="query.wbGateway.isAllowLock" label="允许"></el-radio>
+                                <el-radio v-model="query.wbGateway.isAllowLock" label="不允许"></el-radio>
+                              </p>
                           </el-col>
                           <el-col :span="12">
-                              <P>储值卡余额不足是否扣除余额：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>向广告屏发空车位信息：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>储值卡扣费自动放行：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>停车时间较长需值班员确认(单位:天)：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>车卡是否绑定：{{ ip}}</P>
+                              <P>储值卡余额不足是否扣除余额：</P>
+                              <p>
+                                <el-radio v-model="query.wbGateway.isDeductBalance" label="是"></el-radio>
+                                <el-radio v-model="query.wbGateway.isDeductBalance" label="否"></el-radio>
+                              </p>
                           </el-col>
                       </el-row>
                       <el-row :gutter="20">
                           <el-col :span="12">
-                              <P>语音大小：{{ ip}}</P>
+                              <P>向广告屏发空车位信息：</P>
+                                <P>
+                                  <el-radio v-model="query.wbGateway.isparkInfo" label="是"></el-radio>
+                                  <el-radio v-model="query.wbGateway.isparkInfo" label="否"></el-radio>
+                                </P>
                           </el-col>
                           <el-col :span="12">
-                              <P>设定音量开始时间：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>语言：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>设定音量结束时间：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>控制器心跳间隔：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>军警等特殊车辆是否自动放行：{{ ip}}</P>
+                              <P>储值卡扣费自动放行：</P>
+                              <P>
+                                  <el-radio v-model="query.wbGateway.prepaidAutoRelease" label="是"></el-radio>
+                                  <el-radio v-model="query.wbGateway.prepaidAutoRelease" label="否"></el-radio>
+                                </P>
                           </el-col>
                       </el-row>
                       <el-row :gutter="20">
                           <el-col :span="12">
-                              <P>黄牌车默认车型：{{ ip}}</P>
+                              <P>停车时间较长需值班员确认(单位:天)：</P>
+                              <p><el-input v-model="query.wbGateway.dutyManConfirm"></el-input></p>
                           </el-col>
                           <el-col :span="12">
-                              <P>分配IP方式：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>是否定时重启摄像机：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>停车场类型：{{ ip}}</P>
+                              <P>车卡是否绑定：</P>
+                              <P>
+                                  <el-radio v-model="query.wbGateway.isCarCardBind" label="绑定"></el-radio>
+                                  <el-radio v-model="query.wbGateway.isCarCardBind" label="不绑定"></el-radio>
+                              </P>
                           </el-col>
                       </el-row>
                       <el-row :gutter="20">
                           <el-col :span="12">
-                              <P>判定单通道重复最小间隔(单位:秒)：{{ ip}}</P>
+                              <P>语音大小：</P>
+                              <P>
+                                  <el-select v-model="query.wbGateway.speechSize"  filterable >
+                                            <el-option
+                                              v-for="item in speechSize"
+                                              :key="item.value"
+                                              :label="item.label"
+                                              :value="item.value">
+                                            </el-option>
+                                  </el-select>
+                              </P>
                           </el-col>
                           <el-col :span="12">
-                              <P>入口延时关闸(单位:秒)：{{ ip}}</P>
+                              <P>设定音量开始时间：</P>
+                              <p>
+                                <el-time-select
+                                  v-model="query.wbGateway.startTime"
+                                  :picker-options="{
+                                    start: '00:00',
+                                    step: '01:00',
+                                    end: '23:00'
+                                  }"
+                                  placeholder="选择时间">
+                                </el-time-select>
+                              </p>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>语言：</P>
+                              <p>
+                                <el-select v-model="query.wbGateway.language"  filterable >
+                                            <el-option
+                                              v-for="item in language"
+                                              :key="item.value"
+                                              :label="item.label"
+                                              :value="item.value">
+                                            </el-option>
+                                  </el-select>
+                              </p>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>设定音量结束时间：</P>
+                              <p>
+                                <el-time-select
+                                  v-model="query.wbGateway.endTime"
+                                  :picker-options="{
+                                    start: '00:00',
+                                    step: '01:00',
+                                    end: '23:00'
+                                  }"
+                                  placeholder="选择时间">
+                                </el-time-select>
+                              </p>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>控制器心跳间隔：</P>
+                              <p>
+                                <el-input v-model="query.wbGateway.palpitationInterval"></el-input>
+                              </p>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>军警等特殊车辆是否自动放行：</P>
+                              <p>
+                                <el-radio v-model="query.wbGateway.specialVehiclesAutoRelease" label="是"></el-radio>
+                                  <el-radio v-model="query.wbGateway.specialVehiclesAutoRelease" label="否"></el-radio>
+                              </p>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>黄牌车默认车型：</P>
+                              <p>
+                                <el-select v-model="query.wbGateway.yellowCarDefaultMode"  filterable >
+                                            <el-option
+                                              v-for="item in yellowCarDefaultMode"
+                                              :key="item.value"
+                                              :label="item.label"
+                                              :value="item.value">
+                                            </el-option>
+                                  </el-select>
+                                
+                              </p>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>分配IP方式：</P>
+                                  <el-radio v-model="query.wbGateway.ipMethod" label="自动"></el-radio>
+                                  <el-radio v-model="query.wbGateway.ipMethod" label="手动"></el-radio>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>是否定时重启摄像机：</P>
+                                  <el-radio v-model="query.wbGateway.isTimingRestartCamera" label="是"></el-radio>
+                                  <el-radio v-model="query.wbGateway.isTimingRestartCamera" label="否"></el-radio>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>停车场类型：</P>
+                              <el-select v-model="query.wbGateway.parkingType"  filterable >
+                                            <el-option
+                                              v-for="item in parkingType"
+                                              :key="item.value"
+                                              :label="item.label"
+                                              :value="item.value">
+                                            </el-option>
+                                  </el-select>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>判定单通道重复最小间隔(单位:秒)：</P>
+                              <p>
+                                <el-input v-model="query.wbGateway.judgeSingleMinInterval"></el-input>
+                              </p>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>入口延时关闸(单位:秒)：</P>
+                              <p>
+                                <el-input v-model="query.wbGateway.passDelayOff"></el-input>
+                              </p>
                           </el-col>
                       </el-row>
                        <el-row :gutter="20">
                           <el-col :span="12">
-                              <P>判定单通道重复最大间隔(单位:秒)：{{ ip}}</P>
+                              <P>判定单通道重复最大间隔(单位:秒)：</P>
+                              <p>
+                                <el-input v-model="query.wbGateway.judgeSingleMaxInterval"></el-input>
+                              </p>
                           </el-col>
                           <el-col :span="12">
-                              <P>出口延时关闸(单位:秒)：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                      <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>未授权的主库是否收费：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>进场车辆卡机处理方式：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                       <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>是否开启稽查：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>识别后是否需要刷卡或取票卡出入：{{ ip}}</P>
-                          </el-col>
-                      </el-row>
-                       <el-row :gutter="20">
-                          <el-col :span="12">
-                              <P>LED屏是否显示支付二维码：{{ ip}}</P>
-                          </el-col>
-                          <el-col :span="12">
-                              <P>注册车辆是否需要刷卡：{{ ip}}</P>
+                              <P>出口延时关闸(单位:秒)：</P>
+                              <p>
+                                <el-input v-model="query.wbGateway.outDelayOff"></el-input>
+                              </p>
                           </el-col>
                       </el-row>
                       <el-row :gutter="20">
                           <el-col :span="12">
-                              <P>最高收费计费方式：{{ ip}}</P>
+                              <P>未授权的主库是否收费：</P>
+                              <p>
+                                  <el-radio v-model="query.wbGateway.unRootMainKuisCharge" label="收费（自动放行）"></el-radio>
+                                  <el-radio v-model="query.wbGateway.unRootMainKuisCharge" label="禁止通行/收费(确认放行)"></el-radio>
+                              </p>
                           </el-col>
                           <el-col :span="12">
-                              <P>达到最高收费后收费0元是否提醒：{{ ip}}</P>
+                              <P>进场车辆卡机处理方式：</P>
+                              <p>
+                                  <el-radio v-model="query.wbGateway.passCarCardHandle" label="重置后发出"></el-radio>
+                                  <el-radio v-model="query.wbGateway.passCarCardHandle" label="回收"></el-radio>
+                              </p>
+                          </el-col>
+                      </el-row>
+                       <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>是否开启稽查：</P>
+                               <p>
+                                  <el-radio v-model="query.wbGateway.isOpenInspection" label="开启"></el-radio>
+                                  <el-radio v-model="query.wbGateway.isOpenInspection" label="不开启"></el-radio>
+                              </p>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>识别后是否需要刷卡或取票卡出入：</P>
+                              <p>
+                                  <el-radio v-model="query.wbGateway.recognitionIsSwingCard" label="是"></el-radio>
+                                  <el-radio v-model="query.wbGateway.recognitionIsSwingCard" label="否"></el-radio>
+                              </p>
+                          </el-col>
+                      </el-row>
+                       <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>LED屏是否显示支付二维码：</P>
+                              <p>
+                                  <el-radio v-model="query.wbGateway.isLedShowQRcode" label="是"></el-radio>
+                                  <el-radio v-model="query.wbGateway.isLedShowQRcode" label="否"></el-radio>
+                              </p>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>注册车辆是否需要刷卡：</P>
+                              <p>
+                                  <el-radio v-model="query.wbGateway.registerCarIsSwing" label="是"></el-radio>
+                                  <el-radio v-model="query.wbGateway.registerCarIsSwing" label="否"></el-radio>
+                              </p>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>最高收费计费方式：</P>
+                              <p>
+                                  <el-radio v-model="query.wbGateway.maxChargingMode" label="连续二十四小时"></el-radio>
+                                  <el-radio v-model="query.wbGateway.maxChargingMode" label="自然天"></el-radio>
+                              </p>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>达到最高收费后收费0元是否提醒：</P>
+                              <p>
+                                  <el-radio v-model="query.wbGateway.MaxChargeZeroReminding" label="提醒"></el-radio>
+                                  <el-radio v-model="query.wbGateway.MaxChargeZeroReminding" label="不提醒"></el-radio>
+                              </p>
                           </el-col>
                       </el-row>
                       <el-row :gutter="20">
@@ -641,10 +789,36 @@
                       </el-row>
                       <el-row :gutter="20">
                           <el-col :span="12">
-                              <P>月票车：{{ ip}}</P>
+                              <P>月票车：</P>
+                             <p>
+                                <el-radio v-model="query.wbGateway.MaxChargeNoFeeMonth" label="是"></el-radio>
+                                <el-radio v-model="query.wbGateway.MaxChargeNoFeeMonth" label="否"></el-radio>
+                             </p>
                           </el-col>
                           <el-col :span="12">
-                              <P>月票车：{{ ip}}</P>
+                              <P>月票车：</P>
+                              <p>
+                                <el-radio v-model="query.wbGateway.lotFullPassModeMonth" label="正常放行"></el-radio>
+                                <el-radio v-model="query.wbGateway.lotFullPassModeMonth" label="确认放行"></el-radio>
+                                <el-radio v-model="query.wbGateway.lotFullPassModeMonth" label="禁止放行"></el-radio>
+                              </p>
+                          </el-col>
+                      </el-row>
+                      <el-row :gutter="20">
+                          <el-col :span="12">
+                              <P>免费车：</P>
+                              <p>
+                                <el-radio v-model="query.wbGateway.MaxChargeNoFeeFree" label="是"></el-radio>
+                                <el-radio v-model="query.wbGateway.MaxChargeNoFeeFree" label="否"></el-radio>
+                             </p>
+                          </el-col>
+                          <el-col :span="12">
+                              <P>免费车：</P>
+                              <p>
+                                <el-radio v-model="query.wbGateway.lotFullPassModeFree" label="正常放行"></el-radio>
+                                <el-radio v-model="query.wbGateway.lotFullPassModeFree" label="确认放行"></el-radio>
+                                <el-radio v-model="query.wbGateway.lotFullPassModeFree" label="禁止放行"></el-radio>
+                              </p>
                           </el-col>
                       </el-row>
                   </div>
@@ -657,10 +831,16 @@
                     <p class="title">纸票信息</p>
                       <el-row :gutter="20">
                           <el-col :span="12">
-                              <P>纸票标题：{{ ip}}</P>
+                              <P>纸票标题：</P>
+                              <p>
+                                <el-input v-model="query.wbGateway.paperTitle"></el-input>
+                              </p>
                           </el-col>
                           <el-col :span="12">
-                              <P>纸票的提示语/广告语：{{ ip}}</P>
+                              <P>纸票的提示语/广告语：</P>
+                              <p>
+                                <el-input v-model="query.wbGateway.paperHint"></el-input>
+                              </p>
                           </el-col>
                       </el-row>
                       
@@ -671,7 +851,9 @@
             <el-row :gutter="20">
                 <el-col :span="24">
                   <div class="panel">
-                    <p class="title">是否开启出场限行提醒：未开启</p>
+                    <p class="title">是否开启出场限行提醒
+                      <el-checkbox v-model="query.wbGateway.isOpenTiXing"></el-checkbox>
+                    </p>
                   </div>
                 </el-col>
                 
@@ -711,8 +893,42 @@
               
           </div> 
           <div v-show="rightContentCamera" class="contentR right">
-               <div class="panel">
-                   ddd
+               <div class="panel panel2">
+                 
+                 <div class="title">
+                   <el-button size="mini" type="primary">保存</el-button>
+                  
+                  
+                  <p class="cameraTitle" style="text-align:right ;width:90%;"> 属性信息</p>
+                  </div>
+                    <el-row  :gutter="20">
+                        <el-col :span="8">
+                            <div>
+                                <P ><span> 内网IP地址：</span></P>
+                               <p> <el-input v-model="query.passageway.ip"></el-input> </p>
+                            </div>                         
+                            <div>
+                              <p ><span>关联通道：</span>    </p>
+                              <p> <el-select v-model="query.passageway.type">
+                                     <el-option v-for="item in type" 
+                                     :key="item.value"
+                                     :value="item.value"
+                                     :label="item.label">
+                                     </el-option>
+                                 </el-select> </p>
+                          </div>
+                        </el-col>
+                        <el-col :span="10">
+                            <p style="width:100%;"> 
+                                <el-button type="success" size="mini" icon="el-icon-view"> 抓拍现场照片</el-button> 
+                                <el-button type="success" size="mini" ><i>|||</i> 设置识别区域</el-button> 
+                                <el-button type="primary" size="mini" icon="el-icon-refresh">刷新</el-button> 
+                            </p>
+                            <div class="imgBox">
+                                <img :src="query.passageway.url" alt="">
+                            </div>
+                        </el-col>
+                    </el-row>
                </div>
           </div> 
       </div>
@@ -818,10 +1034,14 @@
 // let id = 1000;
 
 import camera from "@/assets/img/camera.png";
-import { reqSaveDevice, reqDeviceInfo,reqDeviceInfo1 } from "@/api/deviceManage";
+import {
+  reqSaveDevice,
+  reqDeviceInfo,
+  reqDeviceInfo1
+} from "@/api/deviceManage";
 export default {
   data() {
-    const datas =  [
+    const datas = [
       {
         id: 9,
         label: "物联网关",
@@ -831,7 +1051,7 @@ export default {
             label: "停车场物联网关",
             type: "edrere",
             ip: "192.178.4.4",
-            json:{},
+            json: {}
           }
         ]
       },
@@ -867,14 +1087,12 @@ export default {
             id: 1,
             label: "入口通道-入口",
             // children:[]
-            children: [
-              
-            ]
+            children: []
           },
           {
             id: 2,
             label: "出口通道-出口",
-            children:[]
+            children: []
             // children: [
             //   {
             //     id: 611,
@@ -906,7 +1124,7 @@ export default {
             label: "停车场物联网关",
             type: "edrere",
             ip: "192.178.4.4",
-            json:{},
+            json: {}
           }
         ]
       },
@@ -942,14 +1160,12 @@ export default {
             id: 1,
             label: "入口通道-入口",
             // children:[]
-            children: [
-              
-            ]
+            children: []
           },
           {
             id: 2,
             label: "出口通道-出口",
-            children:[]
+            children: []
             // children: [
             //   {
             //     id: 611,
@@ -990,13 +1206,13 @@ export default {
       mainEdit: false,
       editBtn: true,
       queryBtn: false,
-    //   data4: JSON.parse(JSON.stringify(data)),
+      //   data4: JSON.parse(JSON.stringify(data)),
       treeData: data,
-      treeDataEdit:datas,
+      treeDataEdit: datas,
       filters: {
         park: ""
       },
-      feeType:[],
+      feeType: [],
       park: [{}],
       nodeLabel: "",
       showType: false,
@@ -1012,8 +1228,8 @@ export default {
           ip: "",
           type: ""
         },
-        wbGateway:{
-          feeType:""
+        wbGateway: {
+          feeType: ""
         },
         json: {},
         tollTerminal: {
@@ -1043,17 +1259,16 @@ export default {
     $(".showType").toggle();
     $(".showIp").toggle();
     $(".right").remove("right");
-   
   },
   created() {
     this.park = this.common.getParkList();
-     this.getDeviceInfo();
+    this.getDeviceInfo();
     // this.addDevice();
   },
   methods: {
-      parkchange(){
-          this.getDeviceInfo();
-      },
+    parkchange() {
+      this.getDeviceInfo();
+    },
     //请求左树控控件
     getDeviceInfo() {
       //       this.treeData=[{
@@ -1073,18 +1288,19 @@ export default {
         parkNo: this.filters.park || "111"
       };
       reqDeviceInfo1(para).then(res => {
-          console.log(res);
+        console.log(res);
         if (res.code === 1) {
-        //   this.treeData = res.equipmentInfoMap;
-          this.getRenderData(res.equipmentInfoMap,this.treeData);
-          this.getRenderData(res.equipmentInfoMap,this.treeDataEdit);
+          //   this.treeData = res.equipmentInfoMap;
+          this.getRenderData(res.equipmentInfoMap, this.treeData);
+          this.getRenderData(res.equipmentInfoMap, this.treeDataEdit);
+
         } else {
           console.log("获取数据失败");
         }
       });
     },
     //树控件请求的数据解析
-    getRenderData(equipmentInfoList,treeData) {
+    getRenderData(equipmentInfoList, treeData) {
       var data = treeData;
       for (var item in equipmentInfoList) {
         treeData.forEach(items => {
@@ -1098,32 +1314,33 @@ export default {
                   var temp = {
                     id: elementss.equipmentNo,
                     label: elementss.equipmentName,
-                    ip:elementss.ip ||"",
-                    type:elementss.type|| ""
+                    ip: elementss.ip || "",
+                    type: elementss.type || ""
                   };
                   itemss.children.push(temp);
-                  console.log(itemss.children);
+                  // console.log(itemss.children);
                 });
               }
             });
           } else if (items["id"] == item) {
+            console.log("收费终端");
+            console.log(item);
             items.children = [];
             equipmentInfoList[item].forEach(elements => {
               var temp = {
                 id: elements.equipmentNo,
                 label: elements.equipmentName,
-                  ip:elementss.ip ||"",
-                  type:elementss.type|| ""
+                ip: elements.ip || "",
+                type: elements.type || ""
               };
               items.children.push(temp);
             });
             // items["children"]=equipmentInfoList[item]
           }
         });
-        console.log("zlzlz");
         
       }
-      console.log(this.treeData);
+      console.log(this.treeDataEdit);
     },
     //添加设备信息
     savedevice() {
@@ -1140,7 +1357,7 @@ export default {
         //     deviceVersion: "",
         //     deviceTwoBinary: "", //二进制位数：值范围（0-255）
         //   },
-        parkNo:this.filters.park,
+        parkNo: this.filters.park,
         deviceType: obj.deviceType, //设备类型
         deviceUseStatus: obj.deviceUseStatus, //设备使用状态
         diviceIP: obj.deviceIP, //设备ip
@@ -1198,10 +1415,10 @@ export default {
         this.rightContent1 = true;
         this.rightContentCamera = false;
         this.rightContent2 = false;
-        this.query.wbGateway={
-            ip:node.data.ip,
-            type:node.data.type,
-        }
+        this.query.wbGateway = {
+          ip: node.data.ip,
+          type: node.data.type
+        };
       } else if (node.parent != null && node.parent.label === "收费机顶盒") {
         this.rightContent1 = false;
         this.rightContent2 = true;
@@ -1234,7 +1451,7 @@ export default {
       this.addVisible = true;
     },
     renderContent(h, { node, data, store }) {
-        console.log("ffffffffff");
+      console.log("ffffffffff");
       console.log(node);
       if (!node.parent.label) {
         return (
@@ -1246,13 +1463,15 @@ export default {
           </span>
         );
         //  return false;
-      }  if (node.label == "停车场物联网关") {
+      }
+      if (node.label == "停车场物联网关") {
         return (
           <span class="custom-tree-node">
             <span> {node.label}</span>
           </span>
         );
-      } if (node.childNodes.length != 0) {
+      }
+      if (node.childNodes.length != 0) {
         return (
           <span class="custom-tree-node">
             <span>
@@ -1278,7 +1497,7 @@ export default {
       }
     },
     renderContentEdit(h, { node, data, store }) {
-         console.log("eeeeeeeeeeeee")
+      console.log("eeeeeeeeeeeee");
       console.log(node);
       //   if (node.data.id < 10 && node.data.id === "1") {
       if (!node.isLeaf && node.label == "物联网关") {
@@ -1414,7 +1633,7 @@ export default {
   margin-left: 15px;
   border: 1px solid #ddd;
   font-size: 12px;
-  width: 1500px;
+  width: 1800px;
   height: 750px;
   -ms-scroll-snap-y: auto;
   overflow: auto;
@@ -1447,7 +1666,7 @@ export default {
 .panel .cameraTitle {
   text-align: right;
 }
-.panel p span {
+.panel p > span {
   color: red;
 }
 .panel2 p span {

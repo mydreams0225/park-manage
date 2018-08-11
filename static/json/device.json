@@ -16,7 +16,9 @@
                 "version": "1.03",
                 "status": "1",
                 "createDate": "1533866523297",
-                "modifyDate": "1533866523297"
+                "modifyDate": "1533866523297",
+                "type": "edrere",
+                "ip": "192.178.4.4"
             }
         ],
         "2": [
@@ -35,7 +37,17 @@
                 "version": "1.03",
                 "status": "1",
                 "createDate": "1533866539756",
-                "modifyDate": "1533866539756"
+                "modifyDate": "1533866539756",
+                "type": "edrere",
+                "ip": "192.178.4.4"
+            }
+        ],
+        "11": [
+            {
+                "equipmentNo": "1111332",
+                "equipmentName": "收费终端",
+                "type": "edrere",
+                "ip": "192.178.4.4"
             }
         ]
     },
