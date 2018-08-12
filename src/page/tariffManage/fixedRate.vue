@@ -1,6 +1,7 @@
 <template>
 	<section>
 		 <div class="parent">
+			 
 		 	<div class="margin-tops">
 			 	<el-tabs type="border-card"> 
 				  <el-tab-pane label="缴费规则分组">

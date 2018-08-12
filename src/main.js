@@ -31,7 +31,12 @@ import Blob from './excel/Blob';
  import Export2Excel from './excel/Export2Excel';
  import common from '../commonFunction/common.js';
   Vue.prototype.common=common
-let data = JSON.parse(window.localStorage.getItem('userRole'));
+  var userInfo = JSON.parse(window.localStorage.getItem("menu"));
+ 
+    let data =userInfo? userInfo[0].children : [];
+
+
+// let data=JSON.parse(window.localStorage.getItem('userRole'));
  
 if (data){
   //这里是防止用户手动刷新页面，整个app要重新加载,动态新增的路由，会消失，所以我们重新add一次

@@ -125,9 +125,11 @@ export default {
                   success: function(data) {
                     // console.log(data);
                     window.localStorage.setItem("user",JSON.stringify(data.userInfo));
-                     _this.login(data.menus);
-                     _this.$router.addRoutes(routers);
-                     _this.$router.push({ path: "/Park" });
+                    window.localStorage.setItem("menu",JSON.stringify( data.menus));
+
+                    //  _this.login(data.menus);
+                    //  _this.$router.addRoutes(routers);
+                     _this.$router.push({ path: "/Home" });
                   },
                   error: function(error) {
                     console.log(error);

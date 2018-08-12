@@ -104,6 +104,31 @@
      var rule=  val?rulevalue=false:rulevalue=true; 
      return rule;
     },
+     deepClone(origin,target){
+      // 1.判断是不是原始值 
+      // 2.判断是数组还是对象
+      // 3.建立相应数组或对象
+      // 4.递归 
+      var target = target || [],
+          toStr = Object.prototype.toString,
+          arrStr = "[Object array]"
+
+      for(var prop in origin){
+          // if(origin.hasOwnProperty(prop)){
+               if(typeof(origin[prop]) == 'object'){
+                 if(toStr.call(origin[prop])==arrStr){
+                     target[prop]=[];
+                 }else{
+                     target[prop]={};
+                 }
+                 this.deepClone(origin[prop],target[prop]); 
+               }else {
+                   target[prop] = origin[prop];
+               }
+          }
+      // }
+
+   }  
       
     
         

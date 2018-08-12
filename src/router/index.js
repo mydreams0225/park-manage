@@ -69,7 +69,13 @@ const commonRouter = [
 
         hidden: true
     },
- 
+    {
+        path: '/Home',
+        name: '',
+        component: Home,
+
+        hidden: true
+    },
     {
         path: '/',
         component: Home,

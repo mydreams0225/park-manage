@@ -5,10 +5,13 @@
 				{{sysName}}
 			</el-col>
       <el-col :span=15>
-        <!-- <div class="tenet-lnav">
-           <li><a >停车管理</a> </li>
-           <li><a >物业管理</a></li>
-        </div> -->
+        <div class="tenet-lnav">
+          
+           <li v-for="item in data"
+           :key="item.label"
+           :value="item.label"
+           :label="item.label"><a v-on:click="fristmenuchange" :datas="item.label">{{item.label}}</a></li>
+        </div>
        
       </el-col>
 			<el-col :span=4 class="userinfo">
@@ -33,7 +36,7 @@
             @select="handleselect" theme="dark" 
             unique-opened 
             router>
-        	<menu-tree :nodes="$router.options.routes"></menu-tree>
+        	<menu-tree :nodes="nodes"></menu-tree>
 				</el-menu>			
 			</aside>
 			<section class="content-container">
@@ -67,11 +70,20 @@ import parkFee from "@/page/financeReport/parkFee";
 import MenuTree from "@/page/MenuTree";
 //引入图标库
 import iconfont from "@/assets/icon/iconfont.css";
+import MenuUtils from "@/utils/MenuUtils";
+
+import Login from '@/page/Login'
+import Home from '@/page/Home'
+import imports from '@/page/import.vue'
+import s404  from '@/page/404.vue'
 export default {
   data() {
     return {
+      userInfo: [],
+      data: [],
       isCollapse: true,
       nodes: this.$router.options.routes,
+      nodesorigin: this.$router.options.routes,
       sysName: "logos",
       w:
         window.innerWidth ||
@@ -94,12 +106,51 @@ export default {
   },
 
   methods: {
+    fristmenuchange(e) {
+      var name = e.target.text.trim();
+      var userInfo = JSON.parse(window.localStorage.getItem("menu"));
+      var menu = this.getMenu(userInfo, name);
+      if (menu) {
+        var routers = [];
+        if (menu) {
+          MenuUtils(routers, menu, false);
+           this.$router.addRoutes(routers);
+          //  var nodes=this.nodes;
+          this.nodes=[];
+          var target=[];
+           console.log(target);
+         this.common.deepClone(this.nodesorigin,this.nodes);
+           this.nodes.push(...menu);
+          console.log("this.nodes");
+          console.log(this.nodes);
+        }
+      }
+    },
+    getMenu(userinfo, name) {
+      if (userinfo) {
+        for (var item in userinfo) {
+          if (userinfo[item]["name"] == name) {
+            return userinfo[item]["children"] || "错误";
+          } else {
+          }
+        }
+        // userinfo.forEach(element => {
+        // console.log(element);
+        //   if ((element["name"] = name)) {
+        //     return element["children"] || "错误";
+        //   }else{
+        //     return [];
+        //   }
+        // });
+      } else {
+        return [];
+      }
+    },
     onSubmit() {
       console.log("submit!");
     },
     handleopen() {
       console.log("handleopen");
-      console.log(this.nodes);
     },
     handleclose() {
       console.log("handleclose");
@@ -132,7 +183,6 @@ export default {
       this.isCollapse = !this.isCollapse;
     },
     showMenu(i, status) {
-      console.log("i,status");
       this.$refs.menuCollapsed.getElementsByClassName(
         "submenu-hook-" + i
       )[0].style.display = status ? "block" : "none";
@@ -143,14 +193,40 @@ export default {
     //有兴趣的可以看一下源码，是为什么获取不到，但是却又有规则了
     //另外在开发的时候，可能由于是热部署，也会不断重复的给nodes添加元素，造成导航条有重复的，简单解决，可以设置一个开关
     let isLoadNodes = window.localStorage.getItem("isLoadNodes");
+    var userInfo = JSON.parse(window.localStorage.getItem("menu"));
+    this.userInfo = userInfo;
+    userInfo.forEach(element => {
+      var temp = { label: element.name };
+      this.data.push(temp);
+    });
+
+
     if (!isLoadNodes) {
-      let data = JSON.parse(window.localStorage.getItem("userRole"));
+      var userInfo = JSON.parse(window.localStorage.getItem("menu"));
+      let data = userInfo[0].children;
+      // let data = JSON.parse(window.localStorage.getItem("userRole"));
+      this.nodes=[];
+      this.common.deepClone(this.nodesorigin,this.nodes);
       this.nodes.push(...data);
-      console.log(this.nodes);
       window.localStorage.setItem("isLoadNodes", "true");
     }
   },
   mounted() {
+    //动态加载路由
+    // var userInfo = JSON.parse(window.localStorage.getItem("menu"));
+    // this.userInfo=userInfo;
+    // userInfo.forEach(element => {
+    //   var temp = { label: element.name };
+    //   this.data.push(temp);
+    // });
+    // var datas = userInfo[1].children;
+    // window.localStorage.setItem("roleMenu",datas)
+    // var routers = [];
+    // MenuUtils(routers, datas, false);
+    // this.$router.addRoutes(routers);
+    // // this.$router.push({ path: "/Park" });
+    // this.nodes.push(...datas);
+
     // this.getMenu();
     var user = window.localStorage.getItem("user");
     if (user) {
@@ -211,16 +287,15 @@ html body {
       zoom: 1;
       li {
         float: left;
-         margin: 0 18px;
+        margin: 0 18px;
         list-style: none;
-        
       }
       li a:hover {
         border-bottom: 2px solid #fff;
         cursor: pointer;
       }
       li a:active {
-         border-bottom: 2px solid #fff;
+        border-bottom: 2px solid #fff;
       }
     }
 

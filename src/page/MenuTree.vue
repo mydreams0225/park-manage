@@ -20,14 +20,6 @@ export default {
   data() {
     return {};
   },
-  created() {
-    console.log("路由路由");
-    console.log(this.nodes);
-    for (var item in this.nodes) {
-      console.log(this.nodes[item].hasChildren);
-      console.log(item.hasChildren);
-    }
-  },
   props: {
     nodes: {
       required: true

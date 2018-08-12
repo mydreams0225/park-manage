@@ -6,7 +6,7 @@ export default (routers, data, hasparent) => {
   generaMenu(routers, data, hasparent)
 }
 function generaMenu(routers, data, hasparent) {
-
+  console.log(data);
   data.forEach((item) => {
     var menu = Object.assign({}, item);
     !hasparent ? menu.component = lazyLoading("/Home") : menu.hasChildren ? menu.component = lazyLoading("/publish-center") : menu.component = lazyLoading(menu.path);

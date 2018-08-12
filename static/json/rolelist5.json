@@ -4,34 +4,7 @@
         "avatar": "https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png",
         "name": "林芝大人"
     },
-    "menus":[{"name":"停车管理1","children":[
-        {
-            "path": "",
-            "name": "停车场管理",
-            "hasChildren":true,
-            "iconCls": "icon-park-tingchechang",
-            "children": [
-                {
-                    "meta": {
-                        "btnPermissions": [
-                            "query",
-                            "edit"
-                        ]
-                    },
-                    "path": "/Park",
-                    "component": "Park",
-                    "hasChildren":false,
-                    "name": "停车场列表"
-                },
-                {
-                    "path": "/AttendCar",
-                    "component": "AttendCar",
-                    "hasChildren":false,
-                    "name": "在场车辆"
-                }
-            ]
-        }
-    ]},{ "name":"停车管理", "children":[
+    "menus": [
         {
             "path": "",
             "name": "停车场管理",
@@ -387,6 +360,5 @@
                
             ]
         }
-    ]}
-     ]
+    ]
 }
