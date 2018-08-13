@@ -5,14 +5,14 @@
 				{{sysName}}
 			</el-col>
       <el-col :span=15>
-        <div class="tenet-lnav">
-          
+        <div class="tenet-lnav"> 
            <li v-for="item in data"
            :key="item.label"
            :value="item.label"
-           :label="item.label"><a v-on:click="fristmenuchange" :datas="item.label">{{item.label}}</a></li>
+           :label="item.label">
+              <a v-on:click="fristmenuchange" :datas="item.label">{{item.label}}</a>
+           </li>
         </div>
-       
       </el-col>
 			<el-col :span=4 class="userinfo">
 				<el-dropdown trigger="hover">
@@ -71,11 +71,6 @@ import MenuTree from "@/page/MenuTree";
 //引入图标库
 import iconfont from "@/assets/icon/iconfont.css";
 import MenuUtils from "@/utils/MenuUtils";
-
-import Login from '@/page/Login'
-import Home from '@/page/Home'
-import imports from '@/page/import.vue'
-import s404  from '@/page/404.vue'
 export default {
   data() {
     return {
@@ -106,26 +101,40 @@ export default {
   },
 
   methods: {
+    //点击一级菜单事件
     fristmenuchange(e) {
+      console.log("e");
+      console.log(e.target.getAttribute("datas"));
+      window.localStorage.setItem(
+        "datas",
+        JSON.stringify(e.target.getAttribute("datas"))
+      );
       var name = e.target.text.trim();
+      $("a").removeClass("activeLi");
+      $(e.target).addClass("activeLi");
       var userInfo = JSON.parse(window.localStorage.getItem("menu"));
+      //得到二级菜单
       var menu = this.getMenu(userInfo, name);
+      //
+
+      window.localStorage.setItem("secondMenus", JSON.stringify(menu));
+      //判断菜单是否存在
       if (menu) {
         var routers = [];
-        if (menu) {
-          MenuUtils(routers, menu, false);
-           this.$router.addRoutes(routers);
-          //  var nodes=this.nodes;
-          this.nodes=[];
-          var target=[];
-           console.log(target);
-         this.common.deepClone(this.nodesorigin,this.nodes);
-           this.nodes.push(...menu);
-          console.log("this.nodes");
-          console.log(this.nodes);
-        }
+        MenuUtils(routers, menu, false);
+        this.$router.addRoutes(routers);
+        //  var nodes=this.nodes;
+        this.nodes = [];
+        var target = [];
+        console.log(target);
+        this.common.deepClone(this.nodesorigin, this.nodes);
+        this.nodes.push(...menu);
+        this.$router.push({ path: menu[0].children[0].path });
+        console.log("this.nodes");
+        console.log(this.nodes);
       }
     },
+    //获得二级菜单
     getMenu(userinfo, name) {
       if (userinfo) {
         for (var item in userinfo) {
@@ -134,20 +143,9 @@ export default {
           } else {
           }
         }
-        // userinfo.forEach(element => {
-        // console.log(element);
-        //   if ((element["name"] = name)) {
-        //     return element["children"] || "错误";
-        //   }else{
-        //     return [];
-        //   }
-        // });
       } else {
         return [];
       }
-    },
-    onSubmit() {
-      console.log("submit!");
     },
     handleopen() {
       console.log("handleopen");
@@ -199,35 +197,28 @@ export default {
       var temp = { label: element.name };
       this.data.push(temp);
     });
-
-
-    if (!isLoadNodes) {
-      var userInfo = JSON.parse(window.localStorage.getItem("menu"));
-      let data = userInfo[0].children;
-      // let data = JSON.parse(window.localStorage.getItem("userRole"));
-      this.nodes=[];
-      this.common.deepClone(this.nodesorigin,this.nodes);
+    // if (!isLoadNodes) {
+      var secondMenus = JSON.parse(window.localStorage.getItem("secondMenus"));
+      let data;
+      // 判断是否点击过一级菜单
+      if (secondMenus) {
+        data = secondMenus;
+      } else {
+        var userInfo = JSON.parse(window.localStorage.getItem("menu"));
+        data = userInfo[0].children;
+      }
+      this.nodes = [];
+      //深度克隆路由
+      this.common.deepClone(this.nodesorigin, this.nodes);
+      //跳转第一个菜单的第一个路径
+      this.$router.push({ path: data[0].children[0].path });
       this.nodes.push(...data);
       window.localStorage.setItem("isLoadNodes", "true");
-    }
+    // }
   },
   mounted() {
-    //动态加载路由
-    // var userInfo = JSON.parse(window.localStorage.getItem("menu"));
-    // this.userInfo=userInfo;
-    // userInfo.forEach(element => {
-    //   var temp = { label: element.name };
-    //   this.data.push(temp);
-    // });
-    // var datas = userInfo[1].children;
-    // window.localStorage.setItem("roleMenu",datas)
-    // var routers = [];
-    // MenuUtils(routers, datas, false);
-    // this.$router.addRoutes(routers);
-    // // this.$router.push({ path: "/Park" });
-    // this.nodes.push(...datas);
-
-    // this.getMenu();
+    var a = window.localStorage.getItem("datas");
+    $(".tenet-lnav li:first-child  a:first-child").addClass("activeLi");
     var user = window.localStorage.getItem("user");
     if (user) {
       user = JSON.parse(user);
@@ -285,17 +276,20 @@ html body {
       background-color: #09c;
       overflow: hidden;
       zoom: 1;
+
       li {
         float: left;
         margin: 0 18px;
         list-style: none;
       }
-      li a:hover {
+      .activeLi {
+        padding-bottom: 5px;
         border-bottom: 2px solid #fff;
-        cursor: pointer;
       }
-      li a:active {
-        border-bottom: 2px solid #fff;
+      li :hover {
+        padding-bottom: 5px;
+        // border-bottom: 2px solid #fff;
+        cursor: pointer;
       }
     }
 

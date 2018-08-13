@@ -33,16 +33,22 @@ import Blob from './excel/Blob';
   Vue.prototype.common=common
   var userInfo = JSON.parse(window.localStorage.getItem("menu"));
  
-    let data =userInfo? userInfo[0].children : [];
-
-
+    let data ="";
+     var secondMenu = JSON.parse(window.localStorage.getItem("secondMenus"));
+    if(secondMenu){
+      data=secondMenu;
+    }else{ 
+      data = userInfo? userInfo[0].children : [];
+    }
 // let data=JSON.parse(window.localStorage.getItem('userRole'));
  
 if (data){
+  console.log("秀");
+  console.log(data);
   //这里是防止用户手动刷新页面，整个app要重新加载,动态新增的路由，会消失，所以我们重新add一次
-  let routes = []
-  MenuUtils(routes,data)
-  router.addRoutes(routes)
+  let routes = [];
+  MenuUtils(routes ,data ,false);
+  router.addRoutes(routes);
   window.localStorage.removeItem('isLoadNodes')
 }
 router.beforeEach((to, from, next) => {
