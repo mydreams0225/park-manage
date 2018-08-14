@@ -19,47 +19,53 @@
              <el-dialog
                 title="添加停车场"
                 :visible.sync="addVisible"
-                width="700px"
+                width="500px"
                 :before-close="handleClose">
                 
-                  <form >
+                  <el-form  :model="add" :rules="rules" ref="add" class="form-inline" >
                     <el-row :gutter="20">
-                      
                       <el-col :span="12">
-                                <div>
-                                  <label for=""><span style="color:red">*</span> 停车场编号</label>
-                                </div>
-                                <el-input v-model="add.parkNo"></el-input>    
+                                  <el-form-item prop="parkNo" label="停车场编号">
+                                      <!-- <label for=""><span style="color:red">*</span> 停车场编号</label> -->
+                                      <el-input v-model="add.parkNo"></el-input>    
+                                  </el-form-item>
+                                
                         </el-col>        
                         <el-col :span="12">
-                                <div>
-                                  <label for=""><span style="color:red">*</span> 停车场名称</label>
-                                </div>
-                                  <el-input v-model="add.parkName" placeholder="请输入内容"></el-input>
+                                <el-form-item prop="parkName" label="停车场名称">
+                                  <el-input v-model="add.parkName" ></el-input>
+
+                                </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                                <div>
-                                  <label for=""><span style="color:red">*</span> 选择地区</label>
-                                </div>
-                                  <el-cascader class="areaCascader"  
+                                <el-form-item prop="area" label="选择地区">
+                                  <div style="display:block">
+                                  
+                                  <el-cascader class="areaCascader" 
 
-                                  :options="area"
-                                  expand-trigger="hover"
-                                  v-model="add.area"
-                                  @change="handleChange">
-                                </el-cascader>   
+                                      :options="area"
+                                      expand-trigger="hover"
+                                      v-model="add.area"
+                                      @change="handleChange">
+                                    </el-cascader>
+                                  </div>
+                                       
+
+                                </el-form-item>
+                                    
                         </el-col>        
                         <el-col :span="12">
-                                <div>
-                                  <label for=""><span style="color:red">*</span> 具体地址</label>
-                                </div>
-                                  <el-input v-model="add.detailArea" placeholder="请输入内容"></el-input>
+                               <el-form-item prop="detailArea" label="具体地址">
+                                  <el-input v-model="add.detailArea" ></el-input>
+
+                                </el-form-item>
+                                  
                         </el-col>
                     </el-row>
-                  </form>
+                  </el-form>
             <span slot="footer" class="dialog-footer">
               <el-button @click="addVisible = false">取 消</el-button>
-              <el-button type="primary" @click="savePark">保 存</el-button>
+              <el-button type="primary" @click="savePark('add')">保 存</el-button>
             </span> 
         </el-dialog>
           </div>
@@ -70,10 +76,10 @@
                     </el-input>
                     <el-dialog title="选择所属客户" :visible.sync="dialogTableVisible" width="550px" >
                       <form class="clientSearch">
-                        <el-input   id="s_names" name="s_names" placeholder="名称" :value="filters.name" >
+                        <el-input   placeholder="名称" :value="filters.name" >
                         <template slot="prepend">名称</template>   
                         </el-input>
-                        <el-input   id="s_codes" name="s_codes" placeholder="编码" :value="filters.codes" >
+                        <el-input    placeholder="编码" :value="filters.codes" >
                         <template slot="prepend">编码</template>   
                         </el-input>
                         <el-button size="medium" type="primary" icon="el-icon-search" >查询</el-button>
@@ -209,66 +215,66 @@
         </section>
       </template>
 <script>
-import { getParklist1,reqSavePark } from "@/api/api";
+import { getParklist1, reqSavePark } from "@/api/api";
 export default {
   methods: {
-    openAddPark(){
-     
-    //  add: {
-    //     parkNo: "",
-    //     parkName: "",
-    //     area:"",
-    //     detailArea:""
-    //   },
-      this.addVisible=true;
-      this.add.parkNo="";
-
+    openAddPark() {
+      //  add: {
+      //     parkNo: "",
+      //     parkName: "",
+      //     area:"",
+      //     detailArea:""
+      //   },
+      this.addVisible = true;
+      this.add.parkNo ="";
     },
-     handleClose(done) {
+    handleClose(done) {
       // this.$confirm("确认关闭？")
       //   .then(_ => {
       //     done();
       //   })
       //   .catch(_ => {});
-       done();
+      done();
     },
-    savePark(){
-      this.addVisible=false;
-      let para={
-        parkNo:this.add.parkNo,
-        parkName:this.add.parkName,
-        area:this.add.area,
-        detailArea:this.add.detailArea,
-        jwt:window.localStorage.getItem("jwt")
-      };
-      //停车场请求
-      reqSavePark(para).then(res=>{
-         if(res.code===1){
-            this.$message({
-            message: "添加成功！",
-            type: "success"
+    savePark(formName) {
+      this.$refs[formName].validate(valid => {
+        if (!valid) {
+          console.log("error submit!!");
+          return false;
+        } else {
+          this.addVisible = false;
+          let para = {
+            parkNo: this.add.parkNo,
+            parkName: this.add.parkName,
+            area: this.add.area,
+            detailArea: this.add.detailArea,
+            jwt: window.localStorage.getItem("jwt")
+          };
+          //停车场请求
+          reqSavePark(para).then(res => {
+            if (res.code === 1) {
+              this.$message({
+                message: "添加成功！",
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.message,
+                type: "error"
+              });
+            }
           });
-         }else{
-           this.$message({
-            message: res.message,
-            type: "error"
-            });
-         }
+        }
       });
-
     },
     handleChange(value) {
       console.log(value);
     },
-    clientsearch() {
-      console.log("client");
-    },
+    clientsearch() {},
     clientCheck(row, column) {
       this.dialogFormVisible = false;
       this.dialogTableVisible = false;
-      console.log("zlz");
       this.filters.clientValue = row.clientName;
-      // console.log(column)
     },
     getPark() {
       let para = {
@@ -290,14 +296,14 @@ export default {
       console.log("para", para);
 
       getParklist1(para).then(res => {
-        if(res.code===1){
-        this.parkList = res.data;
-        this.totals.totalNum = res.total;
-        console.log("fff" + res);
-        }else{
+        if (res.code === 1) {
+          this.parkList = res.data;
+          this.totals.totalNum = res.total;
+          console.log("fff" + res);
+        } else {
           console.log("暂无数据");
         }
-        
+
         this.listLoading = false;
       });
     },
@@ -324,18 +330,32 @@ export default {
     }
   },
   mounted() {
+    //获取停车场列表
     this.getPark();
   },
   data() {
     return {
+      rules: {
+        parkNo: [
+          { required: true, message: "请输入停车场编号", trigger: "blur" }
+          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
+        parkName: [
+          { required: true, message: "请输入停车场名称", trigger: "blur" }
+        ],
+        area: [{ required: true, message: "请选择地区", trigger: "blur" }],
+        detailArea: [{ required: true, message: "请选择地区", trigger: "blur" }]
+      },
+
       addVisible: false,
       add: {
         parkNo: "",
         parkName: "",
-        area:"",
-        detailArea:""
+        area: [],
+        detailArea: ""
       },
       clientValue: "",
+      //客户数据
       clientData: [{ clientName: "酒店一" }, { clientName: "酒店二" }],
       dialogTableVisible: false,
       dialogFormVisible: false,
@@ -358,9 +378,13 @@ export default {
         currentPage: 2,
         pageSize: 10
       },
+      //停车场列表
       parkList: configs.parkList,
+      //类型
       types: configs.parksys,
+      //在线状态
       online: configs.online,
+      //工程状态
       projectStatus: configs.projectStatus
     };
   }
