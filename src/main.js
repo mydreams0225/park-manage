@@ -25,49 +25,41 @@ var routers = [];
 import axios from "axios";
 
 import { getPermission } from "@/api/api";
-import {constantRouterMap} from '@/router';
+import { constantRouterMap } from '@/router';
 
 import Blob from './excel/Blob';
- import Export2Excel from './excel/Export2Excel';
- import common from '../commonFunction/common.js';
-  Vue.prototype.common=common
-  var userInfo = JSON.parse(window.localStorage.getItem("menu"));
- 
-    let data ="";
-     var secondMenu = JSON.parse(window.localStorage.getItem("secondMenus"));
-    if(secondMenu){
-      data=secondMenu;
-    }else{ 
-      data = userInfo? userInfo[0].children : [];
-    }
+import Export2Excel from './excel/Export2Excel';
+import common from '../commonFunction/common.js';
+Vue.prototype.common = common
+var userInfo = JSON.parse(window.localStorage.getItem("menu"));
+
+let data = "";
+var secondMenu = JSON.parse(window.localStorage.getItem("secondMenus"));
+if (secondMenu) {
+  data = secondMenu;
+} else {
+  data = userInfo ? userInfo[0].children : [];
+}
 // let data=JSON.parse(window.localStorage.getItem('userRole'));
- 
-if (data){
-  console.log("秀");
-  console.log(data);
+debugger;
+if (data) {
   //这里是防止用户手动刷新页面，整个app要重新加载,动态新增的路由，会消失，所以我们重新add一次
   let routes = [];
-  MenuUtils(routes ,data ,false);
+  MenuUtils(routes, data, false);
   router.addRoutes(routes);
-  window.localStorage.removeItem('isLoadNodes')
+  window.localStorage.removeItem('isLoadNodes');
 }
 router.beforeEach((to, from, next) => {
-  console.log('z')
-  console.log(!user && to.path != '/login');
-
   if (to.path == '/login') {
     console.log(to.path)
     window.localStorage.removeItem('user');
-     window.sessionStorage.removeItem('isLoadNodes')
-    // window.location.href = '/'
-    // return false
+    window.sessionStorage.removeItem('isLoadNodes');
   }
   let user = JSON.parse(window.localStorage.getItem('user'));
   if (!user && to.path != '/login') {
-    next({ path: '/login' })
+    next({ path: '/login' });
   } else {
-    console.log('111s');
-     next()
+    next();
   }
 })
 

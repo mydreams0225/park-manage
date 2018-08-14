@@ -19,8 +19,6 @@ function generaMenu(routers, data, hasparent) {
       generaMenu(menu.children, item.children, true)
     }
     routers.push(menu);
-
-
-  })
+  });
 
 }

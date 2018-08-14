@@ -197,24 +197,30 @@ export default {
       var temp = { label: element.name };
       this.data.push(temp);
     });
-    // if (!isLoadNodes) {
-      var secondMenus = JSON.parse(window.localStorage.getItem("secondMenus"));
-      let data;
-      // 判断是否点击过一级菜单
-      if (secondMenus) {
-        data = secondMenus;
-      } else {
-        var userInfo = JSON.parse(window.localStorage.getItem("menu"));
-        data = userInfo[0].children;
-      }
-      this.nodes = [];
-      //深度克隆路由
-      this.common.deepClone(this.nodesorigin, this.nodes);
-      //跳转第一个菜单的第一个路径
-      this.$router.push({ path: data[0].children[0].path });
-      this.nodes.push(...data);
-      window.localStorage.setItem("isLoadNodes", "true");
-    // }
+    if (!isLoadNodes) {
+          var secondMenus = JSON.parse(window.localStorage.getItem("secondMenus"));
+          let data="";
+          // 判断是否点击过一级菜单
+          if (secondMenus) {
+            data = secondMenus;
+          } else {
+            data = userInfo ? userInfo[0].children : [];
+          }
+          if (data) {
+            //这里是防止用户手动刷新页面，整个app要重新加载,动态新增的路由，会消失，所以我们重新add一次
+            let routes = [];
+            MenuUtils(routes, data, false);
+            this.$router.addRoutes(routes);
+          }
+          this.nodes = [];
+          //深度克隆路由
+          this.common.deepClone(this.nodesorigin, this.nodes);
+          //跳转第一个菜单的第一个路径
+          this.nodes.push(...data);
+          this.$router.push({ path: data[0].children[0].path });
+
+          window.localStorage.setItem("isLoadNodes", "true");
+    }
   },
   mounted() {
     var a = window.localStorage.getItem("datas");

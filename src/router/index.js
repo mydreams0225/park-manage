@@ -88,7 +88,7 @@ const commonRouter = [
         ],
         hidden: true
     },
-    {path:'*',component:s404, hidden: true}
+    // {path:'*',component:s404, hidden: true}
 
 ];
 
