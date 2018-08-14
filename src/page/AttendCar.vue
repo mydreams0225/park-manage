@@ -168,11 +168,16 @@
                 <div>
                   <div>
                         <div>
+                           
                             <div >当前车牌号：{{editForm.carNo}}</div>
                         </div>
                       <div class="jzcar_no"> 
-                          <div style="display:inline-block;width: 70%;">纠正车牌号：<el-input  v-model="editForm.editCarNo" >  
-                            </el-input></div>
+                        <el-form-item prop="name" label="停车场名称">
+                                  <el-input v-model="editForm.editCarNo" ></el-input>
+
+                                </el-form-item>
+                          <!-- <div style="display:inline-block;width: 70%;">纠正车牌号：<el-input  v-model="editForm.editCarNo" >  
+                            </el-input></div> -->
                           <div >
                           </div>
                       </div>

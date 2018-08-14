@@ -90,7 +90,6 @@
                     </el-dialog>
                     <span>系统类型</span>
                     <el-select v-model="filters.sysType" id="types"  filterable placeholder="系统类型">
-                      <!-- <el-option selected="selected">全部</el-option> -->
                         <el-option
                           v-for="item in types"
                           :key="item.value"
@@ -219,21 +218,10 @@ import { getParklist1, reqSavePark } from "@/api/api";
 export default {
   methods: {
     openAddPark() {
-      //  add: {
-      //     parkNo: "",
-      //     parkName: "",
-      //     area:"",
-      //     detailArea:""
-      //   },
       this.addVisible = true;
-      this.add.parkNo ="";
+      this.add.parkNo = "";
     },
     handleClose(done) {
-      // this.$confirm("确认关闭？")
-      //   .then(_ => {
-      //     done();
-      //   })
-      //   .catch(_ => {});
       done();
     },
     savePark(formName) {
@@ -292,14 +280,10 @@ export default {
         jwt: window.localStorage.getItem("jwt")
       };
       this.listLoading = true;
-      //NProgress.start();
-      console.log("para", para);
-
       getParklist1(para).then(res => {
         if (res.code === 1) {
           this.parkList = res.data;
           this.totals.totalNum = res.total;
-          console.log("fff" + res);
         } else {
           console.log("暂无数据");
         }
@@ -325,7 +309,6 @@ export default {
     },
     getUrl() {
       for (item in $router.options.routes) {
-        console.log(item);
       }
     }
   },
@@ -335,10 +318,10 @@ export default {
   },
   data() {
     return {
+      //表单验证
       rules: {
         parkNo: [
           { required: true, message: "请输入停车场编号", trigger: "blur" }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
         parkName: [
           { required: true, message: "请输入停车场名称", trigger: "blur" }
