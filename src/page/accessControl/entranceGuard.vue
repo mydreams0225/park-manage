@@ -33,6 +33,16 @@
                  <el-button type="primary" size="medium" icon="el-icon-plus">保存</el-button>
                  <el-button type="danger" size="medium" icon="el-icon-delete">删除</el-button>
              </div>
+             <div class="querys">
+               所属社区
+               <communtitySelect :community="filters.community">
+               </communtitySelect>
+               <el-input placeholder="门禁通道名称" :value="filters.entranceChannelName" >
+                        <template slot="门禁通道名称">门禁通道名称</template>   
+              </el-input>
+             </div>
+               
+             
              <!-- <div class="query">
                   <el-select v-model="filters.v_park" filterable placeholder="所属社区">
 	                    <el-option
@@ -49,6 +59,8 @@
     </section>
 </template>
 <script>
+import communtitySelect from "@/components/accessControl/communitySelect";
+
 export default {
   watch: {
     filterText(val) {
@@ -87,6 +99,10 @@ export default {
   },
   data() {
     return {
+      filters:{
+          community: "ddd",
+      },
+      
       title: "我的社区",
       filterText: "",
       treeGuard: [
@@ -106,6 +122,9 @@ export default {
         label: "label"
       }
     };
+  },
+  components: {
+    communtitySelect
   }
 };
 </script>
