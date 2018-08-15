@@ -3,6 +3,14 @@ import qs from 'qs';
 // let base = '/apis';
 let base=configs.base;
 $axios.defaults.baseURL='apis'
+//post注销
+export const reqLoginOut = params=>{
+  return $axios({
+    url:"http://192.168.1.19:8088/jwt/logout",
+    method:"post",
+    data:params,
+  }).then(res=>res.data);
+}
 //  post登录
 export const requestLogin = params => {
  
@@ -10,7 +18,7 @@ export const requestLogin = params => {
     //  url: 'http://192.168.43.116:8080/park/login',
     url: "/park/login",
     method: 'post',
-    data: {},
+    data: params,
     // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
   }    //{headers:{'Access-Control-Allow-Origin': "*"}}
   ).then(res =>

@@ -1,0 +1,386 @@
+{
+    "userInfo": {
+        "username": "admin",
+        "avatar": "https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png",
+        "name": "林芝大人"
+    },
+    "menus":[
+        { "name":"停车管理",
+             "children":[
+        {
+            "path": "",
+            "name": "停车场管理",
+            "hasChildren":true,
+            "iconCls": "icon-park-tingchechang",
+            "children": [
+                {
+                    "meta": {
+                        "btnPermissions": [
+                            "query",
+                            "edit"
+                        ]
+                    },
+                    "path": "/Park",
+                    "component": "Park",
+                    "hasChildren":false,
+                    "name": "停车场列表"
+                },
+                {
+                    "path": "/AttendCar",
+                    "component": "AttendCar",
+                    "hasChildren":false,
+                    "name": "在场车辆"
+                }
+            ]
+        },
+        {
+            "path": "",
+            "name": "车辆管理",
+            "hasChildren":true,
+            "iconCls": "icon-park-cheliang",
+            "children": [
+                {
+                    "path": "/carManage/carinfoList",
+                    "hasChildren":false,
+                    "component": "carManage/carinfoList",
+                    "name": "车辆信息列表"
+                },
+                {
+                    "path": "/carManage/newCarRegist",
+                    "hasChildren":false,
+                    "component": "carManage/newCarRegist",
+                    "name": "新车登记注册"
+                },
+                {
+                    "path": "/carManage/garageAuthorize",
+                    "hasChildren":false,
+                    "component": "carManage/garageAuthorize",
+                    "name": "车库授权"
+                },
+                {
+                    "path": "/carManage/carGroup",
+                    "hasChildren":false,
+                    "component": "carManage/carGroup",
+                    "name": "车辆分组"
+                },
+                {
+                    "path": "/carManage/carType",
+                    "hasChildren":false,
+                    "component": "carManage/carType",
+                    "name": "车辆类型"
+                },
+                {
+                    "path": "/carManage/blacklistCar",
+                    "hasChildren":false,
+                    "component": "carManage/blacklistCar",
+                    "name": "黑名单车"
+                },
+                {
+                    "path": "/carManage/sendcarManage",
+                    "hasChildren":false,
+                    "component": "carManage/sendcarManage",
+                    "name": "派车管理"
+                },
+                {
+                    "path": "/carManage/reservationvehicleList",
+                    "hasChildren":false,
+                    "component": "carManage/reservationvehicleList",
+                    "name": "预约车辆列表"
+                }
+            ]
+        },
+        {
+            "path": "/parkingManage",
+            "name": "车位管理",
+            "hasChildren":true,
+            "iconCls": "icon-park-tingchewei",
+            "children": [
+                {
+                    "path": "/parkingManage/parkPoolSetting",
+                    "hasChildren":false,
+                    "component": "parkingManage/parkPoolSetting",
+                    "name": "车位池设置"
+                },
+                {
+                    "path": "/parkingManage/parkPoolorParking",
+                    "hasChildren":false,
+                    "component": "parkingManage/parkPoolorParking",
+                    "name": "车位池-车位管理"
+                },
+                {
+                    "path": "/parkingManage/garageParkingInfo",
+                    "hasChildren":false,
+                    "component": "parkingManage/garageParkingInfo",
+                    "name": "车库车位信息"
+                }
+            ]
+        },
+        {
+            "path": "/deviceManage",
+            "hasChildren":true,
+            "name": "设备管理",
+            "iconCls": "icon-park-shebei",
+            "children": [
+                {
+                    "path": "/deviceManage/parkingandEntryequi",
+                    "hasChildren":false,
+                    "component": "deviceManage/parkingandEntryequi",
+                    "name": "停车出入设备"
+                },
+                {
+                    "path": "/deviceManage/parkGuidequiState",
+                    "hasChildren":false,
+                    "component": "deviceManage/parkGuidequiState",
+                    "name": "停车引导设备状态"
+                }
+            ]
+        },
+        {
+            "path": "/garageManage",
+            "hasChildren":true,
+            "name": "车库管理",
+            "iconCls": "icon-park-cheku",
+            "children": [
+                {
+                    "path": "/garageManage/garageList",
+                    "hasChildren":false,
+                    "component": "garageManage/garageList",
+                    "name": "车库列表"
+                },
+                {
+                    "path": "/garageManage/garageFloorMap",
+                    "hasChildren":false,
+                    "component": "garageManage/garageFloorMap",
+                    "name": "车库楼层地图"
+                },
+                {
+                    "path": "/garageManage/garageLocationInfo",
+                    "hasChildren":false,
+                    "component": "garageManage/garageLocationInfo",
+                    "name": "车库区位信息"
+                }
+            ]
+        },
+        {
+            "path": "/tariffManage",
+            "hasChildren":true,
+            "name": "费率管理",
+            "iconCls": "icon-park-tixianfeishuai",
+            "children": [
+                {
+                    "path": "/tariffManage/parkingRate",
+                    "hasChildren":false,
+                    "component": "tariffManage/parkingRate",
+                    "name": "临停车费率"
+                },
+                {
+                    "path": "/tariffManage/holiday",
+                    "hasChildren":false,
+                    "component": "tariffManage/holiday",
+                    "name": "节假日"
+                },
+                {
+                    "path": "/tariffManage/fixedRate",
+                    "hasChildren":false,
+                    "component": "tariffManage/fixedRate",
+                    "name": "固定车费率"
+                }
+            ]
+        },
+        {
+            "path": "",
+            "hasChildren":true,
+            "name": "记录查询",
+            "iconCls": "icon-park-msnui-task-search",
+            "children": [
+                {
+                    "path": "carRecord",
+                    "hasChildren":true,
+                    "name": "车辆出入记录",
+                    "children": [
+                        {
+                            "path": "/recordQuery/carRecord/passRecord",
+                            "hasChildren":false,
+                            "component": "recordQuery/carRecord/passRecord",
+                            "name": "入场记录"
+                        },
+                        {
+                            "path": "/recordQuery/carRecord/outRecord",
+                            "hasChildren":false,
+                            "component": "recordQuery/carRecord/outRecord",
+                            "name": "出场记录"
+                        },
+                        {
+                            "path": "/recordQuery/carRecord/freeRelease",
+                            "hasChildren":false,
+                            "component": "recordQuery/carRecord/freeRelease",
+                            "name": "免费放行记录"
+                        },
+                        {
+                            "path": "/recordQuery/carRecord/manualSwitch",
+                            "hasChildren":false,
+                            "component": "recordQuery/carRecord/manualSwitch",
+                            "name": "手动开闸记录"
+                        },
+                        {
+                            "path": "/recordQuery/carRecord/plateModify",
+                            "hasChildren":false,
+                            "component": "recordQuery/carRecord/plateModify",
+                            "name": "车牌修改记录"
+                        },
+                        {
+                            "path": "/recordQuery/carRecord/carLock",
+                            "hasChildren":false,
+                            "component": "recordQuery/carRecord/carLock",
+                            "name": "车辆锁车记录"
+                        }
+                    ]
+                },
+                {
+                    "path": "/recordQuery/parkingDiscount",
+                    "hasChildren":false,
+                    "component": "recordQuery/parkingDiscount",
+                    "name": "停车打折记录"
+                },
+                {
+                    "path": "carin-out",
+                    "hasChildren":true,
+                    "name": "车辆管理记录",
+                    "children": [
+                        {
+                            "path": "/recordQuery/carin-out/breakRule",
+                            "hasChildren":false,
+                            "component": "recordQuery/carin-out/breakRule",
+                            "name": "场内违章停车记录"
+                        },
+                        {
+                            "path": "/recordQuery/carin-out/carCheck",
+                            "hasChildren":false,
+                            "component": "recordQuery/carin-out/carCheck",
+                            "name": "车辆盘点操作记录"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/statisticsReport",
+            "hasChildren":true,
+            "name": "统计报表",
+            "iconCls": "icon-park-tongjibaobiao",
+            "children": [
+                {
+                    "path": "/statisticsReport/trafficflowAnalysisReport",
+                    "hasChildren":false,
+                    "component": "statisticsReport/trafficflowAnalysisReport",
+                    "name": "车流量分析报表"
+                },
+                {
+                    "path": "/statisticsReport/regionalAnalysisReport",
+                    "hasChildren":false,
+                    "component": "statisticsReport/regionalAnalysisReport",
+                    "name": "区域车流分析报表"
+                }
+            ]
+        },
+        {
+            "path": "/financeReport",
+            "hasChildren":true,
+            "name": "财务报表",
+            "iconCls": "icon-park-drxx94",
+            "children": [
+                {
+                    "path": "/financeReport/parkFee",
+                    "hasChildren":false,
+                    "component": "financeReport/parkFee",
+                    "name": "停车收费汇总报表"
+                },
+                {
+                    "path": "/financeReport/tempStop",
+                    "hasChildren":false,
+                    "component": "financeReport/tempStop",
+                    "name": "临停收费报表"
+                },
+                {
+                    "path": "/financeReport/monthCar",
+                    "hasChildren":false,
+                    "component": "financeReport/monthCar",
+                    "name": "月结车消费汇总报表"
+                }
+            ]
+        },
+        {
+            "path": "",
+            "hasChildren":true,
+            "name": "系统管理",
+            "iconCls": "el-icon-circle-plus",
+            "children": [
+                {
+                    "path": "/sysManage/role",
+                    "component": "sysManage/role",
+                    "hasChildren":false,
+                    "name": "用户管理"
+                },
+                {
+                    "path": "/sysManage/groups",
+                    "component": "sysManage/groups",
+                    "hasChildren":false,
+                    "name": "角色管理"
+                },
+                {
+                    "path": "/sysManage/menu",
+                    "component": "sysManage/menu",
+                    "hasChildren":false,
+                    "name": "菜单管理"
+                }
+            ]
+        },
+        {
+            "path": "/merchantManage",
+            "hasChildren":true,
+            "name": "商户管理",
+            "iconCls": "icon-park-shanghu",
+            "children": [
+                {
+                    "path": "/merchantManage/businessListings",
+                    "hasChildren":false,
+                    "component": "merchantManage/businessListings",
+                    "name": "商户列表"
+                },
+                {
+                    "path": "/merchantManage/businessAccountList",
+                    "hasChildren":false,
+                    "component": "merchantManage/businessAccountList",
+                    "name": "商户账号列表"
+                },
+                {
+                    "path": "/merchantManage/businessRQcode",
+                    "hasChildren":false,
+                    "component": "merchantManage/businessRQcode",
+                    "name": "商户二维码优惠券"
+                }
+               
+            ]
+        }
+       ]},
+       {"name":"门禁管理",
+        "children":[
+           
+        {
+            "path": "",
+            "name": "门禁管理",
+            "hasChildren":true,
+            "iconCls": "icon-park-tingchechang",
+            "children": [
+                {
+                    "path": "/accessControl/entranceGuard",
+                    "component": "accessControl/entranceGuard",
+                    "hasChildren":false,
+                    "name": "门禁授权"
+                }
+                
+            ]
+        }
+    ]}
+     ]
+}

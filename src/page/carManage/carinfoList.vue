@@ -333,6 +333,7 @@
                    <el-form  v-show="editShow" :model="editDialog.editForm" label-width="80px" :rules="editDialog.editFormRules" ref="editForm">
                         <el-row :gutter="20">
                             <el-col :span="4">
+                             
                               <div >
                                 <div>
                                   <span style="color:rgb(255,0,0)">*</span>停车场
@@ -780,7 +781,7 @@ export default {
 
       editDialog: {
         editFormRules: {
-          name: [{ required: true, message: "请输入车牌号", trigger: "blur" }]
+          PlateNo: [{ required: true, message: "请输入车牌号", trigger: "blur" }]
         },
         //编辑界面数据
         editForm: {
@@ -895,7 +896,7 @@ export default {
     this.selectPlate();
   },
   created() {
-    this.getParkList();
+    this.querySels.park=this.common.getParkList();
   },
   methods: {
     //导出excel
@@ -917,38 +918,6 @@ export default {
           // this.excelData = this.dataList //你要导出的数据list。
         })
         .catch(() => {});
-    },
-    getParkList() {
-      var _this = this;
-      var userInfo = window.localStorage.getItem("user");
-
-      // var parks = [
-      //   {
-      //     parkName: "林芝停车场",
-      //     parkNo: "1",
-      //     entryPassway: "林芝入口通道1-林芝入口通道2"
-      //     // entrychildren : [{  },{  }],
-      //     // outChildren:[{},{}]
-      //   },
-      //   {
-      //     parkName: "正佳停车场",
-      //     parkNo: "2",
-      //     entryPassway: "正佳入口通道"
-      //   }
-      // ];
-
-      if (typeof JSON.parse(userInfo)["parks"] == "object") {
-        JSON.parse(userInfo)["parks"].forEach(item => {
-          var park1 = {
-            value: item["parkNo"],
-            label: item["parkName"],
-            entryPassway: item["entryPassway"],
-            outPassway: item["outPassway"]
-          };
-          _this.querySels.park.push(park1);
-          console.log(_this.querySels.park);
-        });
-      }
     },
     selsChange: function(sels) {
       this.checkBox = sels;

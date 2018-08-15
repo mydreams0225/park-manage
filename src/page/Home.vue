@@ -16,7 +16,8 @@
       </el-col>
 			<el-col :span=4 class="userinfo">
 				<el-dropdown trigger="hover">
-					<span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /> {{sysUserName}}</span>
+					<span class="el-dropdown-link userinfo-inner"> 欢迎您，{{sysUserName}}<span class="el-icon-caret-bottom"></span></span>
+          
 					<el-dropdown-menu slot="dropdown">
 						<el-dropdown-item>我的消息</el-dropdown-item>
 						<el-dropdown-item>设置</el-dropdown-item>
@@ -63,7 +64,8 @@ import {
   requestLogin,
   requestMenu,
   requestLogin1,
-  requestMenu1
+  requestMenu1,
+  reqLoginOut //注销
 } from "@/api/api";
 import { getRole } from "../api/api";
 import parkFee from "@/page/financeReport/parkFee";
@@ -156,17 +158,45 @@ export default {
     handleselect: function(a, b) {},
     //退出登录
     logout: function() {
+      var para = {
+        token: window.localStorage.getItem("token")
+      };
       var _this = this;
       this.$confirm("确认退出吗?", "提示", {
         //type: 'warning'
       })
         .then(() => {
-          window.localStorage.removeItem("user");
-          window.localStorage.removeItem("userRole");
-          window.localStorage.removeItem("userInfo");
-          window.localStorage.removeItem("jwt");
-          window.localStorage.removeItem("isLoadNodes");
-          _this.$router.push({ path: "/login" });
+          // reqLoginOut(para).then(res => {
+          //   if (res.code === 200) {
+          //       window.localStorage.removeItem("user");
+          //       window.localStorage.removeItem("userRole");
+          //       window.localStorage.removeItem("userInfo");
+          //       window.localStorage.removeItem("token");
+          //       window.localStorage.removeItem("isLoadNodes");
+          //       _this.$router.push({ path: "/login" });
+          //   }
+          // });
+          $.ajax({
+            type: "post",
+            data: { token: window.localStorage.getItem("token") },
+            //  url: "../../static/json/rolelist.json",
+            url: "http://192.168.1.19:8088/jwt/logout",
+            // url:`${configs.base}/index` ,
+            // dataType: "jsonp",
+            success: function(data) {
+                window.localStorage.removeItem("user");
+                window.localStorage.removeItem("userRole");
+                window.localStorage.removeItem("userInfo");
+                window.localStorage.removeItem("token");
+                window.localStorage.removeItem("isLoadNodes");
+                _this.$router.push({ path: "/login" });
+
+              
+            },
+            error: function(error) {
+              console.log(error);
+            }
+          });
         })
         .catch(err => {
           alert(err);
@@ -193,42 +223,68 @@ export default {
     let isLoadNodes = window.localStorage.getItem("isLoadNodes");
     var userInfo = JSON.parse(window.localStorage.getItem("menu"));
     this.userInfo = userInfo;
+
     userInfo.forEach(element => {
       var temp = { label: element.name };
       this.data.push(temp);
     });
     if (!isLoadNodes) {
-          var secondMenus = JSON.parse(window.localStorage.getItem("secondMenus"));
-          let data="";
-          // 判断是否点击过一级菜单
-          if (secondMenus) {
-            data = secondMenus;
-          } else {
-            data = userInfo ? userInfo[0].children : [];
-          }
-          if (data) {
-            //这里是防止用户手动刷新页面，整个app要重新加载,动态新增的路由，会消失，所以我们重新add一次
-            let routes = [];
-            MenuUtils(routes, data, false);
-            this.$router.addRoutes(routes);
-          }
-          this.nodes = [];
-          //深度克隆路由
-          this.common.deepClone(this.nodesorigin, this.nodes);
-          //跳转第一个菜单的第一个路径
-          this.nodes.push(...data);
-          this.$router.push({ path: data[0].children[0].path });
+      var secondMenus = JSON.parse(window.localStorage.getItem("secondMenus"));
+      let data = "";
+      // 判断是否点击过一级菜单
+      if (secondMenus) {
+        data = secondMenus;
+      } else {
+        data = userInfo ? userInfo[0].children : [];
+      }
+      if (data) {
+        //这里是防止用户手动刷新页面，整个app要重新加载,动态新增的路由，会消失，所以我们重新add一次
+        let routes = [];
+        MenuUtils(routes, data, false);
+        this.$router.addRoutes(routes);
+      }
+      this.nodes = [];
+      //深度克隆路由
+      this.common.deepClone(this.nodesorigin, this.nodes);
+      //跳转第一个菜单的第一个路径
+      this.nodes.push(...data);
+      this.$router.push({ path: data[0].children[0].path });
 
-          window.localStorage.setItem("isLoadNodes", "true");
+      window.localStorage.setItem("isLoadNodes", "true");
     }
   },
   mounted() {
+    var _this = this;
+    //认证
+    $.ajax({
+      type: "post",
+      data: { token: window.localStorage.getItem("token") },
+      //  url: "../../static/json/rolelist.json",
+      url: "http://192.168.1.19:8088/jwt/checkToken",
+      // url:`${configs.base}/index` ,
+      // dataType: "jsonp",
+      success: function(data) {
+        window.localStorage.setItem("token", data.token);
+        window.localStorage.setItem("user", data.data);
+        console.log("用户信息");
+        console.log(data);
+
+        _this.sysUserName = data.data.username || "";
+        this.sysUserAvatar = user.avatar || "";
+
+        // _this.sysUserName = data.userInfo.userName;
+      },
+      error: function(error) {
+        console.log(error);
+      }
+    });
     var a = window.localStorage.getItem("datas");
     $(".tenet-lnav li:first-child  a:first-child").addClass("activeLi");
     var user = window.localStorage.getItem("user");
+    console.log(user);
+    console.log("fffff");
     if (user) {
-      user = JSON.parse(user);
-      this.sysUserName = user.name || "";
+      this.sysUserName = user.username || "";
       this.sysUserAvatar = user.avatar || "";
     }
   },

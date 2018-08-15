@@ -1,5 +1,5 @@
 .diaCommon .el-dialog__header{
-  background: #FCFDFF;
+  /* background: #FCFDFF; */
   
 }
 .jzcar_no .el-input{
@@ -165,4 +165,8 @@
 .is-round,
 {
    padding: 4px 4px !important;
+}
+
+.jzcar_no .el-form-item__label{
+  text-align: right;
 }

@@ -47,7 +47,7 @@ export default {
     return {
       logining: false,
       ruleForm2: {
-        account: "test2",
+        account: "admin",
         checkPass: "123456",
         yzm: ""
       },
@@ -105,40 +105,52 @@ export default {
             loginParams.append("password", this.ruleForm2.checkPass);
            //jsonp
            $.ajax({
-              type: "get",
-               data: { username: _this.ruleForm2.account, password: _this.ruleForm2.checkPass },
-                url: "../../static/json/login.json",
+              type: "post",
+               data: { username: _this.ruleForm2.account, password: _this.ruleForm2.checkPass,proId:"sys_003" },
+                // url: "../../static/json/login.json",
               // url: `${configs.base}/login`,
+              // url: "../../static/json/rolelist.json",
+               url: `http://192.168.1.19:8088/jwt/login`,
               // jsonpCallback: "showData",
               // dataType: "jsonp",
               success: function(data) {
+                debugger;
                 this.logining = false;
                 console.log(data);
                 var jwt = data.jwt || "";
-                window.localStorage.setItem("jwt", data.jwt);
-                $.ajax({
-                  type: "get",
-                  data:{a:"111"},
-                     url: "../../static/json/rolelist.json",
-                  // url:`${configs.base}/index` ,
-                  // dataType: "jsonp",
-                  success: function(data) {
-                    // console.log(data);
-                    window.localStorage.setItem("user",JSON.stringify(data.userInfo));
-                    window.localStorage.setItem("menu",JSON.stringify( data.menus));
-
+                window.localStorage.setItem("token", data.token);
+                console.log(data.token);
+                 // console.log(data);
+                  console.log("data.data");
+                 console.log(data.data);
+                    window.localStorage.setItem("user",(data.userInfo) );
+                    window.localStorage.setItem("menu",JSON.stringify(data.data[0].children) );
                     //  _this.login(data.menus);
                     //  _this.$router.addRoutes(routers);
                      _this.$router.push({ path: "/Home" });
-                  },
-                  error: function(error) {
-                    console.log(error);
-                  }
-                });
+                // $.ajax({
+                //   type: "get",
+                //   data:{a:"111"},
+                //      url: "../../static/json/rolelist.json",
+                //   // url:`${configs.base}/index` ,
+                //   // dataType: "jsonp",
+                //   success: function(data) {
+                //     // console.log(data);
+                //     window.localStorage.setItem("user",JSON.stringify(data.userInfo));
+                //     window.localStorage.setItem("menu",JSON.stringify( data.menus));
+
+                //     //  _this.login(data.menus);
+                //     //  _this.$router.addRoutes(routers);
+                //      _this.$router.push({ path: "/Home" });
+                //   },
+                //   error: function(error) {
+                //     console.log(error);
+                //   }
+                // });
               },
               error: function(error) {
                 _this.$message({
-                  message: error.message,
+                  message: error.msg,
                   type: "error"
                 });
               }

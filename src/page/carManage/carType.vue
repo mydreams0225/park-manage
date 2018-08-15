@@ -4,7 +4,7 @@
 			<!-- 查询区 -->
       	<div class="margin-tops">
       		<form class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
-	      		<el-select v-model="v_park" filterable placeholder="所属停车场">
+	      		<el-select v-model="filters.park" filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in park"
 	                      :key="item.value"
@@ -12,7 +12,7 @@
 	                      :value="item.value">
 	                    </el-option>
 	                  </el-select>
-	                   <el-button  type="primary" icon="el-icon-search" size="medium">查询</el-button>
+	                   <el-button  type="primary" icon="el-icon-search" size="medium" @click="getCarType">查询</el-button>
 	                   <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')" size="medium">清除</el-button>
               </form>
       	</div>
@@ -61,51 +61,60 @@
             </div>
              <!--  分页 -->
               <!--编辑界面-->
-              <el-dialog :visible.sync="editFormVisible" title="编辑" v-model="editFormVisible" :close-on-click-modal="false" width="400px">
-                  <form  >
-                      <el-row :gutter="20">
-                        <div><label for=""><span style="color:red">*</span> 类型名称</label></div>
-                      
-                        <el-select style="display:block" v-model="v_car_type" placeholder="请选择">
-                          <el-option
-                            v-for="item in car_type"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                          </el-option>
-                        </el-select>
-                        <div><label for=""><span style="color:red">*</span> 屏显名称</label></div>
-                        <el-input v-model="v_px_name" placeholder="请输入内容"></el-input>
-                        
-                      </el-row>
+              <el-dialog :visible.sync="editFormVisible" title="编辑" v-model="editFormVisible" :close-on-click-modal="false" width="500px">
+                  <el-form :model="edit" :rules="rules" ref="edit" >
                         <el-row :gutter="20">
-                          <el-col :span="10"><div class="grid-content bg-purple">
-                            <div><label for="">排序</label></div>
-                              <el-input v-model="v_order" placeholder="请输入内容"></el-input>
-                            </div>
-
+                         <el-col :span="12">
+                           <el-form-item prop="carType" label="类型名称">
+                                 <el-select  v-model="edit.carType" placeholder="请选择">
+                                    <el-option
+                                      v-for="item in carType"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                    </el-option>
+                                </el-select>
+                                </el-form-item>
+                         </el-col>
+                         <el-col :span="12">
+                            <el-form-item prop="pxName" label="屏显名称">
+                                 <el-input v-model="edit.pxName" ></el-input>
+                            </el-form-item>
+                         </el-col>                       
+                        </el-row>
+                        <el-row :gutter="20">                        
+                          <el-col :span="12">
+                            <el-form-item label="排序">
+                                 <el-input v-model="edit.order" ></el-input>
+                            </el-form-item>
                           </el-col>
-                          <el-col :span="10"><div class="grid-content bg-purple">
-                            <div><label for=""><span style="color:red">*</span> 启用状态</label></div>
-                            <el-input v-model="v_use_state" placeholder="请输入内容"></el-input>
-                            </div>
+                          <el-col :span="12">
+                            <el-form-item prop="useState" label="启用状态"> 
+                                 <el-select  v-model="edit.useState" placeholder="请选择">
+                                    <el-option
+                                      v-for="item in useState"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
                           </el-col>
                         </el-row>
-                    </form>
+                    </el-form>
                             <div slot="footer" class="dialog-footer">
                               <el-button @click.native="editFormVisible = false">取消</el-button>
-                              <el-button type="primary" @click.native="editSubmit" :loading="editDialog.editLoading">提交</el-button>
+                              <el-button type="primary" @click.native="editSubmit('edit')" :loading="editDialog.editLoading">保存</el-button>
                             </div>
               </el-dialog>
          <div>
 
-            <el-pagination
-              @size-change="handleSizeChange"
+           <el-pagination
               @current-change="handleCurrentChange"
-              :current-page.sync="currentPage1"
-              :page-size="1"
+              :current-page.sync="totals.currentPage"
+              :page-size.sync="totals.pageSize"
               layout="total, prev, pager, next"
-              :total="1">
+              :total.sync="totals.totalNum">
             </el-pagination>
           </div>
              <!-- 分页end -->
@@ -116,29 +125,40 @@
 export default {
   data() {
     return {
-      v_car_type:"",
-      car_type:[],
-      v_px_name:"",
-      v_order:"",
-      v_use_state:"",
-      //clientData: [{ plate_name: "车位一" }, { plate_name: "车位二" }],
+      edit: {
+        carType: "",
+        pxName: "",
+        order: "",
+        useState: ""
+      },
+      useState:[],
+      rules:{
+        carType: [
+            { required: true, message: '请选择车辆类型', trigger: 'change' },
+          ],
+          pxName:[
+            { required: true, message: '请输入显屏名称', trigger: 'blur' },
+          ],
+          useState:[
+            { required: true, message: '请选择使用状态', trigger: 'change' },
+          ]
+
+      },
+      carType: [],
       dialogTableVisible: false,
       editFormRules: {
         name: [{ required: true, message: "请输入车牌号", trigger: "blur" }]
       },
       editDialog: {
-        //编辑界面数据
-        editForm: {
-          name: "22"
-        },
+       
         editLoading: false,
-
-        editForm: ""
       },
       editFormVisible: false,
       currentPage1: 1,
-      v_park: "",
-      park: [{ value: "", label: "所属停车场" }],
+      filters: {
+        park: ""
+      },
+      park: [],
       tableData: [
         {
           seri_no: "1",
@@ -147,20 +167,46 @@ export default {
           enable_status: "启用",
           order_by: ""
         }
-      ]
+      ],
+      totals:{
+        currentPage:1,
+        pageSize:1,
+        totalNum:10
+      }
     };
   },
+  created() {
+    //获取停车场列表
+    this.park = this.common.getParkList();
+  },
+  mounted(){
+    this.getCarType();
+  },
   methods: {
-       //显示编辑界面
+    //查询请求
+    getCarType() {
+      
+    },
+    //显示编辑界面
     handleEdit: function(index, row) {
       this.editFormVisible = true;
-      this.editDialog.editForm = Object.assign({}, row);
-      console.log("zlz");
+      // this.editDialog.edit = Object.assign({}, row);
+    },
+    //修改数据请求
+    editSubmit(formNames){
+      this.$refs.edit.validate(valid=>{
+        if(valid){
+          //验证通过
+          this.dialogTableVisible=false;
+          
+        }
+      })
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
+     
       console.log(`当前页: ${val}`);
     },
     callbackSelTenant: function() {

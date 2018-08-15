@@ -1031,8 +1031,6 @@
 	</section>
 </template>
 <script>
-// let id = 1000;
-
 import camera from "@/assets/img/camera.png";
 import {
   reqSaveDevice,
@@ -1058,14 +1056,14 @@ export default {
       {
         id: 11,
         label: "收费机顶盒",
-        // children: [
-        //   {
-        //     id: 20,
-        //     label: "收费终端",
-        //     type: "edrere",
-        //     ip: "192.178.4.4"
-        //   }
-        // ]
+        children: [
+          {
+            id: 20,
+            label: "收费终端",
+            type: "edrere",
+            ip: "192.178.4.4"
+          }
+        ]
       },
       {
         id: 3,
@@ -1131,14 +1129,14 @@ export default {
       {
         id: 11,
         label: "收费机顶盒",
-        // children: [
-        //   {
-        //     id: 20,
-        //     label: "收费终端",
-        //     type: "edrere",
-        //     ip: "192.178.4.4"
-        //   }
-        // ]
+        children: [
+          {
+            id: 20,
+            label: "收费终端",
+            type: "edrere",
+            ip: "192.178.4.4"
+          }
+        ]
       },
       {
         id: 3,

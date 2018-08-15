@@ -165,22 +165,24 @@
             </el-col>
             <el-col :span="10">
               <div class="grid-content ">
-                <div>
-                  <div>
+                <!-- <div>
+                  <div> -->
                         <div>
-                           
-                            <div >当前车牌号：{{editForm.carNo}}</div>
+                          <el-form-item  label="当前车牌：" label-width="120px">
+                                  {{editForm.carNo}}
+                                </el-form-item>
+                            <!-- <div > 当前车牌：{{editForm.carNo}}</div> -->
                         </div>
-                      <div class="jzcar_no"> 
-                        <el-form-item prop="name" label="停车场名称">
+                        <div class="jzcar_no" > 
+                                <el-form-item prop="editCarNo" label="纠正车牌：" label-width="120px">
+                                 
                                   <el-input v-model="editForm.editCarNo" ></el-input>
-
                                 </el-form-item>
                           <!-- <div style="display:inline-block;width: 70%;">纠正车牌号：<el-input  v-model="editForm.editCarNo" >  
                             </el-input></div> -->
                           <div >
-                          </div>
-                      </div>
+                    <!-- </div>
+                 </div> -->
                   </div>
                 </div>
               </div>
@@ -189,7 +191,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+        <el-button type="primary" @click.native="editSubmit('editForm')" :loading="editLoading">保存</el-button>
       </div>
     </el-dialog>
     </div>
@@ -212,7 +214,9 @@ export default {
       clientData: configs.plateName,
       dialogTableVisible: false,
       editFormRules: {
-        name: [{ required: true, message: "请输入车牌号", trigger: "blur" }]
+        editCarNo: [
+          { required: true, message: "请输入车牌号", trigger: "blur" }
+        ]
       },
       //编辑界面数据
       editForm: {
@@ -244,10 +248,12 @@ export default {
         {
           url: "../../static/img/car.jpg",
           carNo: "赣F6666"
-        },{
+        },
+        {
           url: "../../static/img/car.jpg",
           carNo: "赣F6666"
-        },{
+        },
+        {
           url: "",
           carNo: "赣F6666"
         }
@@ -279,7 +285,7 @@ export default {
       querySels: {
         priceType: configs.chargeType,
         carType: configs.carType,
-        garage:configs.garage,
+        garage: configs.garage,
         isplate: configs.isplate,
         plateRelia: configs.plateRelia
       }
@@ -287,7 +293,7 @@ export default {
   },
   created() {
     //获取停车场列表
-     this.park = this.common.getParkList();
+    this.park = this.common.getParkList();
   },
   methods: {
     updatestall() {
@@ -343,9 +349,13 @@ export default {
         if (res.code === 1) {
           var list = res.flowList;
           list.forEach(item => {
-              var temp = { url: item["url"], carNo: item["carNo"],entryTime:item["entryTime"] };
-              this.carlist.push(temp);
-            });
+            var temp = {
+              url: item["url"],
+              carNo: item["carNo"],
+              entryTime: item["entryTime"]
+            };
+            this.carlist.push(temp);
+          });
           this.totals.totalNum = res.totalNum;
         } else {
           alert("暂无数据");
@@ -361,7 +371,7 @@ export default {
       console.log(row);
     },
     //提交编辑
-    editSubmit: function() {
+    editSubmit: function(formName) {
       this.$refs.editForm.validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
@@ -446,8 +456,8 @@ export default {
     this.getattendcar();
   },
   created() {
-    let data = JSON.parse(window.localStorage.getItem("user"));
-    var arr = data.userParkInfos;
+    // let data = JSON.parse(window.localStorage.getItem("user"));
+    // var arr = data.userParkInfos;
   }
 };
 </script>
@@ -459,9 +469,8 @@ export default {
 .fatherImg .el-card__body {
   height: 230px;
 }
-.fatherImg .showImgBox img{
+.fatherImg .showImgBox img {
   height: 230px;
-  
 }
 .querys span {
   font-size: 12px;
@@ -551,11 +560,10 @@ ul > li {
   left: 2px;
 }
 /* 编辑 */
-.el-card__body .rf a{
+.el-card__body .rf a {
   position: absolute;
   top: -13px;
   right: -42px;
-
 }
 .rf i {
   position: absolute;
@@ -603,5 +611,6 @@ ul > li {
 .el-card__body {
   padding: 0 !important;
 }
+
 
 </style>

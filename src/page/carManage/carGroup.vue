@@ -7,56 +7,58 @@
       	<el-dialog
           title="添加车辆分组"
           :visible.sync="addVisible"
-          width="30%"
+          width="600px"
           :before-close="handleClose">
-          
-          <form >
+          <el-form :model="add" :rules="rules" ref="add" label-width="100px">
              <el-row :gutter="20">
-              <div><label for=""><span style="color:red">*</span> 所属停车场</label></div>
-            
-              <el-select style="display:block" v-model="v_park" placeholder="请选择">
-                <el-option
-                  v-for="item in s_park"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-              <div><label for=""><span style="color:red">*</span> 分组名称</label></div>
-              <el-input v-model="v_group" placeholder="请输入内容"></el-input>
-              
+               <el-col :span="12">  
+                  <el-form-item label="所属停车场" prop="park">
+                    <el-select  v-model="add.park" placeholder="请选择">
+                    <el-option
+                      v-for="item in park"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                  </el-form-item>
+              </el-col>
+               <el-col  :span="12">
+                 <el-form-item label="分组名称" prop="group">
+                     <el-input v-model="add.group" placeholder="请输入分组名称"></el-input>
+                 </el-form-item>
+               </el-col>
              </el-row>
               <el-row :gutter="20">
-                <el-col :span="10"><div class="grid-content bg-purple">
-                  <div><label for=""><span style="color:red">*</span> 计费类型</label></div>
-                     <el-select v-model="v_fee_type" placeholder="请选择">
-                <el-option
-                  v-for="item in fee_type"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-                  </div>
-
+                <el-col :span="12">  
+                        <el-form-item label="计费类型" prop="feeType">                   
+                              <el-select  v-model="add.feeType" placeholder="请选择">
+                                <el-option
+                                  v-for="item in feeType"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                                </el-option>
+                              </el-select>
+                  </el-form-item>
                 </el-col>
-                <el-col :span="10"><div class="grid-content bg-purple">
-                  <div><label for="">排序</label></div>
-                  <el-input v-model="v_order" placeholder="请输入内容"></el-input>
-                  </div>
+                 <el-col :span="12">
+                  <el-form-item label="排序" prop="order">
+                      <el-input v-model="add.order" ></el-input>
+                  </el-form-item>
                 </el-col>
               </el-row>
-          </form>
+          </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="addVisible = false">取 消</el-button>
-            <el-button type="primary" @click="addVisible = false">保 存</el-button>
+            <el-button type="primary" @click="saveCarGroup('add')">保 存</el-button>
           </span>
         </el-dialog>
         </div>
       	<!-- 查询区 -->
       	<div class="margin-tops">
       		<form class="form-inline" role="form" id="searchForm" name="searchForm" onsubmit="subSearchForm();return false;">
-	      		<el-select v-model="v_park" filterable placeholder="所属停车场">
+	      		<el-select v-model="filters.park" filterable placeholder="所属停车场">
 	                    <el-option
 	                      v-for="item in park"
 	                      :key="item.value"
@@ -64,7 +66,7 @@
 	                      :value="item.value">
 	                    </el-option>
 	                  </el-select>
-	                   <el-button  type="primary" icon="el-icon-search" size="medium">查询</el-button>
+	                   <el-button  type="primary" icon="el-icon-search" size="medium" @click="getCarGroup">查询</el-button>
 	                   <el-button icon="el-icon-delete" v-on:click="callbackSelTenant(null,'')" size="medium">清除</el-button>
               </form>
       	</div>
@@ -108,12 +110,11 @@
          <div class="block">
 
             <el-pagination
-              @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
-              :current-page.sync="currentPage1"
-              :page-size="1"
+              :current-page.sync="totals.currentPage"
+              :page-size.sync="totals.pageSize"
               layout="total, prev, pager, next"
-              :total="0">
+              :total.sync="totals.totalNum">
             </el-pagination>
           </div>
              <!-- 分页end -->
@@ -125,20 +126,83 @@
 export default {
   data() {
     return {
-      v_fee_type:"",
-      fee_type:[],
-      v_order:"",
+      rules: {
+        park: [
+          {
+            required: true,
+            message: "请选择停车场",
+            trigger: "change"
+          }
+        ],
+        group: [
+          {
+            required: true,
+            message: "请输入分组名称",
+            trigger: "blur"
+          }
+        ],
+        feeType: [
+          {
+            required: true,
+            message: "请选择计费类型",
+            trigger: "change"
+          }
+        ],
+        order: [
+          {
+            required: true,
+            message: "请输入排序",
+            trigger: "blur"
+          }
+        ]
+      },
+      filters: {
+        park: ""
+      },
+      totals: {
+        currentPage: 1,
+        pageSize: 1,
+        totalNum: 6
+      },
+      add: {
+        feeType: "",
+        order: "",
+        park: "",
+        group: ""
+      },
+      feeType: [],
       addVisible: false,
-      v_park: "",
-      s_park: [],
-      v_group: "",
+      park: [],
       currentPage1: 1,
-      v_park: "", //停车场
       park: [{ value: "", label: "所属停车场" }],
       groupData: []
     };
   },
+  mounted() {
+    this.getCarGroup();
+  },
+  created(){
+    this.park=this.common.getParkList();
+  },
   methods: {
+    saveCarGroup(formName) {
+      this.$refs.add.validate(valid => {
+        if (valid) {
+        } else {
+        }
+      });
+    },
+    //查询请求
+    getCarGroup() {
+      var parp = {
+        park:this.filters.park,
+        jwt:window.localStorage.getItem("jwt"),
+        currentPage:this.totals.currentPage,
+        pageSize:this.totals.pageSize
+      };
+
+    },
+
     handleClose(done) {
       this.$confirm("确认关闭？")
         .then(_ => {

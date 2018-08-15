@@ -45,11 +45,20 @@
         "11": [
             {
                 "equipmentNo": "1111332",
-                "equipmentName": "收费终端",
-                "type": "edrere",
-                "ip": "192.178.4.4"
+                "equipmentName": "收费终端1",
+                "type": "edrere111",
+                "ip": "192.178.4.4111"
             }
-        ]
+        ],
+        "9": [
+            {
+              "equipmentNo": 10,
+              "equipmentName": "停车场物联网关1",
+              "type": "edrere",
+              "ip": "192.178.4.4",
+              "json": {}
+            }
+          ]
     },
     "code": 1
 }

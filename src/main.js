@@ -41,7 +41,6 @@ if (secondMenu) {
   data = userInfo ? userInfo[0].children : [];
 }
 // let data=JSON.parse(window.localStorage.getItem('userRole'));
-debugger;
 if (data) {
   //这里是防止用户手动刷新页面，整个app要重新加载,动态新增的路由，会消失，所以我们重新add一次
   let routes = [];
@@ -52,11 +51,11 @@ if (data) {
 router.beforeEach((to, from, next) => {
   if (to.path == '/login') {
     console.log(to.path)
-    window.localStorage.removeItem('user');
+    window.localStorage.removeItem('token');
     window.sessionStorage.removeItem('isLoadNodes');
   }
-  let user = JSON.parse(window.localStorage.getItem('user'));
-  if (!user && to.path != '/login') {
+  var token= window.localStorage.getItem("token");
+  if (!token && to.path != '/login') {
     next({ path: '/login' });
   } else {
     next();
