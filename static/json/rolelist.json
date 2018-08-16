@@ -108,7 +108,7 @@
                                     "name": "车辆信息列表",
                                     "state": null,
                                     "checked": false,
-                                    "path": "/carManager/carinfoList",
+                                    "path": "/carManage/carinfoList",
                                     "children": [],
                                     "parentId": "1c15520043f342d69794cae9734f1c13",
                                     "hasParent": true,
@@ -130,7 +130,7 @@
                                     "name": "车库授权",
                                     "state": null,
                                     "checked": false,
-                                    "path": "/carManager/garageAuthorize",
+                                    "path": "/carManage/garageAuthorize",
                                     "children": [],
                                     "parentId": "1c15520043f342d69794cae9734f1c13",
                                     "hasParent": true,
@@ -152,7 +152,7 @@
                                     "name": "新车登记注册",
                                     "state": null,
                                     "checked": false,
-                                    "path": "/carManager/newCarRegist",
+                                    "path": "/carManage/newCarRegist",
                                     "children": [],
                                     "parentId": "1c15520043f342d69794cae9734f1c13",
                                     "hasParent": true,
@@ -202,15 +202,68 @@
                             "state": null,
                             "checked": false,
                             "path": "/deviceManage",
-                            "children": [],
+                            "children": [
+                                
+                                {
+                                    "path": "/deviceManage/parkingandEntryequi",
+                                    "hasChildren": false,
+                                    "name": "停车引导设备状态"
+                                    
+                                },
+                                {
+                                    "path": "/deviceManage/parkGuidequiState",
+                                    "hasChildren": false,
+                                    "name": "停车出入设备"
+                                }
+
+                            ],
                             "parentId": "e5b13a3e28664f0a9be0050a9ed382c8",
                             "hasParent": true,
-                            "hasChildren": false
+                            "hasChildren": true
                         }
                     ],
                     "parentId": "a5afbe1f79524eae870ec0977195c3b8",
                     "hasParent": true,
                     "hasChildren": true
+                },
+                {
+                    "name": "门禁管理",
+                    "children": [
+                        {
+                            "path": "",
+                            "name": "门禁权限",
+                            "hasChildren": true,
+                            "iconCls": "icon-park-tingchechang",
+                            "children": [
+                                {
+                                    "path": "/accessControl/entranceGuard",
+                                    "component": "accessControl/entranceGuard",
+                                    "hasChildren": false,
+                                    "name": "门禁授权"
+                                }
+                            ]
+                        },
+                        {
+                            "path": "",
+                            "name": "设备管理",
+                            "hasChildren": true,
+                            "iconCls": "icon-park-tingchechang",
+                            "children": [
+                                {
+                                    "path": "/accessControl/deviceManage/mjControlMachine",
+                                    "component": "accessControl/deviceManage/mjControlMachine",
+                                    "hasChildren": false,
+                                    "name": "门禁控制机"
+                                },{
+                                    "path": "/accessControl/deviceManage/channelGateEqui",
+                                    "component": "accessControl/deviceManage/channelGateEqui",
+                                    "hasChildren": false,
+                                    "name": "通道闸设备"
+                                }
+
+                            ]
+                        }
+                    ]
                 }
             ],
             "parentId": "0",

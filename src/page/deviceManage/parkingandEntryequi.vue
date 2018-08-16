@@ -1186,7 +1186,9 @@ export default {
       }
     ];
     return {
+       parks:[],
       addVisible: false,
+      speechSize:[{value:"1",label:"大"},{value:"2",label:"中"},{value:"3",label:"小"}],
       add: {
         deviceType: "",
         deviceIP: "",
@@ -1250,6 +1252,7 @@ export default {
           descInfo: "11"
         }
       }
+     
       // url:'1'
     };
   },
