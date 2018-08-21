@@ -21,7 +21,6 @@
                 :visible.sync="addVisible"
                 width="500px"
                 :before-close="handleClose">
-                
                   <el-form  :model="add" :rules="rules" ref="add" class="form-inline" >
                     <el-row :gutter="20">
                       <el-col :span="12">
@@ -357,7 +356,7 @@ export default {
         projectStatus: ""
       },
       totals: {
-        totalNum: 15,
+        totalNum: 1,
         currentPage: 2,
         pageSize: 10
       },

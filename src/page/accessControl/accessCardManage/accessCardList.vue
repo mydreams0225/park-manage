@@ -33,38 +33,12 @@
                 所属社区
                <communtitySelect :community="filters.community">
                </communtitySelect>
-               <span>门禁设备类型</span>
-                    <el-select v-model="filters.guardDeviceType" filterable placeholder="门禁设备类型">
-                      <el-option
-                        v-for="item in guardDeviceType"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                <span>在线状态</span>
-                    <el-select v-model="filters.onlineState" filterable placeholder="在线状态">
-                      <el-option
-                        v-for="item in onlineState"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                </el-select>
-                <span>网络电话</span>
-                    <el-select v-model="filters.netPhone" filterable placeholder="网络电话">
-                      <el-option
-                        v-for="item in netPhone"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                </el-select>
-                <el-input placeholder="设备序列号" v-model="filters.deviceNo" >
-                     <template slot="prepend">设备序列号</template>   
+               
+                <el-input placeholder="所属房铺" v-model="filters.house" >
+                     <template slot="prepend">所属房铺</template>   
                 </el-input>
-                <el-input placeholder="设备名称" v-model="filters.deviceName" >
-                     <template slot="prepend">设备名称</template>   
+                <el-input placeholder="门禁卡号" v-model="filters.accessCardNo" >
+                     <template slot="prepend">门禁卡号</template>   
                 </el-input>
                 <el-input placeholder="当前版本" v-model="filters.currentVersion" >
                      <template slot="prepend">当前版本</template>   

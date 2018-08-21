@@ -262,6 +262,26 @@
                                 }
 
                             ]
+                        },
+                        {
+                            "path": "",
+                            "name": "门禁卡管理",
+                            "hasChildren": true,
+                            "iconCls": "icon-park-tingchechang",
+                            "children": [
+                                {
+                                    "path": "/accessControl/accessCardManage/accessCardList",
+                                    "component": "accessControl/accessCardManage/accessCardList",
+                                    "hasChildren": false,
+                                    "name": "门禁卡列表"
+                                },{
+                                    "path": "/accessControl/accessCardManage/accessCardRegist",
+                                    "component": "accessControl/accessCardManage/accessCardRegist",
+                                    "hasChildren": false,
+                                    "name": "门禁卡登记"
+                                }
+
+                            ]
                         }
                     ]
                 }

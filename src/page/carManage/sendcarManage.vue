@@ -288,7 +288,7 @@ export default {
       tableData: [],
       //totals:1,
       totals: {
-        totalnum: 3,
+        totalnum: 0,
         pagesize: 1,
         currentPage1: 1
       }

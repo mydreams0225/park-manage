@@ -2,9 +2,9 @@
 
         <template>
         <!-- <el-input v-model="community"></el-input> -->
-            <el-select v-model="community" placeholder="请选择">
+            <el-select v-model="channelType" placeholder="请选择">
                 <el-option
-                v-for="item in communitySel"
+                v-for="item in channelTypes"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -16,13 +16,13 @@
 <script>
 export default {
     props: {
-    community: {
+    channelType: {
       required: true
     }
   },
   data(){
       return{
-        communitySel:[{value:"1",label:"dd1"}]  
+        channelTypes:[{value:"1",label:"通道1"}]  
       }
   }
 }

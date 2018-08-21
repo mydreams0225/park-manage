@@ -99,7 +99,7 @@ export default {
       deviceStatus: [{}],
       tableData: [],
       totals: {
-        totalNum: 1,
+        totalNum: 0,
         pageSize: 1,
         currentPage: 1
       }

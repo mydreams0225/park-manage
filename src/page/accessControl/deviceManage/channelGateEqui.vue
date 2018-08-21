@@ -1,7 +1,7 @@
-// 通道闸设备
+
 <template>
     <section>
-
+       
     </section>
 </template>
 <script>

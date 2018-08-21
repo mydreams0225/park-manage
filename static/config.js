@@ -15,8 +15,8 @@ const business={
 };
 const configs = {
     // sy   base: "http://192.168.0.105:8081/park",
-     //正佳
-    base: "http://192.168.0.32:8081/park",
+     //新宇
+    base: "http://192.168.0.110:8084/park",
     //地区
     options: [
         {

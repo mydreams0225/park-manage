@@ -162,7 +162,7 @@ export default {
       totals: {
         currentPage: 1,
         pageSize: 1,
-        totalNum: 6
+        totalNum:0
       },
       add: {
         feeType: "",

@@ -261,7 +261,7 @@ export default {
       totals: {
         currentPage: 1,
         pageSize: 10,
-        totalNum: 10
+        totalNum: 5
       },
 
       checked: false,

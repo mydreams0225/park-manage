@@ -171,7 +171,7 @@ export default {
       totals:{
         currentPage:1,
         pageSize:1,
-        totalNum:10
+        totalNum:1
       }
     };
   },

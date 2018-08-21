@@ -1186,9 +1186,16 @@ export default {
       }
     ];
     return {
-       parks:[],
+      parks: [],
+      language: [],
+      yellowCarDefaultMode:[],
+      parkingType:[],//停车场类型
       addVisible: false,
-      speechSize:[{value:"1",label:"大"},{value:"2",label:"中"},{value:"3",label:"小"}],
+      speechSize: [
+        { value: "1", label: "大" },
+        { value: "2", label: "中" },
+        { value: "3", label: "小" }
+      ],
       add: {
         deviceType: "",
         deviceIP: "",
@@ -1252,7 +1259,7 @@ export default {
           descInfo: "11"
         }
       }
-     
+
       // url:'1'
     };
   },
@@ -1294,7 +1301,6 @@ export default {
           //   this.treeData = res.equipmentInfoMap;
           this.getRenderData(res.equipmentInfoMap, this.treeData);
           this.getRenderData(res.equipmentInfoMap, this.treeDataEdit);
-
         } else {
           console.log("获取数据失败");
         }
@@ -1339,7 +1345,6 @@ export default {
             // items["children"]=equipmentInfoList[item]
           }
         });
-        
       }
       console.log(this.treeDataEdit);
     },

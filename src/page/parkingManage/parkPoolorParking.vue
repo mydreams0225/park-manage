@@ -202,7 +202,7 @@ export default {
   data() {
     return {
 			totals: {
-        totalNum: 2,
+        totalNum: 0,
         pageSize: 1,
         currentPage: 1
 			},

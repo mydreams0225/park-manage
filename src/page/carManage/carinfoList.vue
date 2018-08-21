@@ -759,7 +759,7 @@ export default {
       totals: {
         currentPage: 1,
         pageSize: 10,
-        totalNum: 11
+        totalNum: 1
       },
       selects: {
         clientData: configs.plateName, //[{ plate_name: "车位一" }, { plate_name: "车位二" }],
