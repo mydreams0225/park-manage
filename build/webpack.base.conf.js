@@ -24,6 +24,10 @@ module.exports = {
   entry: {
     app: './src/main.js'
   },
+  // 在webpack.base.conf.js配置文件中配置BMap,(创建BMap对象)
+  externals: {
+    'BMap': 'BMap'
+  },  
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',

@@ -29,6 +29,10 @@
 .margin-tops{
   margin-top:15px !important;
 }
+.margin-tops::after{
+  content:"";
+  clear:both;
+}
 .parent{
   text-align:left !important;
 }

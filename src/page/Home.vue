@@ -5,14 +5,6 @@
 				{{sysName}}
 			</el-col>
       <el-col :span=15>
-        <div class="tenet-lnav"> 
-           <li v-for="item in data"
-           :key="item.label"
-           :value="item.label"
-           :label="item.label">
-              <a v-on:click="fristmenuchange" :datas="item.label">{{item.label}}</a>
-           </li>
-        </div>
       </el-col>
 			<el-col :span=4 class="userinfo">
 				<el-dropdown trigger="hover">
@@ -37,7 +29,7 @@
             @select="handleselect" theme="dark" 
             unique-opened 
             router>
-        	<menu-tree :nodes="nodes"></menu-tree>
+        	<MenuTree :nodes="nodes"></MenuTree>
 				</el-menu>			
 			</aside>
 			<section class="content-container">
@@ -51,8 +43,9 @@
 					</el-col>
 					<el-col :span=24 class="content-wrapper">
 						<transition name="fade" mode="out-in">
-							<router-view></router-view>
+							<router-view></router-view>       
 						</transition>
+           
 					</el-col>
 				</div>
 			</section>
@@ -68,7 +61,7 @@ import {
   reqLoginOut //注销
 } from "@/api/api";
 import { getRole } from "../api/api";
-import parkFee from "@/page/financeReport/parkFee";
+
 import MenuTree from "@/page/MenuTree";
 //引入图标库
 import iconfont from "@/assets/icon/iconfont.css";
@@ -180,18 +173,16 @@ export default {
             type: "post",
             data: { token: window.localStorage.getItem("token") },
             //  url: "../../static/json/rolelist.json",
-            url: "http://192.168.1.19:8088/jwt/logout",
+            url: `${configs.login}/jwt/logout`,
             // url:`${configs.base}/index` ,
             // dataType: "jsonp",
             success: function(data) {
-                window.localStorage.removeItem("user");
-                window.localStorage.removeItem("userRole");
-                window.localStorage.removeItem("userInfo");
-                window.localStorage.removeItem("token");
-                window.localStorage.removeItem("isLoadNodes");
-                _this.$router.push({ path: "/login" });
-
-              
+              window.localStorage.removeItem("user");
+              window.localStorage.removeItem("userRole");
+              window.localStorage.removeItem("userInfo");
+              window.localStorage.removeItem("token");
+              window.localStorage.removeItem("isLoadNodes");
+              _this.$router.push({ path: "/login" });
             },
             error: function(error) {
               console.log(error);
@@ -235,7 +226,7 @@ export default {
       if (secondMenus) {
         data = secondMenus;
       } else {
-        data = userInfo ? userInfo[0].children : [];
+        data = userInfo ? userInfo : [];
       }
       if (data) {
         //这里是防止用户手动刷新页面，整个app要重新加载,动态新增的路由，会消失，所以我们重新add一次
@@ -248,29 +239,44 @@ export default {
       this.common.deepClone(this.nodesorigin, this.nodes);
       //跳转第一个菜单的第一个路径
       this.nodes.push(...data);
-      this.$router.push({ path: data[0].children[0].path });
+      //  this.$router.push({ path: data[0].children[0].path });
+      // var sub=window.location.href;
+      // var index=sub.lastIndexOf("\#");
 
+      //     sub=sub.substring(index+1,sub.length);
+      //     sub =sub=="Home"? "/Park" :sub;
+      //     console.log(sub)
+      //     this.$router.push({ path: sub });
       window.localStorage.setItem("isLoadNodes", "true");
     }
   },
   mounted() {
     var _this = this;
+
     //认证
     $.ajax({
       type: "post",
       data: { token: window.localStorage.getItem("token") },
       //  url: "../../static/json/rolelist.json",
-      url: "http://192.168.1.19:8088/jwt/checkToken",
+      url: `http://192.168.0.104:8088/jwt/checkToken`,
       // url:`${configs.base}/index` ,
       // dataType: "jsonp",
       success: function(data) {
-        window.localStorage.setItem("token", data.token);
-        window.localStorage.setItem("user", data.data);
-        console.log("用户信息");
-        console.log(data);
-
-        _this.sysUserName = data.data.username || "";
-        this.sysUserAvatar = user.avatar || "";
+        if (data.status === 201) {
+          window.localStorage.removeItem("user");
+          window.localStorage.removeItem("userRole");
+          window.localStorage.removeItem("userInfo");
+          window.localStorage.removeItem("token");
+          window.localStorage.removeItem("isLoadNodes");
+          _this.$router.push({ path: "/login" });
+        } else {
+          window.localStorage.setItem("token", data.token);
+          window.localStorage.setItem("user", data.data);
+          console.log("用户信息");
+          console.log(data);
+          _this.sysUserName = data.data.username || "测试";
+          this.sysUserAvatar = user.avatar || "";
+        }
 
         // _this.sysUserName = data.userInfo.userName;
       },
@@ -284,7 +290,7 @@ export default {
     console.log(user);
     console.log("fffff");
     if (user) {
-      this.sysUserName = user.username || "";
+      this.sysUserName = user.username || "测试1";
       this.sysUserAvatar = user.avatar || "";
     }
   },

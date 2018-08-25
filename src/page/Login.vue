@@ -88,7 +88,7 @@ export default {
 
     login(datas) {
       window.localStorage.setItem("userRole", JSON.stringify(datas));
-         console.log(datas)
+      console.log(datas);
       MenuUtils(routers, datas, false);
     },
     handleSubmit2(ev) {
@@ -99,70 +99,76 @@ export default {
           var yzmt = this.verifyCode.validate(_this.ruleForm2.yzm);
           console.log("yzmt" + yzmt);
           // if (yzmt) {
-            this.logining = true;
-            var loginParams = new URLSearchParams();
-            loginParams.append("username", this.ruleForm2.account);
-            loginParams.append("password", this.ruleForm2.checkPass);
-           //jsonp
-           $.ajax({
-              type: "get",
-               data: { username: _this.ruleForm2.account, password: _this.ruleForm2.checkPass,proId:"sys_003" },
-                // url: "../../static/json/login.json",
-              // url: `${configs.base}/login`,
-               url: "../../static/json/rolelist.json",
-              //  url: `http://192.168.1.19:8088/jwt/login`,
-              // jsonpCallback: "showData",
-              // dataType: "jsonp",
-              success: function(data) {
-                debugger;
-                this.logining = false;
-                console.log(data);
-                var jwt = data.jwt || "";
-                window.localStorage.setItem("token", data.token);
-                console.log(data.token);
-                 // console.log(data);
-                  console.log("data.data");
-                 console.log(data.data);
-                    window.localStorage.setItem("user",(data.userInfo) );
-                    window.localStorage.setItem("menu",JSON.stringify(data.data[0].children) );
-                    //  _this.login(data.menus);
-                    //  _this.$router.addRoutes(routers);
-                     _this.$router.push({ path: "/Home" });
-                // $.ajax({
-                //   type: "get",
-                //   data:{a:"111"},
-                //      url: "../../static/json/rolelist.json",
-                //   // url:`${configs.base}/index` ,
-                //   // dataType: "jsonp",
-                //   success: function(data) {
-                //     // console.log(data);
-                //     window.localStorage.setItem("user",JSON.stringify(data.userInfo));
-                //     window.localStorage.setItem("menu",JSON.stringify( data.menus));
+          this.logining = true;
+          var loginParams = new URLSearchParams();
+          loginParams.append("username", this.ruleForm2.account);
+          loginParams.append("password", this.ruleForm2.checkPass);
+          //jsonp
+          $.ajax({
+            type: "post",
+            data: {
+              username: _this.ruleForm2.account,
+              password: _this.ruleForm2.checkPass,
+              proId: "sys_004"
+            },
+            // url: "../../static/json/login.json",
+            url: `http://192.168.0.104:8088/jwt/login`,
+            // url: "../../static/json/rolelist.json",
+            //  url: `http://192.168.1.19:8088/jwt/login`,
+            // jsonpCallback: "showData",
+            // dataType: "jsonp",
+            success: function(data) {
+              debugger;
+              this.logining = false;
+              console.log(data);
+              var jwt = data.jwt || "";
+              window.localStorage.setItem("token", data.token);
+              console.log(data.token);
+              // console.log(data);
+              console.log("data.data");
+              console.log(data.data);
+              window.localStorage.setItem("user", data.userInfo);
+              window.localStorage.setItem(
+                "menu",
+                JSON.stringify(data.data[0].children)
+              );
+              //  _this.login(data.menus);
+              //  _this.$router.addRoutes(routers);
+              _this.$router.push({ path: "/Home" });
+              // $.ajax({
+              //   type: "get",
+              //   data:{a:"111"},
+              //      url: "../../static/json/rolelist.json",
+              //   // url:`${configs.base}/index` ,
+              //   // dataType: "jsonp",
+              //   success: function(data) {
+              //     // console.log(data);
+              //     window.localStorage.setItem("user",JSON.stringify(data.userInfo));
+              //     window.localStorage.setItem("menu",JSON.stringify( data.menus));
 
-                //     //  _this.login(data.menus);
-                //     //  _this.$router.addRoutes(routers);
-                //      _this.$router.push({ path: "/Home" });
-                //   },
-                //   error: function(error) {
-                //     console.log(error);
-                //   }
-                // });
-              },
-              error: function(error) {
-                _this.$message({
-                  message: error.msg,
-                  type: "error"
-                });
-              }
-            });
-           ////jsonpend
-           
+              //     //  _this.login(data.menus);
+              //     //  _this.$router.addRoutes(routers);
+              //      _this.$router.push({ path: "/Home" });
+              //   },
+              //   error: function(error) {
+              //     console.log(error);
+              //   }
+              // });
+            },
+            error: function(error) {
+              _this.$message({
+                message: error.msg,
+                type: "error"
+              });
+            }
+          });
+          ////jsonpend
+
           // } else {
           //   alert("验证码错误");
           //   return false;
           // }
         } else {
-          
           console.log("error submit!!");
           return false;
         }
@@ -177,7 +183,9 @@ export default {
   top: 0px;
   bottom: 0px;
   width: 100%;
-  background: url(../../static/img/login.jpg);
+  height: 100%;
+  background: url(../../static/img/login.jpg) no-repeat;
+  background-size: cover;
   overflow: auto;
 }
 .form-fade-enter-active,

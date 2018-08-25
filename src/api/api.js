@@ -1,7 +1,8 @@
 import $axios from 'axios';
 import qs from 'qs';
-// let base = '/apis';
 let base=configs.base;
+// let base = '/apis';
+
 $axios.defaults.baseURL='apis'
 //post注销
 export const reqLoginOut = params=>{
@@ -113,6 +114,31 @@ export const reqUpdateStall = params => {
      {  // 这里是跨域写法  
     headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
     }).then(res => res.data); }; 
+
+    // 文件上传
+    // const upload = axios.create({
+    //   baseURL: 'api',
+    //   //这里配置你自己的url
+    //   timeout: 5000,
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data' //请求头
+    //   }
+    // })
+    export const upload = params => {   
+      return $axios.post(`https://adveross.oss-cn-shenzhen.aliyuncs.com/`,  
+       qs.stringify(params,{ indices: false }),  
+         {  // 这里是跨域写法  
+        headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
+        }).then(res => res.data); }; 
+
+        //上传图片 uploadAli
+        export const upLoadPicFromWeApp = params => {   
+          return $axios.post(`${base}/pic/upload`,  
+            // qs.stringify(params,{ indices: false }),  
+            params,
+             {  // 这里是跨域写法  
+            headers:{"Content-Type": "multipart/form-data",}  // 这里是跨域的写法  
+            }).then(res => res.data); };      
 
 
 
