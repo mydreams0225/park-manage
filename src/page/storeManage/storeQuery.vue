@@ -87,7 +87,9 @@
              <div class="imgBox">
                <img :src="receiptDialog.url" alt="">
              </div>
+             
            </el-dialog>
+           <div style="display:none" id="allmap"></div>
        </div>
     </section>
 </template>
@@ -157,23 +159,44 @@ export default {
       receiptDialog: {
         dialogVisible: false,
         url: ""
-      }
+      },
+      areaCache: {} //  缓存
     };
   },
   mounted() {
     this.queryStore();
   },
   methods: {
-    areaLabel: function(str, arr) {
-      for (var item in arr) {
-        if (arr[item]["value"] === str) {
-          
-          console.log(arr[item]["value"]);
-          return arr[item]["label"];
+    //地区转换
+    findAreaName(res, str) {
+      if (this.areaCache[str]) return this.areaCache[str];
+      for (var i = 0, len = res.length; i < len; i++) {
+        if (str === res[i]["value"]) {
+          return res[i]["label"];
+        } else if (res[i]["children"]) {
+          var temp = this.findAreaName(res[i]["children"], str);
+          if (temp) {
+            this.areaCache[str] = temp;
+            return temp;
+          }
         }
       }
-      return "f"
     },
+    // ready: function() {
+     
+    //   // 百度地图API功能
+    //   let map = new BMap.Map("allmap"); // 创建Map实例
+    //   map.centerAndZoom(new BMap.Point(116.404, 39.915), 11); // 初始化地图,设置中心点坐标和地图级别
+    //   //添加地图类型控件
+    //   map.addControl(
+    //     new BMap.MapTypeControl({
+    //       mapTypes: [BMAP_NORMAL_MAP, BMAP_HYBRID_MAP]
+    //     })
+    //   );
+    //   map.setCurrentCity("北京"); // 设置地图显示的城市 此项是必须设置的
+    //   map.enableScrollWheelZoom(true);
+      
+    // },
     //查询门店
     queryStore(name, code) {
       this.loading = true;
@@ -186,9 +209,9 @@ export default {
         pageSize: this.totals.pageSize,
         token: window.localStorage.getItem("token")
       };
-      //地区变label
-
       reqStore(para).then(res => {
+       
+        var _this=this;
         console.log(res);
         if (res.status === 200) {
           this.storeData = [];
@@ -198,13 +221,11 @@ export default {
             areas.push(item.shoppro, item.shopcity, item.shoparea);
             var ssstoreAddress = "";
             if (areas) {
-              let pro= this.areaLabel(areas[0], configs.options);
-              let city=this.areaLabel(areas[1], configs.options);
-              let qu=this.areaLabel(areas[2], configs.options)
-              ssstoreAddress =pro+""+city+qu;
-                
+              let pro = _this.findAreaName( configs.options,areas[0]);
+              let city = _this.findAreaName( configs.options,areas[1]);
+              let qu = _this.findAreaName( configs.options,areas[2]);
+              ssstoreAddress = pro + "" + city + qu;
             }
-
             var temp = {
               storeId: item.shopno,
               storeName: item.shopname,
@@ -233,10 +254,12 @@ export default {
     },
     //打开门店添加页面
     openStore() {
+      // this.ready();
       this.dialog.dialogVisible = true;
       this.dialog.title = "添加门店";
       //   this.dialog.sellersName = "";
       this.dialog.storeData = {};
+      
     },
     //改变当前页数
     handleCurrentChanges(currentPage, pageSize) {
@@ -246,6 +269,7 @@ export default {
     },
     //编辑信息查看
     handleClick(row) {
+       debugger
       this.dialog;
       this.dialog.dialogVisible = true;
       this.dialog.title = "编辑门店信息";
@@ -275,9 +299,6 @@ export default {
           });
         })
         .catch(() => {});
-      //   console.log("rows");
-      //   console.log(rowId);
-      //   rows.splice(index, 1);
     },
     //添加或修改
     submits(obj) {
@@ -298,7 +319,6 @@ export default {
       };
       if (this.dialog.title === "添加门店") {
         //添加请求
-        // reqAddBusiness(para).then(res => {
         reqAddStore(para)
           .then(res => {
             if (res.status === 200) {
@@ -306,13 +326,14 @@ export default {
                 message: "添加成功",
                 type: "success"
               });
+              this.dialog.dialogVisible = false;
+              this.queryStore(this.filters.names, this.filters.codes);
             }
           })
           .catch(err => {
             console.log(err);
           });
-        this.dialog.dialogVisible = false;
-        this.queryStore(this.filters.names, this.filters.codes);
+        
         // });
       } else {
         //修改请求
@@ -350,7 +371,7 @@ export default {
 }
 .imgBox img {
   height: 100%;
-  width: 100%;
+  /* width: 100%; */
 }
 </style>
 

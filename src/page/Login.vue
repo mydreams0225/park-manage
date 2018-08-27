@@ -111,10 +111,10 @@ export default {
               password: _this.ruleForm2.checkPass,
               proId: "sys_004"
             },
-            // url: "../../static/json/login.json",
-            url: `http://192.168.0.104:8088/jwt/login`,
+
+            url: `${configs.login}/jwt/login`,
             // url: "../../static/json/rolelist.json",
-            //  url: `http://192.168.1.19:8088/jwt/login`,
+
             // jsonpCallback: "showData",
             // dataType: "jsonp",
             success: function(data) {

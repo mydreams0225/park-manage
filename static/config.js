@@ -19,8 +19,8 @@ const business={
 const configs = {
     // sy   base: "http://192.168.0.105:8081/park",
      //pf
-     login:"http://192.168.0.104:8088",
-    base: "http://192.168.0.104:8083",
+     login:"http://192.168.0.110:8088",
+    base: "http://192.168.0.110:8083",
     //地区
     options: [
         {

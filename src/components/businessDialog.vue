@@ -45,7 +45,6 @@
                     <div class="btn">
                       <el-button @click="firstclick('second')" type="success" size="medium">下一步</el-button>
                     </div>
-                
             </el-tab-pane>
             <el-tab-pane label="商户资料" name="second">
                  <el-form label-position="right" label-width="160px" :model="info">

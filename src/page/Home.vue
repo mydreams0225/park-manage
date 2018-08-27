@@ -258,7 +258,7 @@ export default {
       type: "post",
       data: { token: window.localStorage.getItem("token") },
       //  url: "../../static/json/rolelist.json",
-      url: `http://192.168.0.104:8088/jwt/checkToken`,
+      url: `${configs.login}/jwt/checkToken`,
       // url:`${configs.base}/index` ,
       // dataType: "jsonp",
       success: function(data) {
