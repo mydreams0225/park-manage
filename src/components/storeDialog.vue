@@ -136,6 +136,7 @@ export default {
   },
   methods: {
     getlocation(obj) {
+      debugger
       this.baseinfo.gpsLongitude = obj.longitude;
       this.baseinfo.gpsLatitude = obj.latitude;
       this.baseinfo.detailArea=obj.detailArea;

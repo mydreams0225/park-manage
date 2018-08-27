@@ -19,28 +19,55 @@ export default Vue.extend({
   },
   methods: {
     ready: function() {
-        
       // 百度地图API功能
       var _this = this;
       var map = new BMap.Map("allmap");
       map.centerAndZoom("北京", 12);
+      map.enableScrollWheelZoom(true);
+      var navigationControl = new BMap.NavigationControl({
+        // 靠左上角位置
+        anchor: BMAP_ANCHOR_TOP_LEFT,
+        // LARGE类型
+        type: BMAP_NAVIGATION_CONTROL_LARGE,
+        // 启用显示定位
+        enableGeolocation: true
+      });
+      map.addControl(navigationControl);
+      // 添加定位控件
+      var geolocationControl = new BMap.GeolocationControl();
+      geolocationControl.addEventListener("locationSuccess", function(e) {
+        // 定位成功事件
+        var address = "";
+        address += e.addressComponent.province;
+        address += e.addressComponent.city;
+        address += e.addressComponent.district;
+        address += e.addressComponent.street;
+        address += e.addressComponent.streetNumber;
+        alert("当前定位地址为：" + address);
+      });
+      geolocationControl.addEventListener("locationError", function(e) {
+        // 定位失败事件
+        alert(e.message);
+      });
+      map.addControl(geolocationControl);
       //单击获取点击的经纬度
       var geoc = new BMap.Geocoder() || "";
       map.addEventListener("click", function(e) {
+        debugger;
         var adds = e.point;
         var latitude = adds.lat,
           longitude = adds.lng;
         _this.locationObj["longitude"] = longitude;
         _this.locationObj["latitude"] = latitude;
-        // _this.$emit('getlocation',_this.locationObj)
 
         geoc.getLocation(
           e.point,
           function(rs) {
             var addComp = rs.addressComponents;
-            _this.locationObj["detailArea"] =addComp.district+""
-              addComp.street + "" + addComp.streetNumber;
+            _this.locationObj["detailArea"] = addComp.district + "";
+            addComp.street + "" + addComp.streetNumber;
             alert(_this.locationObj["detailArea"]);
+            _this.$emit("getlocation", _this.locationObj);
             // if (geoc.getStatus() == BMAP_STATUS_SUCCESS) {
             $.ajax({
               url:
@@ -72,7 +99,7 @@ export default Vue.extend({
     },
     getLocations() {
       console.log(this.locationObj);
-      this.$emit("getlocation", this.locationObj);
+      //   this.$emit("getlocation", this.locationObj);
     }
   }
 });
