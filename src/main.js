@@ -50,6 +50,7 @@ if (data) {
   window.localStorage.removeItem('isLoadNodes');
 }
 router.beforeEach((to, from, next) => {
+  debugger
   if (to.path == '/login') {
     console.log(to.path)
     window.localStorage.removeItem('token');

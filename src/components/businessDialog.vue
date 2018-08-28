@@ -317,7 +317,7 @@ export default {
           { required: true, message: "请选择经营期限", trigger: "change" }
         ],
         openBankArea: [
-          { required: true, message: "请选择开户行所在地区", trigger: "change" }
+          // { required: true, message: "请选择开户行所在地区", trigger: "blur" }
         ]
       }
     };

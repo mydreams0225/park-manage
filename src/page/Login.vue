@@ -49,7 +49,7 @@ export default {
       ruleForm2: {
         account: "admin",
         checkPass: "123456",
-        yzm: ""
+        yzm: "1"
       },
       rules2: {
         account: [
@@ -132,8 +132,8 @@ export default {
               proId: "sys_004"
             },
 
-            //  url: `${configs.login}/jwt/login`,
-            url: "../../static/json/rolelist.json",
+              url: `${configs.login}/jwt/login`,
+            // url: "../../static/json/rolelist.json",
 
             // jsonpCallback: "showData",
             // dataType: "jsonp",
@@ -142,17 +142,18 @@ export default {
               this.logining = false;
               console.log(data);
               var jwt = data.jwt || "";
-              window.localStorage.setItem("token", data.token);
 
-              console.log(data.token);
-              // console.log(data);
-              console.log("data.data");
-              console.log(data.data);
+              window.localStorage.setItem("token", data.token);
               window.localStorage.setItem("user", data.userInfo);
-              window.localStorage.setItem(
+              if(data.data.length===0){
+
+              }else{
+                 window.localStorage.setItem(
                 "menu",
                 JSON.stringify(data.data[0].children)
               );
+              }
+             
               //  _this.login(data.menus);
               //  _this.$router.addRoutes(routers);
               _this.$router.push({ path: "/Home" });

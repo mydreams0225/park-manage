@@ -9,10 +9,11 @@
 			<el-col :span=4 class="userinfo">
 				<el-dropdown trigger="hover">
 					<span class="el-dropdown-link userinfo-inner"> 欢迎您，{{sysUserName}}<span class="el-icon-caret-bottom"></span></span>
-          
+          <showPwd :dialog="dialog"></showPwd>
 					<el-dropdown-menu slot="dropdown">
 						<!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
-						<el-dropdown-item divided >修改密码</el-dropdown-item>
+						<el-dropdown-item divided @click.native="showPwds">修改密码</el-dropdown-item>
+            
 						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
@@ -55,13 +56,14 @@
 </template>
 <script>
 import {
+  getRole,
   requestLogin,
   requestMenu,
   requestLogin1,
   requestMenu1,
-  reqLoginOut //注销
+  reqLoginOut //注销,
 } from "@/api/api";
-import { getRole } from "../api/api";
+
 
 import MenuTree from "@/page/MenuTree";
 //引入图标库

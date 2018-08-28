@@ -303,7 +303,9 @@ export default {
     },
     //添加或修改
     submits(obj) {
+      var userinfo=window.localStorage.getItem("user");
       let para = {
+        marchantno:userinfo.username,
         shopname: obj.storeName, // 店铺名称·
         shopaddress: obj.storeDetailAddress, // 详细地址
         contacts: obj.contacts, // 联系人

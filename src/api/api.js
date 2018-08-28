@@ -148,7 +148,16 @@ export const reqUpdateStall = params => {
                 params,
                  {  // 这里是跨域写法  
                 headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
-                }).then(res => res.data); };   
+                }).then(res => res.data); }; 
+                // 
+                // 修改密码reqEditPwd
+                export const reqEditPwd = params => {   
+                  return $axios.post(`${base}/team/merchant/checkMerchantno`,  
+                     qs.stringify(params,{ indices: false }),  
+                    params,
+                     {  // 这里是跨域写法  
+                    headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
+                    }).then(res => res.data); };
 
 
 
