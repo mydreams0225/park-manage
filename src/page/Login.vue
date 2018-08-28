@@ -4,7 +4,7 @@
 	  <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width=   "0px" class="demo-ruleForm login-container">
 		    <h3 class="title">系统登录</h3>
 		    <el-form-item prop="account">
-				      <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号">
+				      <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号" >
 				      	
 				      </el-input>
 			</el-form-item>
@@ -21,7 +21,7 @@
 				<div  id="v_container" class="yzm" style="width: 140px;height: 30px; display:inline-block"></div>
 				</div>
 			</el-form-item>
-		    <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
+		    <el-checkbox v-model="rememberPassword" checked class="remember" >记住密码</el-checkbox>
 		    <el-form-item style="width:100%;">
 		      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
             <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
@@ -64,7 +64,7 @@ export default {
         ],
         yzm: [{ required: true, message: "请输入验证码", trigger: "blur" }]
       },
-      checked: true,
+      rememberPassword: true,
       verifyCode: "1"
     };
   },
@@ -72,6 +72,26 @@ export default {
     this.gv();
   },
   methods: {
+    //保存密码方法
+    // savePwd(){
+    //   debugger
+    //   var checkPwd=this.rememberPassword;
+    //   var account=this.ruleForm2.account;
+    //   var pwd=this.ruleForm2.checkPass;
+    //   if(checkPwd==true){
+    //    sessionStorage.setItem("inpUser",pwd);
+    //  }
+    //  else{
+    //   sessionStorage.removeItem("inpUser");
+    //  }
+    // },
+    // //检查密码
+    // checkusername(){
+    //    var sessionipUser=sessionStorage.getItem("inpUser");
+    //    if(""!=sessionipUser && sessionipUser !=null){
+    //  this.ruleForm2.checkPass=sessionipUser;
+    // }
+    // },
     gv() {
       this.verifyCode = new GVerify("v_container");
     },
@@ -105,15 +125,15 @@ export default {
           loginParams.append("password", this.ruleForm2.checkPass);
           //jsonp
           $.ajax({
-            type: "post",
+            type: "get",
             data: {
               username: _this.ruleForm2.account,
               password: _this.ruleForm2.checkPass,
               proId: "sys_004"
             },
 
-            url: `${configs.login}/jwt/login`,
-            // url: "../../static/json/rolelist.json",
+            //  url: `${configs.login}/jwt/login`,
+            url: "../../static/json/rolelist.json",
 
             // jsonpCallback: "showData",
             // dataType: "jsonp",
@@ -123,6 +143,7 @@ export default {
               console.log(data);
               var jwt = data.jwt || "";
               window.localStorage.setItem("token", data.token);
+
               console.log(data.token);
               // console.log(data);
               console.log("data.data");
@@ -157,7 +178,7 @@ export default {
             },
             error: function(error) {
               _this.$message({
-                message: error.msg,
+                message: "请求超时",
                 type: "error"
               });
             }

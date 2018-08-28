@@ -159,7 +159,22 @@
           }
       // }
 
-   }  
+   }  ,
+   // 根据code获取城市区域名称
+   findAreaName(res, str) {
+    // if (this.areaCache[str]) return this.areaCache[str];
+    for (var i = 0, len = res.length; i < len; i++) {
+      if (str === res[i]["value"]) {
+        return res[i]["label"];
+      } else if (res[i]["children"]) {
+        var temp = this.findAreaName(res[i]["children"], str);
+        if (temp) {
+          // this.areaCache[str] = temp;
+          return  temp ;
+        }
+      }
+    }
+  },
       
     
         

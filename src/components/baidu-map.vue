@@ -13,16 +13,35 @@ export default Vue.extend({
       }
     };
   },
-  props: {},
+  props: {
+    areaName: ""
+  },
   mounted() {
     this.ready();
+  },
+  watch: {
+    areaName() {
+      console.log(this.areaName);
+      // 百度地图API功能
+      var map = new BMap.Map("allmap");
+      var point = new BMap.Point(116.331398, 39.897445);
+      map.centerAndZoom(point, 11);
+      if (this.areaName != "") {
+   
+        map.centerAndZoom(this.areaName || "北京" , 11); // 用城市名设置地图中心点
+        this.locationObj.longitude="";
+        this.locationObj.latitude="";
+        this.locationObj.detailArea="";
+      }
+
+    }
   },
   methods: {
     ready: function() {
       // 百度地图API功能
       var _this = this;
       var map = new BMap.Map("allmap");
-      map.centerAndZoom("北京", 12);
+      map.centerAndZoom(this.areaName || "北京" , 11);
       map.enableScrollWheelZoom(true);
       var navigationControl = new BMap.NavigationControl({
         // 靠左上角位置
@@ -53,7 +72,6 @@ export default Vue.extend({
       //单击获取点击的经纬度
       var geoc = new BMap.Geocoder() || "";
       map.addEventListener("click", function(e) {
-        debugger;
         var adds = e.point;
         var latitude = adds.lat,
           longitude = adds.lng;
@@ -65,10 +83,8 @@ export default Vue.extend({
           function(rs) {
             var addComp = rs.addressComponents;
             _this.locationObj["detailArea"] = addComp.district + "";
-            addComp.street + "" + addComp.streetNumber;
-            alert(_this.locationObj["detailArea"]);
-            _this.$emit("getlocation", _this.locationObj);
-            // if (geoc.getStatus() == BMAP_STATUS_SUCCESS) {
+            addComp.street + "" + addComp.streetNumber+addComp.business;
+            debugger;
             $.ajax({
               url:
                 "http://api.map.baidu.com/geocoder/v2/?ak=siqNMtF7couEA04FaCoAjfx3bsoYvclW&location=" +
@@ -83,22 +99,19 @@ export default Vue.extend({
                 var result = res.result,
                   addressComponent = result.addressComponent,
                   adcode = addressComponent.adcode;
-                alert(adcode);
+                _this.locationObj["areaCode"] = adcode;
+                _this.$emit("getlocation", _this.locationObj);
                 //   $(ev.currentTarget).text("城市号码为" + adcode);
               }
             });
-            // } else {
-            //   $(ev.currentTarget).text("定位失败");
-            // }
           },
           { enableHighAccuracy: true }
         ); //指示浏览器获取高精度的位置，默认false
-
-        alert(e.point.lng + "," + e.point.lat);
       });
     },
     getLocations() {
       console.log(this.locationObj);
+      this.ready();
       //   this.$emit("getlocation", this.locationObj);
     }
   }

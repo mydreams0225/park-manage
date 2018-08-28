@@ -5,36 +5,35 @@
         :visible.sync="dialog.dialogVisible"
         width="800px"
         >
-        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick" >
             <el-tab-pane label="基本资料" name="first">
-                 <el-form label-position="right" label-width="160px" :model="info">
-                    <el-form-item label="微信商户号：">
+                 <el-form label-position="right" :inline-message="true" label-width="160px" :model="info" :rules="rules" ref="info" class="demo-dynamic">
+                    <el-form-item label="微信商户号："  prop="sellersId">
                         <el-input v-model="info.sellersId" readnoly="readnoly"></el-input>
                     </el-form-item>
                     <el-form-item label="微信公众号-APPID：">
                         <el-input v-model="info.sellersAPPID"></el-input>
                     </el-form-item>
-                    <el-form-item label="联系人：">
+                    <el-form-item label="联系人：" prop="contacts">
                         <el-input v-model="info.contacts"></el-input>
                     </el-form-item>
-                    <el-form-item label="电子邮箱：">
+                    <el-form-item label="电子邮箱：" prop="email">
                         <el-input v-model="info.email"></el-input>
                     </el-form-item>
                     <el-form-item label="固定电话：">
                         <el-input v-model="info.fixedPhone"></el-input>
                     </el-form-item>
-                    <el-form-item label="手机号码：">
+                    <el-form-item label="手机号码：" prop="mobilePhone">
                         <el-input v-model="info.mobilePhone"></el-input>
                     </el-form-item>
                     <el-form-item label="商户简称：">
                         <el-input v-model="info.sellersJC"></el-input>      
                     </el-form-item>
-                    <el-form-item label="费率：">
+                    <el-form-item label="费率：" prop="rate">
                         <el-input v-model="info.rate"></el-input>      
                     </el-form-item>
-                    <el-form-item label="所在地区：">
+                    <el-form-item label="所在地区：" prop="baseinfoarea">
                         <el-cascader class="areaCascader" 
-
                                       :options="area"
                                       expand-trigger="hover"
                                       v-model="info.baseinfoarea"
@@ -47,8 +46,8 @@
                     </div>
             </el-tab-pane>
             <el-tab-pane label="商户资料" name="second">
-                 <el-form label-position="right" label-width="160px" :model="info">
-                        <el-form-item label="商户名称：">
+                 <el-form label-position="right" label-width="160px" :model="info" :inline-message="true" :rules="rules" ref="info">
+                        <el-form-item label="商户名称：" prop="sellersName">
                             <el-input v-model="info.sellersName" ></el-input>
                         </el-form-item>
                         <el-form-item label="注册地址：">
@@ -70,7 +69,7 @@
                         <el-form-item label="经营范围：">
                             <el-input v-model="info.businessScope"></el-input>
                         </el-form-item>
-                        <el-form-item label="经营期限：">
+                        <el-form-item label="经营期限：" prop="operateTerm">
                             <el-date-picker
                                 v-model="info.operateTerm"
                                 type="daterange"
@@ -83,7 +82,7 @@
                         <el-form-item label="组织机构代码/统一社会信用代码：">
                             <el-input v-model="info.tycode"></el-input>      
                         </el-form-item>
-                        <el-form-item label="营业期限：">
+                        <!-- <el-form-item label="营业期限：">
                             <el-date-picker
                                 v-model="info.businessTerm"
                                 type="daterange"
@@ -92,7 +91,7 @@
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期">
                             </el-date-picker>
-                        </el-form-item>
+                        </el-form-item> -->
                         <el-form-item label="证件持有人类型：">
                         <el-select v-model="info.certifyHolderType" >
                         <el-option
@@ -123,11 +122,11 @@
                 </div>
             </el-tab-pane>
             <el-tab-pane label="结算账号" name="third">
-                <el-form label-position="right" label-width="160px" :model="info">
+                <el-form label-position="right" label-width="160px" :model="info" :inline-message="true" :rules="rules" ref="info">
                     <el-form-item label="开户名称：">
                         <el-input v-model="info.accountName"></el-input>
                     </el-form-item>
-                    <el-form-item label="开户银行所在地区：">
+                    <el-form-item label="开户银行所在地区：" prop="openBankArea"> 
                         <el-cascader class="areaCascader" 
                                       :options="openBankArea"
                                       expand-trigger="hover"
@@ -192,7 +191,7 @@
                 </el-form>
                 <div class="btn">
                 <el-button @click="firstclick('third')" type="success" size="medium">上一步</el-button>
-                 <el-button @click="submit" type="success" size="medium" :loading="loading">提交</el-button>
+                 <el-button @click="submit('info')" type="success" size="medium" :loading="loading">提交</el-button>
                  </div>
             </el-tab-pane>
         </el-tabs>
@@ -201,20 +200,50 @@
     </div>
 </template>
 <script>
-import { upLoadPicFromWeApp } from "@/api/api";
+import { upLoadPicFromWeApp, reqSellersId } from "@/api/api";
 import { client } from "@/utils/alioss";
 import axios from "axios";
 export default {
   data() {
+    // 验证商户编号
+    var validateSellersId = (rule, value, callback) => {
+      if (value) {
+        let para = {
+          token: window.localStorage.getItem("token"),
+          merchantno: value
+        };
+        reqSellersId(para)
+          .then(res => {
+            if (res.status === 201) {
+              callback(new Error("该商户id已存在"));
+            } else {
+              callback();
+            }
+          })
+          .catch(err => {
+            callback(new Error("连接超时"));
+          });
+      } else {
+        callback(new Error("请输入商户id"));
+      }
+    };
+    // 验证费率
+    var validateRate = (rule, value, callback) => {
+      if (value >= 2 && value <= 20) {
+        callback();
+      } else {
+        callback(new Error("费率必须在1000分之 2-20之间"));
+      }
+    };
     return {
       mult: "multipart/form-data",
       file: "",
       loading: false,
       area: configs.options,
-      openBankArea:businessObj.openBankArea,
+      openBankArea: businessObj.openBankArea,
       sellersTradeType: businessObj.sellersTradeType,
-      certifyHolderType: [], // 证件持有人类型
-      certifyType: [], // 证件类型
+      certifyHolderType: businessObj.certifyHolderType, // 证件持有人类型
+      certifyType: businessObj.certifyType, // 证件类型
       activeName: "first",
       baseinfo: {
         wxSellersNo: "",
@@ -251,6 +280,45 @@ export default {
         openPermitimgUrl: "", // 开户许可证
         identityCardzimgUrl: "", // 身份证人面照
         identityCardfimgUrl: ""
+      },
+      rules: {
+        sellersId: [
+          // { required: true, message: "请输入商户号", trigger: "blur" },
+          { validator: validateSellersId, trigger: "blur" }
+          // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+        ],
+        rate: [{ validator: validateRate, trigger: "blur" }],
+        contacts: [
+          { required: true, message: "请输入联系人", trigger: "blur" }
+        ],
+        mobilePhone: [
+          {
+            required: true,
+            message: "请输入手机号码"
+          },
+          {
+            pattern: /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/,
+            message: "手机格式不对"
+          }
+        ],
+        email: [
+          {
+            pattern: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/,
+            message: "请输入有效的邮箱"
+          }
+        ],
+        baseinfoarea: [
+          { required: true, message: "请选择地区", trigger: "change" }
+        ],
+        sellersName: [
+          { required: true, message: "请输入商户名称", trigger: "blur" }
+        ],
+        operateTerm: [
+          { required: true, message: "请选择经营期限", trigger: "change" }
+        ],
+        openBankArea: [
+          { required: true, message: "请选择开户行所在地区", trigger: "change" }
+        ]
       }
     };
   },
@@ -259,15 +327,13 @@ export default {
       title: "添加商户",
       dialogVisible: false,
       loading: false,
-      info: {
-       
-      }
+      info: {}
     },
-    info:{
-        sellersName: "",
-        sellersTradeType: "",
-        sellersAPPID: "",
-        contacts: "",
+    info: {
+      sellersName: "",
+      sellersTradeType: "",
+      sellersAPPID: "",
+      contacts: ""
     }
   },
   mounted() {
@@ -281,13 +347,22 @@ export default {
     firstclick(name) {
       this.activeName = name;
     },
-    submit() {
-      this.loading = true;
-      console.log(this.info)
-      this.$emit("submit", {
-        info:this.info
+    submit(formName) {
+      debugger;
+      var _this = this;
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          _this.loading = true;
+          console.log(_this.info);
+          _this.$emit("submit", {
+            info: _this.info
+          });
+          _this.loading = _this.dialog.loading;
+        } else {
+          this.$message.error("请完善必填项信息");
+          return false;
+        }
       });
-      this.loading = this.dialog.loading;
     },
     handleChange(value) {
       console.log(value || "");
@@ -301,18 +376,17 @@ export default {
       event.preventDefault();
       let formData = new FormData();
       formData.append("file", file);
-      formData.append("token",window.localStorage.getItem("token"));
+      formData.append("token", window.localStorage.getItem("token"));
       axios
         .post(`${configs.base}/team/upload`, formData)
         .then(function(response) {
           _this.info.businessLinseimgUrl = response.data.data;
-          
         })
         .catch(function(error) {
           alert("上传失败");
         });
-        console.log("tupain")
-        console.log( _this.info.businessLinseimgUrl);
+      console.log("tupain");
+      console.log(_this.info.businessLinseimgUrl);
     },
     //开户许可证
     openPermitSuccess(file) {
@@ -330,7 +404,7 @@ export default {
       //   return isJPG && isLt2M;
       let formData = new FormData();
       formData.append("file", file);
-      formData.append("token",window.localStorage.getItem("token"));
+      formData.append("token", window.localStorage.getItem("token"));
       axios
         .post(`${configs.base}/team/upload`, formData)
         .then(function(response) {
@@ -343,7 +417,6 @@ export default {
     },
     //身份证人面照
     identityCardzSuccess(file) {
-      
       var _this = this;
       const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -356,7 +429,7 @@ export default {
       }
       let formData = new FormData();
       formData.append("file", file);
-      formData.append("token",window.localStorage.getItem("token"));
+      formData.append("token", window.localStorage.getItem("token"));
       axios
         .post(`${configs.base}/team/upload`, formData)
         .then(function(response) {
@@ -380,7 +453,7 @@ export default {
       }
       let formData = new FormData();
       formData.append("file", file);
-      formData.append("token",window.localStorage.getItem("token"));
+      formData.append("token", window.localStorage.getItem("token"));
       axios
         .post(`${configs.base}/team/upload`, formData)
         .then(function(response) {
@@ -435,6 +508,9 @@ export default {
   cursor: pointer;
   position: relative;
   overflow: hidden;
+}
+.el-form-item__error {
+  padding-top: 0px;
 }
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;

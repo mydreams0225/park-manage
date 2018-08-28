@@ -14933,6 +14933,8 @@ const configs = {
 }
 const businessObj={
     sellersTradeType: [{ value: "1", label: "行业一" },{ value: "2", label: "行业二" }],
+    certifyHolderType:[{vlaue:"1",label:"经办人"},{value:"2",label:"法人"}],
+    certifyType:[{value:"1",label:"身份证"},{value:"2",label:"港澳通行证"}],
     openBankArea: [
         {
             "value": "110000",

@@ -169,8 +169,7 @@ export default {
                 if (val === data[item]["value"]) {
                   sellersTradTypeName = data[item]["name"];
                 }
-              }
-         
+              }       
               let baseinfoareas = [];
               let businessScopes = [];
               let settleAccountarea = [];
@@ -184,7 +183,6 @@ export default {
               let temp = {
                 createTime: item.createTime,
                 status: item.status,
-
                 sellersId: item.merchantno, // 商户id
                 sellersAPPID: item.wechatappid, // 微信appid
                 contacts: item.contacts, // 联系人
@@ -219,9 +217,6 @@ export default {
                 identityCardzimgUrl: item.backcardpath // 身份证正面照
               };
               this.businessData.push(temp);
-              baseinfoareas = [];
-              businessScopes = [];
-              settleAccountarea = [];
             });
           }
           this.totals.totalNum = res.data.totalNum; //总条数

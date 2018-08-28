@@ -140,6 +140,16 @@ export const reqUpdateStall = params => {
             headers:{"Content-Type": "multipart/form-data",}  // 这里是跨域的写法  
             }).then(res => res.data); };      
 
+            //商户号验证
+            // reqSellersId
+            export const reqSellersId = params => {   
+              return $axios.post(`${base}/team/merchant/checkMerchantno`,  
+                 qs.stringify(params,{ indices: false }),  
+                params,
+                 {  // 这里是跨域写法  
+                headers:{"Content-Type": "application/x-www-form-urlencoded;charset=utf-8",}  // 这里是跨域的写法  
+                }).then(res => res.data); };   
+
 
 
 

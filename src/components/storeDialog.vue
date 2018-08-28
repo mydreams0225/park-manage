@@ -1,19 +1,19 @@
 <template>
-    <div class="dialogArea">
+    <div class="dialogArea storeDialog">
         <el-dialog
         :title="dialog.title"
         :visible.sync="dialog.dialogVisible"
         width="800px"
         >
-                 <el-form label-position="right" label-width="160px" :model="baseinfo">
+                 <el-form label-position="right" label-width="160px" :model="dialog.storeData"  :rules="rules" ref="dialog.storeData">
                    <el-row :gutter="20">
                      <el-col :span="12">
-                         <el-form-item label="门店名称：">
+                         <el-form-item label="门店名称：" prop="storeName">
                         <el-input v-model="dialog.storeData.storeName"></el-input>
                     </el-form-item>
                      </el-col>
                      <el-col :span="12">
-                       <el-form-item label="联系人：">
+                       <el-form-item label="联系人：" prop="contacts">
                         <el-input v-model="dialog.storeData.contacts"></el-input>
                     </el-form-item>
                      </el-col>
@@ -49,7 +49,7 @@
                     </el-form-item>
                      </el-col>
                      <el-col :span="12">
-                       <el-form-item label="所在地区：">
+                       <el-form-item label="所在地区：" prop="area">
                         <el-cascader class="areaCascader" 
                                       :options="area"
                                       expand-trigger="hover"
@@ -76,11 +76,10 @@
                     </el-form-item>
                        </el-col>
                     </el-row>
-                    
-                    <baiMap id="allmap" :locationObj="locationObj" @getlocation="getlocation"></baiMap>
+                    <baiMap id="allmap" :locationObj="locationObj" @getlocation="getlocation" :areaName="areaName"></baiMap>
                     </el-form>
                     <div class="btn margin-tops">
-                      <el-button @click="submit" type="success" size="medium" :loading="loading">提交</el-button>
+                      <el-button @click="submit('dialog.storeData')" type="success" size="medium" :loading="loading">提交</el-button>
                     </div>     
         </el-dialog>
     </div>
@@ -92,6 +91,7 @@ import baiMap from "@/components/baidu-map";
 export default {
   data() {
     return {
+      areaName: "",
       name: "allmap",
       loading: false,
       area: configs.options,
@@ -111,6 +111,15 @@ export default {
       locationObj: {
         longitude: "", // 经度
         latitude: "" // 纬度
+      },
+      rules: {
+        storeName: [
+          { required: true, message: "请输入门店名称", trigger: "blur" }
+        ],
+        contacts: [
+          { required: true, message: "请输入联系人", trigger: "blur" }
+        ],
+        area: [{ required: true, message: "请选择所在地区", trigger: "change" }]
       }
     };
   },
@@ -123,26 +132,33 @@ export default {
       area: ""
     }
   },
-  mounted() {
-    // // this.ready();
-    // debugger;
-    // if (this.dialog.title == "添加门店") {
-    //   this.baseinfo.gpsLongitude = "1";
-    //   this.baseinfo.gpsLatitude = "1";
-    // } else {
-    // this.baseinfo.gpsLongitude = this.dialog.storeData.gpsLongitude;
-    // this.baseinfo.gpsLatitude = this.dialog.storeData.gpsLatitude;
-    // }
-  },
+  mounted() {},
   methods: {
+    //地区转换
+    findAreaName(res, str) {
+      // if (this.areaCache[str]) return this.areaCache[str];
+      for (var i = 0, len = res.length; i < len; i++) {
+        if (str === res[i]["value"]) {
+          return res[i]["value"];
+        } else if (res[i]["children"]) {
+          var temp = this.findAreaName(res[i]["children"], str);
+          if (temp) {
+            // this.areaCache[str] = temp;
+            return res[i]["value"] + "," + temp;
+          }
+        }
+      }
+    },
     getlocation(obj) {
-      debugger
+      var areaStr = this.findAreaName(configs.options, obj.areaCode);
+      var areaArr = areaStr.split(",");
+      this.dialog.storeData.area = areaArr;
       this.baseinfo.gpsLongitude = obj.longitude;
       this.baseinfo.gpsLatitude = obj.latitude;
-      this.baseinfo.detailArea=obj.detailArea;
+      this.baseinfo.detailArea = obj.detailArea;
       this.dialog.storeData.gpsLongitude = this.baseinfo.gpsLongitude;
       this.dialog.storeData.gpsLatitude = this.baseinfo.gpsLatitude;
-      this.dialog.storeData.storeDetailAddress=this.baseinfo.detailArea;
+      this.dialog.storeData.storeDetailAddress = this.baseinfo.detailArea;
       // thid.dialog.storeData.storeDetailAddress=obj.storeDetailAddress;
     },
     handleClick(tab, event) {
@@ -152,19 +168,32 @@ export default {
       this.activeName = name;
     },
 
-    submit() {
+    submit(formName) {
       console.log("add");
-      // console.log(this.baseinfo.area[2]);
-      this.loading = true;
+      var _this=this;
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          // console.log(this.baseinfo.area[2]);
+          _this.loading = true;
 
-      console.log(this.dialog.storeData);
-      // this.baseinfo = this.dialog.storeData; //修改需要改变
-      // this.baseinfo.area[2] = this.dialog.area; //地区
-      this.$emit("submit", this.dialog.storeData);
-      this.loading = false;
+          console.log(_this.dialog.storeData);
+          // this.baseinfo = this.dialog.storeData; //修改需要改变
+          // this.baseinfo.area[2] = this.dialog.area; //地区
+          _this.$emit("submit", _this.dialog.storeData);
+          _this.loading = false;
+        } else {
+          this.$message.error("请完善必填项信息");
+          return false;
+        }
+      });
     },
     handleChange(value) {
       console.log(value || "");
+      debugger;
+      if (value.length === 3) {
+        var areaName = this.common.findAreaName(configs.options, value[2]);
+        this.areaName = areaName;
+      }
     }
   },
   components: {
@@ -186,8 +215,12 @@ export default {
 .el-cascader {
   width: 200px;
 }
-.detailArea .el-input{
-  width:500px;
+.storeDialog .el-form-item__error {
+  padding-top: 0px;
+  top: 91%;
+}
+.detailArea .el-input {
+  width: 500px;
 }
 .dialogArea .el-form-item {
   margin-bottom: 0px;
@@ -195,8 +228,4 @@ export default {
 .dialogArea .btn {
   padding-left: 160px;
 }
-
-/* .dialogArea .el-select,.el-cascader{
-      width:300px !important;
-  } */
 </style>

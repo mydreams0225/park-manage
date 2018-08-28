@@ -11,8 +11,8 @@
 					<span class="el-dropdown-link userinfo-inner"> 欢迎您，{{sysUserName}}<span class="el-icon-caret-bottom"></span></span>
           
 					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item>我的消息</el-dropdown-item>
-						<el-dropdown-item>设置</el-dropdown-item>
+						<!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
+						<el-dropdown-item divided >修改密码</el-dropdown-item>
 						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
@@ -20,6 +20,7 @@
 		</el-col>
 		<el-col :span=24 class="main">
 			<aside >
+        
 				<!--导航菜单-->
         <el-menu   
             :default-active="$route.path" class="el-menu-vertical-demo el-menus" 
@@ -66,9 +67,13 @@ import MenuTree from "@/page/MenuTree";
 //引入图标库
 import iconfont from "@/assets/icon/iconfont.css";
 import MenuUtils from "@/utils/MenuUtils";
+import showPwd from "@/components/editPwd";
 export default {
   data() {
     return {
+      dialog: {
+        dialogVisible: false
+      },
       userInfo: [],
       data: [],
       isCollapse: true,
@@ -96,6 +101,11 @@ export default {
   },
 
   methods: {
+    //展示密码框
+    showPwds() {
+      debugger;
+      this.dialog.dialogVisible = true;
+    },
     //点击一级菜单事件
     fristmenuchange(e) {
       console.log("e");
@@ -295,7 +305,8 @@ export default {
     }
   },
   components: {
-    MenuTree
+    MenuTree,
+    showPwd
   }
 };
 </script>

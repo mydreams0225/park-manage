@@ -218,6 +218,7 @@ export default {
           var list = res.data.shopList; //返回的list集合
           list.forEach(item => {
             let areas = [];
+            // 省市县
             areas.push(item.shoppro, item.shopcity, item.shoparea);
             var ssstoreAddress = "";
             if (areas) {
