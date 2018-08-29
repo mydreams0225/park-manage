@@ -30,8 +30,10 @@
                         <el-input v-model="info.sellersJC"></el-input>      
                     </el-form-item>
                     <el-form-item label="费率：" prop="rate">
-                        <el-input v-model="info.rate"></el-input>      
+                        <el-input v-model="info.rate"></el-input>    
+                        <span style="font-size:12px">单位(千分比)</span>  
                     </el-form-item>
+                  
                     <el-form-item label="所在地区：" prop="baseinfoarea">
                         <el-cascader class="areaCascader" 
                                       :options="area"
@@ -126,7 +128,7 @@
                     <el-form-item label="开户名称：">
                         <el-input v-model="info.accountName"></el-input>
                     </el-form-item>
-                    <el-form-item label="开户银行所在地区：" prop="openBankArea"> 
+                    <el-form-item label="开户银行所在地区：" prop="settleAccountarea"> 
                         <el-cascader class="areaCascader" 
                                       :options="openBankArea"
                                       expand-trigger="hover"
@@ -191,7 +193,7 @@
                 </el-form>
                 <div class="btn">
                 <el-button @click="firstclick('third')" type="success" size="medium">上一步</el-button>
-                 <el-button @click="submit('info')" type="success" size="medium" :loading="loading">提交</el-button>
+                 <el-button @click="submit('info')" type="success" size="medium" :loading="dialog.loading">提交</el-button>
                  </div>
             </el-tab-pane>
         </el-tabs>
@@ -214,6 +216,7 @@ export default {
         };
         reqSellersId(para)
           .then(res => {
+            // this.$refs.info.validateField("sellersId");
             if (res.status === 201) {
               callback(new Error("该商户id已存在"));
             } else {
@@ -221,6 +224,7 @@ export default {
             }
           })
           .catch(err => {
+            console.log(err);
             callback(new Error("连接超时"));
           });
       } else {
@@ -232,7 +236,7 @@ export default {
       if (value >= 2 && value <= 20) {
         callback();
       } else {
-        callback(new Error("费率必须在1000分之 2-20之间"));
+        callback(new Error("费率必须在 2-20之间"));
       }
     };
     return {
@@ -316,8 +320,8 @@ export default {
         operateTerm: [
           { required: true, message: "请选择经营期限", trigger: "change" }
         ],
-        openBankArea: [
-          // { required: true, message: "请选择开户行所在地区", trigger: "blur" }
+        settleAccountarea: [
+          { required: true, message: "请选择开户行所在地区", trigger: "blur" }
         ]
       }
     };
@@ -347,19 +351,44 @@ export default {
     firstclick(name) {
       this.activeName = name;
     },
+    // 提交
     submit(formName) {
-      debugger;
       var _this = this;
-      this.$refs[formName].validate(valid => {
+      _this.$refs[formName].validate(valid => {
         if (valid) {
           _this.loading = true;
           console.log(_this.info);
-          _this.$emit("submit", {
-            info: _this.info
-          });
-          _this.loading = _this.dialog.loading;
+          debugger
+          if (
+            !_this.info.sellersId ||
+            !_this.info.rate ||
+            !_this.info.contacts ||
+            !_this.info.mobilePhone ||
+            !_this.info.baseinfoarea ||
+            !_this.info.sellersName ||
+            !_this.info.operateTerm ||
+            !_this.info.settleAccountarea
+          ) {
+            this.$message.error("请完善必填项信息");
+            _this.loading = false;
+            return false;
+          } 
+           else {
+             if(_this.info.rate>=2 && _this.info.rate<=20){
+                  _this.$emit("submit", {
+                  info: _this.info
+                    });
+                  _this.loading = _this.dialog.loading;
+             }else{
+                this.$message.error("费率必须在2-20之间");
+                _this.loading = false;
+                return false;
+             }
+            
+          }
         } else {
           this.$message.error("请完善必填项信息");
+          _this.loading = false;
           return false;
         }
       });

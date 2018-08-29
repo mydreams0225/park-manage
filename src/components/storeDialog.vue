@@ -3,8 +3,7 @@
         <el-dialog
         :title="dialog.title"
         :visible.sync="dialog.dialogVisible"
-        width="800px"
-        >
+        width="800px">
                  <el-form label-position="right" label-width="160px" :model="dialog.storeData"  :rules="rules" ref="dialog.storeData">
                    <el-row :gutter="20">
                      <el-col :span="12">
@@ -54,9 +53,8 @@
                                       :options="area"
                                       expand-trigger="hover"
                                       v-model="dialog.storeData.area"
-                                      
                                       @change="handleChange">
-                                    </el-cascader>      
+                        </el-cascader>      
                     </el-form-item>
                      </el-col>
                    </el-row>
@@ -79,7 +77,7 @@
                     <baiMap id="allmap" :locationObj="locationObj" @getlocation="getlocation" :areaName="areaName"></baiMap>
                     </el-form>
                     <div class="btn margin-tops">
-                      <el-button @click="submit('dialog.storeData')" type="success" size="medium" :loading="loading">提交</el-button>
+                      <el-button @click="submit('dialog.storeData')" type="success" size="medium" :loading="dialog.loading">提交</el-button>
                     </div>     
         </el-dialog>
     </div>
@@ -119,7 +117,7 @@ export default {
         contacts: [
           { required: true, message: "请输入联系人", trigger: "blur" }
         ],
-        area: [{ required: true, message: "请选择所在地区", trigger: "change" }]
+        area: [{ required: true, message: "请选择所在地区", trigger: "blur" }]
       }
     };
   },
@@ -127,7 +125,7 @@ export default {
     dialog: {
       title: "添加门店111",
       dialogVisible: false,
-      loading: false,
+       loading: false,
       storeName: "1",
       area: ""
     }
@@ -169,18 +167,17 @@ export default {
     },
 
     submit(formName) {
+    
       console.log("add");
-      var _this=this;
+      var _this = this;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          // console.log(this.baseinfo.area[2]);
-          _this.loading = true;
-
+          // console.log(this.baseinfo.area[2]);      
           console.log(_this.dialog.storeData);
+          
           // this.baseinfo = this.dialog.storeData; //修改需要改变
           // this.baseinfo.area[2] = this.dialog.area; //地区
           _this.$emit("submit", _this.dialog.storeData);
-          _this.loading = false;
         } else {
           this.$message.error("请完善必填项信息");
           return false;
@@ -189,7 +186,6 @@ export default {
     },
     handleChange(value) {
       console.log(value || "");
-      debugger;
       if (value.length === 3) {
         var areaName = this.common.findAreaName(configs.options, value[2]);
         this.areaName = areaName;

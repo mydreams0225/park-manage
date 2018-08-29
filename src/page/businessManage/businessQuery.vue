@@ -156,7 +156,6 @@ export default {
       };
       this.loading = true;
       reqBusiness(para).then(res => {
-     
         this.businessData = [];
         if (res.status === 200) {
           let list = res.data.merchantList;
@@ -169,7 +168,7 @@ export default {
                 if (val === data[item]["value"]) {
                   sellersTradTypeName = data[item]["name"];
                 }
-              }       
+              }
               let baseinfoareas = [];
               let businessScopes = [];
               let settleAccountarea = [];
@@ -270,7 +269,7 @@ export default {
     submits(obj) {
       console.log("obj1");
       console.log(obj);
-
+      this.dialog.loading = true;
       let para = {
         // 基本信息
         merchantno: obj.info.sellersId, // 商户id
@@ -288,7 +287,7 @@ export default {
         businesslicencenum: obj.info.businessLicenceNo, // 营业执照注册号
 
         mccode: obj.info.sellersTradeType, // 商户行业类型
-        businessrange: obj.info.businessScope,//经营范围
+        businessrange: obj.info.businessScope, //经营范围
         businessstartdate: obj.info.operateTerm[0] || "",
         businessenddate: obj.info.operateTerm[1] || "", // 经营范围
         // businessTerm: obj.info.businessTerm, // 营业期限
@@ -317,6 +316,10 @@ export default {
               message: "添加成功",
               type: "success"
             });
+            this.dialog.dialogVisible = false;
+            this.dialog.loading = false;
+            this.queryBusiness(this.filters.names, this.filters.codes);
+            this.loading = false;
           }
         });
       } else {
@@ -327,13 +330,13 @@ export default {
               message: "修改成功",
               type: "success"
             });
+            this.dialog.dialogVisible = false;
+            this.dialog.loading = false;
+            this.queryBusiness(this.filters.names, this.filters.codes);
+            this.loading = false;
           }
         });
       }
-      this.dialog.dialogVisible = false;
-      this.dialog.loading = false;
-      this.queryBusiness(this.filters.names, this.filters.codes);
-      this.loading = false;
     }
   },
 

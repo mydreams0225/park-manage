@@ -27,13 +27,11 @@ export default Vue.extend({
       var point = new BMap.Point(116.331398, 39.897445);
       map.centerAndZoom(point, 11);
       if (this.areaName != "") {
-   
-        map.centerAndZoom(this.areaName || "北京" , 11); // 用城市名设置地图中心点
-        this.locationObj.longitude="";
-        this.locationObj.latitude="";
-        this.locationObj.detailArea="";
+        map.centerAndZoom(this.areaName || "北京", 11); // 用城市名设置地图中心点
+        this.locationObj.longitude = "";
+        this.locationObj.latitude = "";
+        this.locationObj.detailArea = "";
       }
-
     }
   },
   methods: {
@@ -41,7 +39,7 @@ export default Vue.extend({
       // 百度地图API功能
       var _this = this;
       var map = new BMap.Map("allmap");
-      map.centerAndZoom(this.areaName || "北京" , 11);
+      map.centerAndZoom(this.areaName || "北京", 11);
       map.enableScrollWheelZoom(true);
       var navigationControl = new BMap.NavigationControl({
         // 靠左上角位置
@@ -83,7 +81,7 @@ export default Vue.extend({
           function(rs) {
             var addComp = rs.addressComponents;
             _this.locationObj["detailArea"] = addComp.district + "";
-            addComp.street + "" + addComp.streetNumber+addComp.business;
+            addComp.street + "" + addComp.streetNumber + addComp.business;
             debugger;
             $.ajax({
               url:

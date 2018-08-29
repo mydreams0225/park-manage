@@ -132,56 +132,38 @@ export default {
               proId: "sys_004"
             },
 
-              url: `${configs.login}/jwt/login`,
+            url: `${configs.login}/jwt/login`,
             // url: "../../static/json/rolelist.json",
 
             // jsonpCallback: "showData",
             // dataType: "jsonp",
             success: function(data) {
-              debugger;
-              this.logining = false;
-              console.log(data);
-              var jwt = data.jwt || "";
-
-              window.localStorage.setItem("token", data.token);
-              window.localStorage.setItem("user", data.userInfo);
-              if(data.data.length===0){
-
-              }else{
-                 window.localStorage.setItem(
-                "menu",
-                JSON.stringify(data.data[0].children)
-              );
+               
+              if (data.status === 200) {
+                // this.logining = false;
+                console.log(data);
+                var jwt = data.jwt || "";
+                window.localStorage.setItem("token", data.token);
+                window.localStorage.setItem("user", data.userInfo);
+                window.localStorage.setItem("menu", JSON.stringify(data.data[0].children));
+                _this.$router.push({ path: "/Home" });
+                this.logining = false;
               }
-             
-              //  _this.login(data.menus);
-              //  _this.$router.addRoutes(routers);
-              _this.$router.push({ path: "/Home" });
-              // $.ajax({
-              //   type: "get",
-              //   data:{a:"111"},
-              //      url: "../../static/json/rolelist.json",
-              //   // url:`${configs.base}/index` ,
-              //   // dataType: "jsonp",
-              //   success: function(data) {
-              //     // console.log(data);
-              //     window.localStorage.setItem("user",JSON.stringify(data.userInfo));
-              //     window.localStorage.setItem("menu",JSON.stringify( data.menus));
-
-              //     //  _this.login(data.menus);
-              //     //  _this.$router.addRoutes(routers);
-              //      _this.$router.push({ path: "/Home" });
-              //   },
-              //   error: function(error) {
-              //     console.log(error);
-              //   }
-              // });
+              else if (data.status === 201) {
+                _this.$message({ message: "用户名或密码错误", type: "error" });
+                _this.logining = false;
+              }else{
+                _this.$message({ message: "没有权限", type: "error" });
+                _this.logining = false;
+              }
+              
             },
             error: function(error) {
               _this.$message({
                 message: "请求超时",
                 type: "error"
               });
+               _this.logining = false;
             }
           });
           ////jsonpend

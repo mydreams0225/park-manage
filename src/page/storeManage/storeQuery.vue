@@ -13,7 +13,6 @@
                     element-loading-spinner="el-icon-loading"
                     element-loading-background="rgba(0, 0, 0, 0.8)"
                     :data="storeData"
-                    height="250"
                     border
                     style="width: 100%">
                     <el-table-column
@@ -270,8 +269,8 @@ export default {
     },
     //编辑信息查看
     handleClick(row) {
-       debugger
       this.dialog;
+      this.dialog.loading=false;
       this.dialog.dialogVisible = true;
       this.dialog.title = "编辑门店信息";
       this.dialog.storeData = row;
@@ -303,9 +302,10 @@ export default {
     },
     //添加或修改
     submits(obj) {
-      var userinfo=window.localStorage.getItem("user");
+      this.dialog.loading=true;
+      var username=window.localStorage.getItem("username");
       let para = {
-        marchantno:userinfo.username,
+        merchantno:username,
         shopname: obj.storeName, // 店铺名称·
         shopaddress: obj.storeDetailAddress, // 详细地址
         contacts: obj.contacts, // 联系人
@@ -329,6 +329,7 @@ export default {
                 message: "添加成功",
                 type: "success"
               });
+              this.dialog.loading=false;
               this.dialog.dialogVisible = false;
               this.queryStore(this.filters.names, this.filters.codes);
             }
@@ -346,7 +347,9 @@ export default {
               message: "修改成功",
               type: "success"
             });
+              this.dialog.loading=false;
           }
+        
           this.dialog.dialogVisible = false;
           this.queryStore(this.filters.names, this.filters.codes);
         });

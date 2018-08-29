@@ -87,7 +87,7 @@ export default {
         document.documentElement.clientWidth ||
         document.body.clientWidth,
       collapsed: false,
-      sysUserName: "",
+      sysUserName: window.localStorage.getItem("username")||"测试",
       sysUserAvatar: "",
       form: {
         name: "zlz",
@@ -286,8 +286,8 @@ export default {
           window.localStorage.setItem("user", data.data);
           console.log("用户信息");
           console.log(data);
-          _this.sysUserName = data.data.username || "测试";
-          this.sysUserAvatar = user.avatar || "";
+           _this.sysUserName = data.data.username || "测试";
+          // this.sysUserAvatar = user.avatar || "";
         }
 
         // _this.sysUserName = data.userInfo.userName;
@@ -302,7 +302,7 @@ export default {
     console.log(user);
     console.log("fffff");
     if (user) {
-      this.sysUserName = user.username || "测试1";
+      this.sysUserName = window.localStorage.getItem("username") || "测试333";
       this.sysUserAvatar = user.avatar || "";
     }
   },
