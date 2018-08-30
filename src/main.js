@@ -50,38 +50,41 @@ if (data) {
   window.localStorage.removeItem('isLoadNodes');
 }
 router.beforeEach((to, from, next) => {
-  debugger
-  $.ajax({
-    type: "post",
-    data: { token: window.localStorage.getItem("token") },
-    //  url: "../../static/json/rolelist.json",
-    url: `${configs.login}/jwt/checkToken`,
-    // url:`${configs.base}/index` ,
-    // dataType: "jsonp",
-    success: function(data) {
-      debugger
-      if (data.status === 201) {
-        window.localStorage.removeItem("user");
-        window.localStorage.removeItem("userRole");
-        window.localStorage.removeItem("userInfo");
-        window.localStorage.removeItem("token");
-        window.localStorage.removeItem("isLoadNodes");
-        // _this.$router.push({ path: "/login" });
-      } else {
-        window.localStorage.setItem("token", data.token);
-        window.localStorage.setItem("user", data.data);
-        console.log("用户信息");
-        console.log(data);
-        window.localStorage.setItem("username",data.data.username)
-        //  _this.sysUserName = data.data.username || "测试";
-        // this.sysUserAvatar = user.avatar || "";
-      }}});
-  if (to.path == '/login') {
-    console.log(to.path)
-    window.localStorage.removeItem('token');
-    window.sessionStorage.removeItem('isLoadNodes');
-  }
-  var token= window.localStorage.getItem("token");
+  var token=window.localStorage.getItem("token");
+  if(!to.path=='/login'){
+    $.ajax({
+      type: "post",
+      data: { token: window.localStorage.getItem("token") },
+      //  url: "../../static/json/rolelist.json",
+      url: `${configs.login}/jwt/checkToken`,
+      // url:`${configs.base}/index` ,
+      // dataType: "jsonp",
+      success: function(data) {
+        if (data.status === 201) {
+          window.localStorage.removeItem("user");
+          window.localStorage.removeItem("userRole");
+          window.localStorage.removeItem("userInfo");
+          window.localStorage.removeItem("token");
+          window.localStorage.removeItem("isLoadNodes");
+          token="";
+          // _this.$router.push({ path: "/login" });
+        } else {
+          window.localStorage.setItem("token", data.token);
+          window.localStorage.setItem("user", data.data);
+          console.log("用户信息");
+          console.log(data);
+          window.localStorage.setItem("username",data.data.username)
+          token=window.localStorage.getItem("token");
+          //  _this.sysUserName = data.data.username || "测试";
+          // this.sysUserAvatar = user.avatar || "";
+        }}});
+  } 
+  // if (to.path == '/login') {
+  //   console.log(to.path)
+  //   window.localStorage.removeItem('token');
+  //   window.sessionStorage.removeItem('isLoadNodes');
+  // }
+
   if (!token && to.path != '/login') {
     next({ path: '/login' });
   } else {

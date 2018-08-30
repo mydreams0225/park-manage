@@ -22,7 +22,7 @@
                     <el-table-column
                     prop="storeId"
                     label="门店编号"
-                    width="180">
+                    width="400">
                     </el-table-column>
                     <el-table-column
                     prop="storeName"
@@ -31,7 +31,8 @@
                     </el-table-column>
                     <el-table-column
                     prop="storeAddress"
-                    label="门店地址">
+                    label="门店地址"
+                    width="200">
                     </el-table-column>
                     <el-table-column
                     prop="storeDetailAddress"
@@ -182,7 +183,7 @@ export default {
       }
     },
     // ready: function() {
-     
+
     //   // 百度地图API功能
     //   let map = new BMap.Map("allmap"); // 创建Map实例
     //   map.centerAndZoom(new BMap.Point(116.404, 39.915), 11); // 初始化地图,设置中心点坐标和地图级别
@@ -194,7 +195,7 @@ export default {
     //   );
     //   map.setCurrentCity("北京"); // 设置地图显示的城市 此项是必须设置的
     //   map.enableScrollWheelZoom(true);
-      
+
     // },
     //查询门店
     queryStore(name, code) {
@@ -209,8 +210,7 @@ export default {
         token: window.localStorage.getItem("token")
       };
       reqStore(para).then(res => {
-       
-        var _this=this;
+        var _this = this;
         console.log(res);
         if (res.status === 200) {
           this.storeData = [];
@@ -221,9 +221,9 @@ export default {
             areas.push(item.shoppro, item.shopcity, item.shoparea);
             var ssstoreAddress = "";
             if (areas) {
-              let pro = _this.findAreaName( configs.options,areas[0]);
-              let city = _this.findAreaName( configs.options,areas[1]);
-              let qu = _this.findAreaName( configs.options,areas[2]);
+              let pro = _this.findAreaName(configs.options, areas[0]);
+              let city = _this.findAreaName(configs.options, areas[1]);
+              let qu = _this.findAreaName(configs.options, areas[2]);
               ssstoreAddress = pro + "" + city + qu;
             }
             var temp = {
@@ -246,6 +246,16 @@ export default {
             this.storeData.push(temp);
           });
           this.totals.totalNum = res.data.totalNum; //总条数
+        } else if (res.status === 202) {
+          this.$message({
+                message: "请求超时，请刷新页面重新登录",
+                type: "error"
+              });
+          window.localStorage.removeItem("user");
+          window.localStorage.removeItem("userRole");
+          window.localStorage.removeItem("userInfo");
+          window.localStorage.removeItem("token");
+          window.localStorage.removeItem("isLoadNodes");
         } else {
           console.log("error");
         }
@@ -259,7 +269,6 @@ export default {
       this.dialog.title = "添加门店";
       //   this.dialog.sellersName = "";
       this.dialog.storeData = {};
-      
     },
     //改变当前页数
     handleCurrentChanges(currentPage, pageSize) {
@@ -270,7 +279,7 @@ export default {
     //编辑信息查看
     handleClick(row) {
       this.dialog;
-      this.dialog.loading=false;
+      this.dialog.loading = false;
       this.dialog.dialogVisible = true;
       this.dialog.title = "编辑门店信息";
       this.dialog.storeData = row;
@@ -294,6 +303,16 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
+            } else if (res.status === 202) {
+              this.$message({
+                message: "请求超时，请刷新页面重新登录",
+                type: "error"
+              });
+                window.localStorage.removeItem("user");
+                window.localStorage.removeItem("userRole");
+                window.localStorage.removeItem("userInfo");
+                window.localStorage.removeItem("token");
+                window.localStorage.removeItem("isLoadNodes");
             }
             this.queryStore(this.filters.names, this.filters.codes);
           });
@@ -302,10 +321,10 @@ export default {
     },
     //添加或修改
     submits(obj) {
-      this.dialog.loading=true;
-      var username=window.localStorage.getItem("username");
+      this.dialog.loading = true;
+      var username = window.localStorage.getItem("username");
       let para = {
-        merchantno:username,
+        merchantno: username,
         shopname: obj.storeName, // 店铺名称·
         shopaddress: obj.storeDetailAddress, // 详细地址
         contacts: obj.contacts, // 联系人
@@ -329,15 +348,25 @@ export default {
                 message: "添加成功",
                 type: "success"
               });
-              this.dialog.loading=false;
+              this.dialog.loading = false;
               this.dialog.dialogVisible = false;
               this.queryStore(this.filters.names, this.filters.codes);
+            } else if (res.status === 202) {
+              this.$message({
+                message: "请求超时，请刷新页面重新登录",
+                type: "error"
+              });
+                window.localStorage.removeItem("user");
+                window.localStorage.removeItem("userRole");
+                window.localStorage.removeItem("userInfo");
+                window.localStorage.removeItem("token");
+                window.localStorage.removeItem("isLoadNodes");
             }
           })
           .catch(err => {
             console.log(err);
           });
-        
+
         // });
       } else {
         //修改请求
@@ -347,9 +376,19 @@ export default {
               message: "修改成功",
               type: "success"
             });
-              this.dialog.loading=false;
+            this.dialog.loading = false;
+          } else if (res.status === 202) {
+            this.$message({
+                message: "请求超时，请刷新页面重新登录",
+                type: "error"
+              });
+              window.localStorage.removeItem("user");
+              window.localStorage.removeItem("userRole");
+              window.localStorage.removeItem("userInfo");
+              window.localStorage.removeItem("token");
+              window.localStorage.removeItem("isLoadNodes");
           }
-        
+
           this.dialog.dialogVisible = false;
           this.queryStore(this.filters.names, this.filters.codes);
         });

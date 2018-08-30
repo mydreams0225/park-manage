@@ -264,7 +264,7 @@ export default {
   },
   mounted() {
     var _this = this;
-
+    debugger
     //认证
     $.ajax({
       type: "post",
@@ -296,6 +296,9 @@ export default {
         console.log(error);
       }
     });
+
+
+
     var a = window.localStorage.getItem("datas");
     $(".tenet-lnav li:first-child  a:first-child").addClass("activeLi");
     var user = window.localStorage.getItem("user");

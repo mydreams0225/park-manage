@@ -1,5 +1,5 @@
 <template>
-    <div class="dialogArea">
+    <div class="dialogBusiness">
         <el-dialog
         :title="dialog.title"
         :visible.sync="dialog.dialogVisible"
@@ -520,15 +520,15 @@ export default {
 };
 </script>
 <style >
-.dialogArea .el-input,
+.dialogBusiness .el-input,
 .el-select,
 .el-cascader {
   width: 350px;
 }
-.dialogArea .el-form-item {
+.dialogBusiness .el-form-item {
   margin-bottom: 0px;
 }
-.dialogArea .btn {
+.dialogBusiness .btn {
   padding-left: 160px;
 }
 .avatar-uploader .el-upload {

@@ -31,7 +31,7 @@
                     width="180">
                     </el-table-column>
                     <el-table-column
-                    prop="sellersTradeType"
+                    prop="sellersTradeTypeName"
                     label="商户行业类型">
                     </el-table-column>
                     <el-table-column
@@ -156,22 +156,24 @@ export default {
       };
       this.loading = true;
       reqBusiness(para).then(res => {
-        this.businessData = [];
         if (res.status === 200) {
-          let list = res.data.merchantList;
+          this.businessData = [];
+          var list = res.data.merchantList;
+          console.log(list);
           if (list) {
             list.forEach(item => {
-              var val = item.sellersTradType;
-              var sellersTradTypes = business.mccode; // 行业id
+              var sellersTradTypes = item.mccode; // 行业id
+              var tradeTypeList = businessObj.sellersTradeType;
+
               var sellersTradTypeName = "";
-              for (var item in sellersTradTypes) {
-                if (val === data[item]["value"]) {
-                  sellersTradTypeName = data[item]["name"];
+              for (var items in businessObj.sellersTradeType) {
+                if (sellersTradTypes == tradeTypeList[items]["value"]) {
+                  sellersTradTypeName = tradeTypeList[items]["label"];
                 }
               }
-              let baseinfoareas = [];
-              let businessScopes = [];
-              let settleAccountarea = [];
+              var baseinfoareas = [];
+              var businessScopes = [];
+              var settleAccountarea = [];
               baseinfoareas.push(
                 item.merchantpro,
                 item.merchantcity,
@@ -179,7 +181,8 @@ export default {
               );
               businessScopes.push(item.businessstartdate, item.businessenddate);
               settleAccountarea.push(item.regbankpro, item.regbankcity);
-              let temp = {
+              var temp = {
+                sellersTradeTypeName: sellersTradTypeName,
                 createTime: item.createTime,
                 status: item.status,
                 sellersId: item.merchantno, // 商户id
@@ -195,7 +198,7 @@ export default {
                 sellersName: item.merchantinfo, // 商户名称
                 registAddress: item.merchantregaddress, // 注册地址
                 businessLicenceNo: item.businesslicencenum, // 营业执照注册号
-                sellersTradeType: item.mccode, // 商户行业类型
+                sellersTradeType: item.mccode, // 商户行业类型id
                 businessScope: item.businessrange, // 经营范围
                 // businessTerm: businessScopes, // 营业期限
                 tycode: item.organnum, // 组织机构代码/统一社会信用代码,
@@ -219,6 +222,16 @@ export default {
             });
           }
           this.totals.totalNum = res.data.totalNum; //总条数
+        } else if (res.status === 202) {
+          this.$message({
+                message: "请求超时，请刷新页面重新登录",
+                type: "error"
+              });
+              window.localStorage.removeItem("user");
+              window.localStorage.removeItem("userRole");
+              window.localStorage.removeItem("userInfo");
+              window.localStorage.removeItem("token");
+              window.localStorage.removeItem("isLoadNodes");
         } else {
         }
         this.loading = false;
@@ -246,8 +259,19 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
+              this.queryBusiness(this.filters.names, this.filters.codes);
+            } else if (res.status === 202) {
+              this.$message({
+                message: "请求超时，请刷新页面重新登录",
+                type: "error"
+              });
+              window.localStorage.removeItem("user");
+              window.localStorage.removeItem("userRole");
+              window.localStorage.removeItem("userInfo");
+              window.localStorage.removeItem("token");
+              window.localStorage.removeItem("isLoadNodes");
             }
-            this.queryBusiness(this.filters.names, this.filters.codes);
+            
           });
         })
         .catch(() => {});
@@ -320,7 +344,17 @@ export default {
             this.dialog.loading = false;
             this.queryBusiness(this.filters.names, this.filters.codes);
             this.loading = false;
-          }
+          }else if (res.status === 202) {
+            this.$message({
+                message: "请求超时，请刷新页面重新登录",
+                type: "error"
+              });
+              window.localStorage.removeItem("user");
+              window.localStorage.removeItem("userRole");
+              window.localStorage.removeItem("userInfo");
+              window.localStorage.removeItem("token");
+              window.localStorage.removeItem("isLoadNodes");
+            }
         });
       } else {
         //修改请求
@@ -334,6 +368,16 @@ export default {
             this.dialog.loading = false;
             this.queryBusiness(this.filters.names, this.filters.codes);
             this.loading = false;
+          }else if(res.status==202){
+            this.$message({
+                message: "请求超时，请刷新页面重新登录",
+                type: "error"
+              });
+              window.localStorage.removeItem("user");
+              window.localStorage.removeItem("userRole");
+              window.localStorage.removeItem("userInfo");
+              window.localStorage.removeItem("token");
+              window.localStorage.removeItem("isLoadNodes");
           }
         });
       }

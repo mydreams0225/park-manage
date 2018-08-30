@@ -115,7 +115,7 @@ export default {
         pageSize: this.totals.pageSize,
         token: window.localStorage.getItem("token")
       };
-      this.loading=true;
+      this.loading = true;
       reqFlow(para).then(res => {
         if (res.status === 200) {
           this.flowData = [];
@@ -141,6 +141,17 @@ export default {
             });
           }
           this.totals.totalNum = res.data.totalNum; //总条数
+        }
+        if (res.status === 202) {
+          window.localStorage.removeItem("user");
+          window.localStorage.removeItem("userRole");
+          window.localStorage.removeItem("userInfo");
+          window.localStorage.removeItem("token");
+          window.localStorage.removeItem("isLoadNodes");
+          this.$message({
+                message: "请求超时，请刷新页面重新登录",
+                type: "error"
+              });
         }
         this.loading = false;
       });

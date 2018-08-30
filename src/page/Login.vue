@@ -125,7 +125,7 @@ export default {
           loginParams.append("password", this.ruleForm2.checkPass);
           //jsonp
           $.ajax({
-            type: "get",
+            type: "post",
             data: {
               username: _this.ruleForm2.account,
               password: _this.ruleForm2.checkPass,
