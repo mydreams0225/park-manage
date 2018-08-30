@@ -264,7 +264,6 @@ export default {
   },
   mounted() {
     var _this = this;
-    debugger
     //认证
     $.ajax({
       type: "post",
@@ -287,6 +286,7 @@ export default {
           console.log("用户信息");
           console.log(data);
            _this.sysUserName = data.data.username || "测试";
+           window.localStorage.setItem("username",data.data.username)
           // this.sysUserAvatar = user.avatar || "";
         }
 

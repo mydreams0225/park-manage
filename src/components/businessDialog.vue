@@ -3,6 +3,7 @@
         <el-dialog
         :title="dialog.title"
         :visible.sync="dialog.dialogVisible"
+        :close-on-click-modal="false"
         width="800px"
         >
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick" >
@@ -95,14 +96,14 @@
                             </el-date-picker>
                         </el-form-item> -->
                         <el-form-item label="证件持有人类型：">
-                        <el-select v-model="info.certifyHolderType" >
-                        <el-option
-                            v-for="item in certifyHolderType"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                        </el-select>
+                            <el-select v-model="info.certifyHolderType" >
+                            <el-option
+                                v-for="item in certifyHolderType"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                            </el-select>
                         </el-form-item>
                         <el-form-item label="证件持有人姓名：">
                             <el-input v-model="info.certifyHolderName"></el-input>
@@ -209,6 +210,7 @@ export default {
   data() {
     // 验证商户编号
     var validateSellersId = (rule, value, callback) => {
+      var _this=this;
       if (value) {
         let para = {
           token: window.localStorage.getItem("token"),
@@ -218,14 +220,19 @@ export default {
           .then(res => {
             // this.$refs.info.validateField("sellersId");
             if (res.status === 201) {
+              _this.loading = true;
               callback(new Error("该商户id已存在"));
+              
             } else {
+               _this.loading = false;
               callback();
             }
           })
           .catch(err => {
             console.log(err);
+            _this.loading = true;
             callback(new Error("连接超时"));
+
           });
       } else {
         callback(new Error("请输入商户id"));
@@ -337,7 +344,8 @@ export default {
       sellersName: "",
       sellersTradeType: "",
       sellersAPPID: "",
-      contacts: ""
+      contacts: "",
+      certifyHolderType:""
     }
   },
   mounted() {

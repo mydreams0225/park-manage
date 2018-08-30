@@ -3,7 +3,7 @@
     <section>
          <div class="parent">
              <div class="margin-tops clearF" >
-                 <query :area="areas" @querys="queryflow"></query>
+                 <query  :area="areas" @querys="queryflow"></query>
              </div>
               <div class="margin-tops">
                <el-table
@@ -88,7 +88,9 @@ export default {
       flowData: [],
       areas: {
         name: "内部订单号", //内部订单号
-        code: "商品编号" //商品编号
+        code: "商户编号", //商户编号
+        id:this.common.has("transaction_merchantno_search"),
+        label:this.common.has("transaction_orderno_search"),
       },
       filters: {
         orderNo: "",
@@ -106,11 +108,12 @@ export default {
   },
   methods: {
     queryflow(name, code) {
+      var _this=this;
       this.filters.orderNo = name;
       this.filters.codes = code;
       let para = {
         tmordernum: this.filters.orderNo || "",
-        merchantno: this.filters.codes || "",
+        merchantno: this.filters.codes || window.localStorage.getItem("username"),
         currentPage: this.totals.currentPage,
         pageSize: this.totals.pageSize,
         token: window.localStorage.getItem("token")
@@ -152,6 +155,7 @@ export default {
                 message: "请求超时，请刷新页面重新登录",
                 type: "error"
               });
+          // _this.common.tokenCheck();
         }
         this.loading = false;
       });

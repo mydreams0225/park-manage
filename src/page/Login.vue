@@ -132,19 +132,20 @@ export default {
               proId: "sys_004"
             },
 
-            url: `${configs.login}/jwt/login`,
-            // url: "../../static/json/rolelist.json",
+             url: `${configs.login}/jwt/login`,
+            //  url: "../../static/json/rolelist.json",
 
             // jsonpCallback: "showData",
             // dataType: "jsonp",
             success: function(data) {
-               
+               debugger
               if (data.status === 200) {
                 // this.logining = false;
                 console.log(data);
                 var jwt = data.jwt || "";
                 window.localStorage.setItem("token", data.token);
                 window.localStorage.setItem("user", data.userInfo);
+                window.localStorage.setItem("buttonPermission",data.buttonperms)
                 window.localStorage.setItem("menu", JSON.stringify(data.data[0].children));
                 _this.$router.push({ path: "/Home" });
                 this.logining = false;

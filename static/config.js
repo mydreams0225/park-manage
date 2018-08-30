@@ -9,7 +9,7 @@
 
 
 // const business={
-    
+
 //     isOpenLock:[{value:1,label:"开启"},{value:2,label:"不开启"}],
 //     bussinessStatus:[{value:"1",label:"启用"},{value:"2",label:"不启用"}],
 //     useState:[{value:"1",label:"未使用"},{value:"2",label:"使用"}],
@@ -18,9 +18,9 @@
 // };
 const configs = {
     // sy   base: "http://192.168.0.105:8081/park",
-     //pf
-     login:"http://192.168.0.110:8088",
-     base: "http://192.168.0.110:8083",
+    //pf
+    login: "http://192.168.0.111:8088",
+    base: "http://192.168.0.111:8083",
     //地区
     options: [
         {
@@ -14895,20 +14895,20 @@ const configs = {
             label: "手动放行"
         },
     ],
-    plateName:[{ plate_name: "车位一" }, { plate_name: "车位二" }],
+    plateName: [{ plate_name: "车位一" }, { plate_name: "车位二" }],
     garage: [
         {
-          value: "2",
-          label: "车库2"
+            value: "2",
+            label: "车库2"
         },
         {
-          value: "1",
-          label: "所属车库1"
+            value: "1",
+            label: "所属车库1"
         }
-      ],
-      //车辆分组
-      carGroup:[{value:"1",label:"分组1"}],
-      plateType:[{value:"车位1",label:"车位1"}],
+    ],
+    //车辆分组
+    carGroup: [{ value: "1", label: "分组1" }],
+    plateType: [{ value: "车位1", label: "车位1" }],
     //停车场列表展示区
     parkList: [{
         date: '2016-05-02',
@@ -14922,31 +14922,35 @@ const configs = {
 
     }],
     //缴费规则分组
-    payRuleGroup:[{value:"缴费规则1",value:"缴费规则2"}],
+    payRuleGroup: [{ value: "缴费规则1", value: "缴费规则2" }],
     //在场状态
-    presenceStatus:[{value:"在场",label:"在场"}],
+    presenceStatus: [{ value: "在场", label: "在场" }],
     //是否过期
-    isOverdue:[{value:"是",label:"是"}],
+    isOverdue: [{ value: "是", label: "是" }],
     //业主信息
-    homeOwner:[{ carOwner_name: "业主1" }, { carOwner_name: "业主2" }]
+    homeOwner: [{ carOwner_name: "业主1" }, { carOwner_name: "业主2" }]
 
 }
-const businessObj={
-    sellersTradeType: [{ value: "1", label: "行业一" },{ value: "2", label: "行业二" }],
-    certifyHolderType:[{vlaue:"1",label:"经办人"},{value:"2",label:"法人"}],
-    certifyType:[{value:"1",label:"身份证"},{value:"2",label:"港澳通行证"}],
+const businessObj = {
+    sellersTradeType: [{ value: "1", label: "行业一" }, { value: "2", label: "行业二" }],
+    certifyHolderType: [{ value: "1", label: "经办人" }, { value: "2", label: "法人" }],
+    certifyType: [{ value: "1", label: "身份证" }, { value: "2", label: "港澳通行证" }],
     openBankArea: [
         {
             "value": "110000",
             "label": "北京市",
-            "children":[{"value": "110100",
-            "label": "市辖区",}]
+            "children": [{
+                "value": "110100",
+                "label": "市辖区",
+            }]
         },
         {
             "value": "120000",
             "label": "天津市",
-            "children":[{ "value": "120100",
-            "label": "市辖区",}]
+            "children": [{
+                "value": "120100",
+                "label": "市辖区",
+            }]
         },
         {
             "value": "130000",
@@ -14955,11 +14959,11 @@ const businessObj={
                 {
                     "value": "130100",
                     "label": "石家庄市",
-               },
+                },
                 {
                     "value": "130200",
                     "label": "唐山市",
-               },
+                },
                 {
                     "value": "130300",
                     "label": "秦皇岛市",
@@ -14968,31 +14972,31 @@ const businessObj={
                     "value": "130400",
                     "label": "邯郸市"
                 },
-                    
+
                 {
                     "value": "130500",
                     "label": "邢台市",
-                     },
+                },
                 {
                     "value": "130600",
                     "label": "保定市",
-             },
+                },
                 {
                     "value": "130700",
                     "label": "张家口市",
-               },
+                },
                 {
                     "value": "130800",
                     "label": "承德市",
-          },
+                },
                 {
                     "value": "130900",
                     "label": "沧州市",
-               },
+                },
                 {
                     "value": "131000",
                     "label": "廊坊市",
-               },
+                },
                 {
                     "value": "131100",
                     "label": "衡水市",
@@ -15000,7 +15004,7 @@ const businessObj={
                 {
                     "value": "139000",
                     "label": "省直辖县级行政区划",
-                 }
+                }
             ]
         },
         {
@@ -15014,7 +15018,7 @@ const businessObj={
                 {
                     "value": "140200",
                     "label": "大同市",
-                 },
+                },
                 {
                     "value": "140300",
                     "label": "阳泉市",
@@ -15046,11 +15050,11 @@ const businessObj={
                 {
                     "value": "141000",
                     "label": "临汾市",
-                 },
+                },
                 {
                     "value": "141100",
                     "label": "吕梁市",
-                 }
+                }
             ]
         },
         {
@@ -15060,7 +15064,7 @@ const businessObj={
                 {
                     "value": "150100",
                     "label": "呼和浩特市",
-                    },
+                },
                 {
                     "value": "150200",
                     "label": "包头市",
@@ -15072,7 +15076,7 @@ const businessObj={
                 {
                     "value": "150400",
                     "label": "赤峰市",
-                 },
+                },
                 {
                     "value": "150500",
                     "label": "通辽市",
@@ -15080,7 +15084,7 @@ const businessObj={
                 {
                     "value": "150600",
                     "label": "鄂尔多斯市",
-                 },
+                },
                 {
                     "value": "150700",
                     "label": "呼伦贝尔市",
@@ -15088,23 +15092,23 @@ const businessObj={
                 {
                     "value": "150800",
                     "label": "巴彦淖尔市",
-                  },
+                },
                 {
                     "value": "150900",
                     "label": "乌兰察布市",
-                 },
+                },
                 {
                     "value": "152200",
                     "label": "兴安盟",
-                 },
+                },
                 {
                     "value": "152500",
                     "label": "锡林郭勒盟",
-                 },
+                },
                 {
                     "value": "152900",
                     "label": "阿拉善盟",
-                  }
+                }
             ]
         },
         {
@@ -15142,7 +15146,7 @@ const businessObj={
                 {
                     "value": "210800",
                     "label": "营口市",
-                 },
+                },
                 {
                     "value": "210900",
                     "label": "阜新市",
@@ -15154,11 +15158,11 @@ const businessObj={
                 {
                     "value": "211100",
                     "label": "盘锦市",
-                 },
+                },
                 {
                     "value": "211200",
                     "label": "铁岭市",
-                 },
+                },
                 {
                     "value": "211300",
                     "label": "朝阳市",
@@ -15184,7 +15188,7 @@ const businessObj={
                 {
                     "value": "220300",
                     "label": "四平市",
-                 },
+                },
                 {
                     "value": "220400",
                     "label": "辽源市",
@@ -15192,7 +15196,7 @@ const businessObj={
                 {
                     "value": "220500",
                     "label": "通化市",
-                 },
+                },
                 {
                     "value": "220600",
                     "label": "白山市",
@@ -15204,7 +15208,7 @@ const businessObj={
                 {
                     "value": "220800",
                     "label": "白城市",
-                  },
+                },
                 {
                     "value": "222400",
                     "label": "延边朝鲜族自治州",
@@ -15230,7 +15234,7 @@ const businessObj={
                 {
                     "value": "230400",
                     "label": "鹤岗市",
-                 },
+                },
                 {
                     "value": "230500",
                     "label": "双鸭山市",
@@ -15266,7 +15270,7 @@ const businessObj={
                 {
                     "value": "232700",
                     "label": "大兴安岭地区",
-                 }
+                }
             ]
         },
         {
@@ -15276,7 +15280,7 @@ const businessObj={
                 {
                     "value": "310100",
                     "label": "市辖区",
-                 }
+                }
             ]
         },
         {
@@ -15286,7 +15290,7 @@ const businessObj={
                 {
                     "value": "320100",
                     "label": "南京市",
-                 },
+                },
                 {
                     "value": "320200",
                     "label": "无锡市",
@@ -15294,7 +15298,7 @@ const businessObj={
                 {
                     "value": "320300",
                     "label": "徐州市",
-                 },
+                },
                 {
                     "value": "320400",
                     "label": "常州市",
@@ -15334,7 +15338,7 @@ const businessObj={
                 {
                     "value": "321300",
                     "label": "宿迁市",
-                 }
+                }
             ]
         },
         {
@@ -15352,15 +15356,15 @@ const businessObj={
                 {
                     "value": "330300",
                     "label": "温州市",
-                 },
+                },
                 {
                     "value": "330400",
                     "label": "嘉兴市",
-             },
+                },
                 {
                     "value": "330500",
                     "label": "湖州市",
-                 },
+                },
                 {
                     "value": "330600",
                     "label": "绍兴市",
@@ -15372,7 +15376,7 @@ const businessObj={
                 {
                     "value": "330800",
                     "label": "衢州市",
-                 },
+                },
                 {
                     "value": "330900",
                     "label": "舟山市",
@@ -15380,7 +15384,7 @@ const businessObj={
                 {
                     "value": "331000",
                     "label": "台州市",
-                  },
+                },
                 {
                     "value": "331100",
                     "label": "丽水市",
@@ -15394,7 +15398,7 @@ const businessObj={
                 {
                     "value": "340100",
                     "label": "合肥市",
-                    },
+                },
                 {
                     "value": "340200",
                     "label": "芜湖市",
@@ -15410,7 +15414,7 @@ const businessObj={
                 {
                     "value": "340500",
                     "label": "马鞍山市",
-                 },
+                },
                 {
                     "value": "340600",
                     "label": "淮北市",
@@ -15422,7 +15426,7 @@ const businessObj={
                 {
                     "value": "340800",
                     "label": "安庆市",
-                 },
+                },
                 {
                     "value": "341000",
                     "label": "黄山市",
@@ -15438,11 +15442,11 @@ const businessObj={
                 {
                     "value": "341300",
                     "label": "宿州市",
-                 },
+                },
                 {
                     "value": "341500",
                     "label": "六安市",
-                 },
+                },
                 {
                     "value": "341600",
                     "label": "亳州市",
@@ -15480,11 +15484,11 @@ const businessObj={
                 {
                     "value": "350500",
                     "label": "泉州市",
-                 },
+                },
                 {
                     "value": "350600",
                     "label": "漳州市",
-                 },
+                },
                 {
                     "value": "350700",
                     "label": "南平市",
@@ -15522,7 +15526,7 @@ const businessObj={
                 {
                     "value": "360500",
                     "label": "新余市",
-               },
+                },
                 {
                     "value": "360600",
                     "label": "鹰潭市",
@@ -15534,11 +15538,11 @@ const businessObj={
                 {
                     "value": "360800",
                     "label": "吉安市",
-                 },
+                },
                 {
                     "value": "360900",
                     "label": "宜春市",
-                 },
+                },
                 {
                     "value": "361000",
                     "label": "抚州市",
@@ -15546,7 +15550,7 @@ const businessObj={
                 {
                     "value": "361100",
                     "label": "上饶市",
-                 }
+                }
             ]
         },
         {
@@ -15560,7 +15564,7 @@ const businessObj={
                 {
                     "value": "370200",
                     "label": "青岛市",
-                 },
+                },
                 {
                     "value": "370300",
                     "label": "淄博市",
@@ -15612,7 +15616,7 @@ const businessObj={
                 {
                     "value": "371500",
                     "label": "聊城市",
-                 },
+                },
                 {
                     "value": "371600",
                     "label": "滨州市",
@@ -15650,7 +15654,7 @@ const businessObj={
                 {
                     "value": "410600",
                     "label": "鹤壁市",
-                 },
+                },
                 {
                     "value": "410700",
                     "label": "新乡市",
@@ -15662,7 +15666,7 @@ const businessObj={
                 {
                     "value": "410900",
                     "label": "濮阳市",
-                 },
+                },
                 {
                     "value": "411000",
                     "label": "许昌市",
@@ -15674,7 +15678,7 @@ const businessObj={
                 {
                     "value": "411200",
                     "label": "三门峡市",
-                  },
+                },
                 {
                     "value": "411300",
                     "label": "南阳市",
@@ -15682,15 +15686,15 @@ const businessObj={
                 {
                     "value": "411400",
                     "label": "商丘市",
-                  },
+                },
                 {
                     "value": "411500",
                     "label": "信阳市",
-                 },
+                },
                 {
                     "value": "411600",
                     "label": "周口市",
-                 },
+                },
                 {
                     "value": "411700",
                     "label": "驻马店市",
@@ -15698,7 +15702,7 @@ const businessObj={
                 {
                     "value": "419000",
                     "label": "省直辖县级行政区划",
-                 }
+                }
             ]
         },
         {
@@ -15736,7 +15740,7 @@ const businessObj={
                 {
                     "value": "420900",
                     "label": "孝感市",
-                  },
+                },
                 {
                     "value": "421000",
                     "label": "荆州市",
@@ -15748,7 +15752,7 @@ const businessObj={
                 {
                     "value": "421200",
                     "label": "咸宁市",
-                 },
+                },
                 {
                     "value": "421300",
                     "label": "随州市",
@@ -15770,7 +15774,7 @@ const businessObj={
                 {
                     "value": "430100",
                     "label": "长沙市",
-                 },
+                },
                 {
                     "value": "430200",
                     "label": "株洲市",
@@ -15778,7 +15782,7 @@ const businessObj={
                 {
                     "value": "430300",
                     "label": "湘潭市",
-                 },
+                },
                 {
                     "value": "430400",
                     "label": "衡阳市",
@@ -15810,19 +15814,19 @@ const businessObj={
                 {
                     "value": "431100",
                     "label": "永州市",
-                  },
+                },
                 {
                     "value": "431200",
                     "label": "怀化市",
-                 },
+                },
                 {
                     "value": "431300",
                     "label": "娄底市",
-                 },
+                },
                 {
                     "value": "433100",
                     "label": "湘西土家族苗族自治州",
-                 }
+                }
             ]
         },
         {
@@ -15868,7 +15872,7 @@ const businessObj={
                 {
                     "value": "441200",
                     "label": "肇庆市",
-                 },
+                },
                 {
                     "value": "441300",
                     "label": "惠州市",
@@ -15876,7 +15880,7 @@ const businessObj={
                 {
                     "value": "441400",
                     "label": "梅州市",
-                 },
+                },
                 {
                     "value": "441500",
                     "label": "汕尾市",
@@ -15884,7 +15888,7 @@ const businessObj={
                 {
                     "value": "441600",
                     "label": "河源市",
-            },
+                },
                 {
                     "value": "441700",
                     "label": "阳江市",
@@ -15904,7 +15908,7 @@ const businessObj={
                 {
                     "value": "445100",
                     "label": "潮州市",
-                 },
+                },
                 {
                     "value": "445200",
                     "label": "揭阳市",
@@ -15926,7 +15930,7 @@ const businessObj={
                 {
                     "value": "450200",
                     "label": "柳州市",
-                 },
+                },
                 {
                     "value": "450300",
                     "label": "桂林市",
@@ -15934,11 +15938,11 @@ const businessObj={
                 {
                     "value": "450400",
                     "label": "梧州市",
-                 },
+                },
                 {
                     "value": "450500",
                     "label": "北海市",
-                 },
+                },
                 {
                     "value": "450600",
                     "label": "防城港市",
@@ -15958,7 +15962,7 @@ const businessObj={
                 {
                     "value": "451000",
                     "label": "百色市",
-                 },
+                },
                 {
                     "value": "451100",
                     "label": "贺州市",
@@ -15966,7 +15970,7 @@ const businessObj={
                 {
                     "value": "451200",
                     "label": "河池市",
-                 },
+                },
                 {
                     "value": "451300",
                     "label": "来宾市",
@@ -16014,7 +16018,7 @@ const businessObj={
                 {
                     "value": "500200",
                     "label": "县",
-                 }
+                }
             ]
         },
         {
@@ -16028,23 +16032,23 @@ const businessObj={
                 {
                     "value": "510300",
                     "label": "自贡市",
-                 },
+                },
                 {
                     "value": "510400",
                     "label": "攀枝花市",
-                 },
+                },
                 {
                     "value": "510500",
                     "label": "泸州市",
-                 },
+                },
                 {
                     "value": "510600",
                     "label": "德阳市",
-                 },
+                },
                 {
                     "value": "510700",
                     "label": "绵阳市",
-                 },
+                },
                 {
                     "value": "510800",
                     "label": "广元市",
@@ -16092,11 +16096,11 @@ const businessObj={
                 {
                     "value": "512000",
                     "label": "资阳市",
-               },
+                },
                 {
                     "value": "513200",
                     "label": "阿坝藏族羌族自治州",
-                 },
+                },
                 {
                     "value": "513300",
                     "label": "甘孜藏族自治州",
@@ -16118,7 +16122,7 @@ const businessObj={
                 {
                     "value": "520200",
                     "label": "六盘水市",
-               },
+                },
                 {
                     "value": "520300",
                     "label": "遵义市",
@@ -16160,11 +16164,11 @@ const businessObj={
                 {
                     "value": "530300",
                     "label": "曲靖市",
-               },
+                },
                 {
                     "value": "530400",
                     "label": "玉溪市",
-                 },
+                },
                 {
                     "value": "530500",
                     "label": "保山市",
@@ -16184,7 +16188,7 @@ const businessObj={
                 {
                     "value": "530900",
                     "label": "临沧市",
-                 },
+                },
                 {
                     "value": "532300",
                     "label": "楚雄彝族自治州",
@@ -16230,7 +16234,7 @@ const businessObj={
                 {
                     "value": "540200",
                     "label": "日喀则市",
-               },
+                },
                 {
                     "value": "540300",
                     "label": "昌都市",
@@ -16272,7 +16276,7 @@ const businessObj={
                 {
                     "value": "610400",
                     "label": "咸阳市",
-                 },
+                },
                 {
                     "value": "610500",
                     "label": "渭南市",
@@ -16284,7 +16288,7 @@ const businessObj={
                 {
                     "value": "610700",
                     "label": "汉中市",
-                 },
+                },
                 {
                     "value": "610800",
                     "label": "榆林市",
@@ -16296,7 +16300,7 @@ const businessObj={
                 {
                     "value": "611000",
                     "label": "商洛市",
-                 }
+                }
             ]
         },
         {
@@ -16306,11 +16310,11 @@ const businessObj={
                 {
                     "value": "620100",
                     "label": "兰州市",
-                 },
+                },
                 {
                     "value": "620200",
                     "label": "嘉峪关市",
-                 },
+                },
                 {
                     "value": "620300",
                     "label": "金昌市",
@@ -16346,7 +16350,7 @@ const businessObj={
                 {
                     "value": "621100",
                     "label": "定西市",
-               },
+                },
                 {
                     "value": "621200",
                     "label": "陇南市",
@@ -16358,7 +16362,7 @@ const businessObj={
                 {
                     "value": "623000",
                     "label": "甘南藏族自治州",
-                 }
+                }
             ]
         },
         {
@@ -16388,7 +16392,7 @@ const businessObj={
                 {
                     "value": "632600",
                     "label": "果洛藏族自治州",
-                 },
+                },
                 {
                     "value": "632700",
                     "label": "玉树藏族自治州",
@@ -16396,7 +16400,7 @@ const businessObj={
                 {
                     "value": "632800",
                     "label": "海西蒙古族藏族自治州",
-                 }
+                }
             ]
         },
         {
@@ -16410,11 +16414,11 @@ const businessObj={
                 {
                     "value": "640200",
                     "label": "石嘴山市",
-                 },
+                },
                 {
                     "value": "640300",
                     "label": "吴忠市",
-                 },
+                },
                 {
                     "value": "640400",
                     "label": "固原市",
@@ -16422,7 +16426,7 @@ const businessObj={
                 {
                     "value": "640500",
                     "label": "中卫市",
-                 }
+                }
             ]
         },
         {
@@ -16460,7 +16464,7 @@ const businessObj={
                 {
                     "value": "652900",
                     "label": "阿克苏地区",
-                 },
+                },
                 {
                     "value": "653000",
                     "label": "克孜勒苏柯尔克孜自治州",
@@ -16476,7 +16480,7 @@ const businessObj={
                 {
                     "value": "654000",
                     "label": "伊犁哈萨克自治州",
-               },
+                },
                 {
                     "value": "654200",
                     "label": "塔城地区",
@@ -16488,7 +16492,7 @@ const businessObj={
                 {
                     "value": "659000",
                     "label": "自治区直辖县级行政区划",
-                 }
+                }
             ]
         },
         {
@@ -16504,5 +16508,5 @@ const businessObj={
             "label": "澳门特别行政区"
         }
     ]
-    
+
 };

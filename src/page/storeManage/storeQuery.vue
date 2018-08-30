@@ -8,7 +8,7 @@
             <!-- 展示区 -->
            <div class="margin-tops">
                <el-table
-                   v-loading="loading"
+                    v-loading="loading"
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading"
                     element-loading-background="rgba(0, 0, 0, 0.8)"
@@ -108,11 +108,14 @@ export default {
     return {
       areas: {
         name: "门店名称",
-        code: "门店编码"
+        code: "门店编码",
+        id:this.common.has("shop_search_num"),
+        label:this.common.has("shop_search_name"),
       },
       filters: {
         names: "",
-        codes: ""
+        codes: "",
+        
       },
       totals: {
         totalNum: 0,
@@ -169,6 +172,7 @@ export default {
   methods: {
     //地区转换
     findAreaName(res, str) {
+
       if (this.areaCache[str]) return this.areaCache[str];
       for (var i = 0, len = res.length; i < len; i++) {
         if (str === res[i]["value"]) {
@@ -199,14 +203,17 @@ export default {
     // },
     //查询门店
     queryStore(name, code) {
+      debugger
       this.loading = true;
       this.filters.names = name;
       this.filters.codes = code;
       let para = {
         shopname: this.filters.names || "",
         shopno: this.filters.codes || "",
+        merchantno: window.localStorage.getItem("username"),
         currentPage: this.totals.currentPage,
         pageSize: this.totals.pageSize,
+
         token: window.localStorage.getItem("token")
       };
       reqStore(para).then(res => {

@@ -3,6 +3,7 @@
         <el-dialog
         :title="dialog.title"
         :visible.sync="dialog.dialogVisible"
+        :close-on-click-modal="false"
         width="800px">
                  <el-form label-position="right" label-width="160px" :model="dialog.storeData"  :rules="rules" ref="dialog.storeData">
                    <el-row :gutter="20">

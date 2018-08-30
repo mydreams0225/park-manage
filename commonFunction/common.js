@@ -138,8 +138,8 @@ export default {
       }
     }
   },
-  //验证token是否失效的方法
-  tokenCheck(){
+  // 验证token是否失效的方法
+  tokenCheck() {
     this.$message({
       message: "请求超时，请刷新页面重新登录",
       type: "error"
@@ -149,6 +149,29 @@ export default {
     window.localStorage.removeItem("userInfo");
     window.localStorage.removeItem("token");
     window.localStorage.removeItem("isLoadNodes");
+  },
+  // 按钮权限验证方法
+  // 权限检查方法
+
+  permissionCache: {},
+  has(value) {
+    var values = value || ""
+    if (this.permissionCache[values]) return this.permissionCache[values];
+    let isExist = false;
+    // 获取用户按钮权限
+    // let btnPermissionsStr = ["sh001", "sh002", "md001", "md002", "jy001", "jy002"]
+    let btnPermissionsStr = window.localStorage.getItem("buttonPermission").split(",");
+    if (btnPermissionsStr == undefined || btnPermissionsStr == null) {
+      return false;
+    }
+    var len = btnPermissionsStr.length
+    for (var i = 0; i < len; i++) {
+      if (btnPermissionsStr[i] === values) {
+        this.permissionCache[values] = 1;
+        isExist = true;
+      }
+    }
+    return isExist;
   }
 
 

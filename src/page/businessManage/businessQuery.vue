@@ -3,7 +3,7 @@
        <div class="parent">
            <div class="margin-tops">
                <el-button type="success" size="medium" class="el-icon-plus" @click="openBusiness">新增商户</el-button>
-               <query :area="areas" @querys="queryBusiness"></query>
+               <query  :area="areas" @querys="queryBusiness"></query>
            </div>
            <!-- 展示区 -->
            <div class="margin-tops">
@@ -96,7 +96,9 @@ export default {
       //// 父组件传给子组件
       areas: {
         name: "商户名称",
-        code: "商户编码"
+        code: "商户编码",
+        id:this.common.has("merchant_search_num"),
+        label:this.common.has("merchant_search_name"),
       },
       filters: {
         names: "",
@@ -235,6 +237,9 @@ export default {
         } else {
         }
         this.loading = false;
+      }).catch(err=>{
+        debugger
+        this.loading = false;
       });
     },
     //改变当前页数
@@ -291,6 +296,7 @@ export default {
     },
     // 子组件传给父组件
     submits(obj) {
+      debugger
       console.log("obj1");
       console.log(obj);
       this.dialog.loading = true;
@@ -379,6 +385,11 @@ export default {
               window.localStorage.removeItem("token");
               window.localStorage.removeItem("isLoadNodes");
           }
+        }).catch(err=>{
+           this.$message({
+                message: "服务器异常",
+                type: "error"
+              });
         });
       }
     }
