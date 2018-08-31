@@ -4,7 +4,6 @@ import Router from '../../node_modules/_vue-router@3.0.1@vue-router'
 import Login from '@/page/Login'
 import Home from '@/page/Home'
 import s404  from '@/page/404.vue'
-import Park from "@/page/Park"
 Vue.use(Router)
 const commonRouter = [
     {

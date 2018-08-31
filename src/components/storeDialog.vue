@@ -85,7 +85,7 @@
 </template>
 <script>
 import BMap from "BMap";
-import baiMap from "@/components/baidu-map";
+import baiMap from "@/components/common/baidu-map";
 // import BaiduMap from "@/utils/baidu-map";
 export default {
   data() {

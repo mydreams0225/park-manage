@@ -69,7 +69,7 @@
                     prop="wxmemo"
                     label="微信返回的备注">
                     </el-table-column>
-                </el-table>
+              </el-table>
            </div>
              <div class="margin-tops">
                <paging :total="totals" @handleCurrentChange="handleCurrentChanges"> </paging>
@@ -79,7 +79,7 @@
 </template>
 <script>
 import query from "@/components/query";
-import paging from "@/components/paging";
+import paging from "@/components/common/paging";
 import { reqFlow } from "@/api/flowQuery";
 export default {
   data() {

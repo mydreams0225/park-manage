@@ -125,16 +125,15 @@ export default {
           loginParams.append("password", this.ruleForm2.checkPass);
           //jsonp
           $.ajax({
-            type: "post",
+            type: "get",
             data: {
               username: _this.ruleForm2.account,
               password: _this.ruleForm2.checkPass,
               proId: "sys_004"
             },
 
-             url: `${configs.login}/jwt/login`,
-            //  url: "../../static/json/rolelist.json",
-
+            //  url: `${configs.login}/jwt/login`,
+              url: "../../static/json/rolelist.json",
             // jsonpCallback: "showData",
             // dataType: "jsonp",
             success: function(data) {
@@ -190,6 +189,7 @@ export default {
   width: 100%;
   height: 100%;
   background: url(../../static/img/login.jpg) no-repeat;
+  /* filter: blur(10px) ; */
   background-size: cover;
   overflow: auto;
 }

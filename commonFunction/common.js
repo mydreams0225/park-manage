@@ -139,8 +139,8 @@ export default {
     }
   },
   // 验证token是否失效的方法
-  tokenCheck() {
-    this.$message({
+  tokenCheck(_this) {
+    _this.$message({
       message: "请求超时，请刷新页面重新登录",
       type: "error"
     });

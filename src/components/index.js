@@ -1,4 +1,4 @@
-import pagingComponent from './paging.vue';
+import pagingComponent from './common/paging.vue';
 
 const paging={
     install:function(Vue){

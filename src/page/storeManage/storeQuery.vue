@@ -101,7 +101,7 @@ import {
   reqEditStore,
   reqAddStore
 } from "@/api/storeManage";
-import paging from "@/components/paging";
+import paging from "@/components/common/paging";
 import storeDialog from "@/components/storeDialog";
 export default {
   data() {

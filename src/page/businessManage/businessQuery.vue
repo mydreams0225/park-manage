@@ -86,7 +86,7 @@ import {
   reqEditBusiness, // 修改请求
   reqDeleteBusiness // 单行删除
 } from "@/api/businessManage";
-import paging from "@/components/paging"; // 引入分页组件
+import paging from "@/components/common/paging"; // 引入分页组件
 import businessDialog from "@/components/businessDialog"; // 引入添加修改弹出界面
 
 export default {

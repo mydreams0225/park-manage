@@ -69,7 +69,7 @@ import MenuTree from "@/page/MenuTree";
 //引入图标库
 import iconfont from "@/assets/icon/iconfont.css";
 import MenuUtils from "@/utils/MenuUtils";
-import showPwd from "@/components/editPwd";
+import showPwd from "@/components/common/editPwd";
 export default {
   data() {
     return {
