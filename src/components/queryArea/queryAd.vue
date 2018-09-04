@@ -1,5 +1,5 @@
 <template>
-    <div class="queryArea">
+    <div class="queryAd">
         <el-select v-model="names" :placeholder="area.name">
            <el-option v-for="item in area.options" 
            :key="item.value" 
@@ -7,7 +7,6 @@
            :value="item.value">
            </el-option>
         </el-select>
-        <el-input :placeholder="area.code" v-model="codes" ></el-input>
         <el-button size="medium" type="primary" @click="query">查询</el-button>
     </div>
 </template>
@@ -15,29 +14,27 @@
 export default {
   props: {
     area: {
-      code: "",
-      options:[]
+      name: "",
     }
   },
   data() {
     return {
-      names: "",
-      codes: ""
+      names: new Date(),
     };
   },
   methods:{
       query:function(){
-          this.$emit('querys',this.names,this.codes);
+          this.$emit('querys',this.names);
       }
   }
 };
 </script>
 <style>
-    .queryArea {
+    .queryAd {
         float: right;
         display: inline-block;
     }
-    .queryArea .el-input {
+    .queryAd .el-input {
         width: 200px;
     }
 </style>

@@ -11,7 +11,6 @@
                     element-loading-spinner="el-icon-loading"
                     element-loading-background="rgba(0, 0, 0, 0.8)"
                     :data="rechargeData"
-                    height="250"
                     border
                     style="width: 100%"
                     >
@@ -44,7 +43,7 @@
                                 <el-button type="success" size="mini" @click="rechargeClick(scope.row)">充值</el-button>
                             </template>
                      </el-table-column>
-              </el-table>
+                 </el-table>
              </div>
              <div class="margin-tops">
                  <paging :total="totals" @handleCurrentChange="CurrentChanges"> </paging>
@@ -57,7 +56,7 @@
                     >
                     <el-form label-position="right" label-width="160px" :model="dialog.rechargeData" :rules="rules" ref="dialog.rechargeData">
                        <el-form-item label="广告主编号：" prop="advertId">
-                          <el-input v-model="dialog.rechargeData.advertId"></el-input>
+                          <el-input v-model="dialog.rechargeData.advertId" :disabled="true"></el-input>
                        </el-form-item>
                        <el-form-item label="充值金额：" prop="rechargeAmount">
                           <el-input v-model="dialog.rechargeData.rechargeAmount"></el-input>
@@ -191,10 +190,12 @@ export default {
                   message: "充值成功",
                   type: "success"
                 });
+                this.queryRecharge(_this.filters.advertisterName);
               } else if (res.status === 202) {
                 _this.common.tokenCheck(_this);
                 _this.dialog.loading = false;
               }
+               
             })
             .catch(err => {
               _this.$message.error("请求超时，请重新发送请求");

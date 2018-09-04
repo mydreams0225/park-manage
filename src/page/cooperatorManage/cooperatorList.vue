@@ -83,15 +83,6 @@
                        <el-form-item label="密码：" prop="pwd">
                           <el-input v-model="dialog.list.pwd"></el-input>
                        </el-form-item>
-                       <el-form-item label="身份：" prop="identity">
-                          <!-- <el-input v-model="dialog.rechargeData.identity"></el-input> -->
-                          <el-select v-model="dialog.list.identity">
-                              <el-option v-for="item in identity" 
-                              :key="item.value"
-                              :label="item.label"
-                              :value="item.value"></el-option>
-                          </el-select>
-                       </el-form-item>
                        <el-form-item label="邮箱：">
                           <el-input v-model="dialog.list.email"></el-input>
                        </el-form-item>
@@ -145,12 +136,9 @@ export default {
       dialog: {
         loading: false,
         dialogVisible: false,
-        list: {
-          
+        list: {        
         }
       },
-
-      identity:configs.identity,
       rules: {
         advertName: [
           { required: true, message: "请输入姓名", trigger: "blur" }
@@ -163,7 +151,7 @@ export default {
       }
     };
   },
-    mounted(){
+  mounted(){
       this.queryAdvertList();
   },
   methods: {
@@ -220,8 +208,7 @@ export default {
     },
     // 提交
     submit(formName) {
-         this.dialog.loading = true;
-      debugger;
+     this.dialog.loading = true;
       var _this = this;
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -250,10 +237,11 @@ export default {
                 _this.common.tokenCheck(_this);
               }
                _this.dialog.loading = false;
+               this.queryAdvertList(_this.filters.identity,_this.filters.name);
             }).catch(err => {
               _this.$message.error("请求超时，请重新发送请求");
               return false;
-            });;
+            });
           } else {
             // 修改请求
             reqEditAdvertList(para).then(res => {
@@ -262,6 +250,7 @@ export default {
                   message: "修改成功",
                   type: "success"
                 });
+                this.queryAdvertList(_this.filters.identity,_this.filters.name);
               } else if (res.status === 202) {
                 _this.common.tokenCheck(_this);
                 
@@ -271,7 +260,7 @@ export default {
               _this.$message.error("请求超时，请重新发送请求");
               _this.dialog.loading = false;
               return false;
-            });;
+            });
           }
         } else {
           _this.$message.error("请完善必填项信息");
@@ -297,6 +286,7 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
+              this.queryAdvertList(_this.filters.identity,_this.filters.name);
             } else if (res.status === 202) {
               _this.common.tokenCheck(_this);
             }
@@ -313,7 +303,7 @@ export default {
     CurrentChanges(currentPage, pageSize) {
       this.totals.currentPage = currentPage;
       this.totals.pageSize = pageSize;
-      // this.queryRecharge(this.filters.advertisterName);
+      this.queryAdvertList(_this.filters.identity,_this.filters.name);
     }
   },
   components: {

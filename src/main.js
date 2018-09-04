@@ -50,8 +50,8 @@ if (data) {
   window.localStorage.removeItem('isLoadNodes');
 }
 router.beforeEach((to, from, next) => {
-  var token=window.localStorage.getItem("token");
-  if(!to.path=='/login'){
+  var token=window.localStorage.getItem("token") ;
+  if(to.path!='/login'){
     $.ajax({
       type: "post",
       data: { token: window.localStorage.getItem("token") },

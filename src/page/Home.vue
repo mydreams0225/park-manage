@@ -269,10 +269,11 @@ export default {
       type: "post",
       data: { token: window.localStorage.getItem("token") },
       //  url: "../../static/json/rolelist.json",
-      url: `${configs.login}/jwt/checkToken`,
+      url: `${configs.login}/jwt/checkToken1111`,
       // url:`${configs.base}/index` ,
       // dataType: "jsonp",
       success: function(data) {
+        debugger
         if (data.status === 201) {
           window.localStorage.removeItem("user");
           window.localStorage.removeItem("userRole");

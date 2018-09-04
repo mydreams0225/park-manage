@@ -27,6 +27,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   },
   globals: {
-    'config': true
+    'config': true,
+    'advertConfit':true
   }
 }
