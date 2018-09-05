@@ -68,7 +68,7 @@
             </div>
             <div class="advertList">
                 <el-dialog
-                     :title="dialog.title"
+                    :title="dialog.title"
                     :visible.sync="dialog.dialogVisible"
                     :close-on-click-modal="false"
                     width="800px"
