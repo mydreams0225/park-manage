@@ -19,7 +19,7 @@ export default {
   },
   data() {
     return {
-      names: new Date(),
+      names: [],
     };
   },
   methods:{

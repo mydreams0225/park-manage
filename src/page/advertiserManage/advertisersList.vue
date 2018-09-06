@@ -2,7 +2,12 @@
     <section>
         <div class="parent">
             <div class="margin-tops">
-                 <el-button type="success" size="medium" class="el-icon-plus" @click="addAdvertList">添加</el-button>
+                 <el-button 
+                     type="success" 
+                     size="medium" 
+                     class="el-icon-plus" 
+                     @click="addAdvertList">添加
+                  </el-button>
                  <query :area = "areas" @querys = "queryAdvertList"></query>  
             </div>
             <div class="margin-tops">
@@ -37,12 +42,12 @@
                     align="center">
                     </el-table-column>
                     <el-table-column
-                    prop="status"
+                    prop="statusName"
                     label="状态"
                     align="center">
                     </el-table-column>
                     <el-table-column
-                    prop="identity"
+                    prop="identityName"
                     label="身份"
                     align="center">
                     </el-table-column>
@@ -54,7 +59,7 @@
                             <template slot-scope="scope">
                                 <el-button @click="handleClick(scope.row)" type="primary" size="mini" class="el-icon-edit"></el-button>
                                 <el-button
-                                @click.native.prevent="deleteRow(scope.$index, scope.row.advertId)"
+                                @click.native.prevent="deleteRow(scope.$index, scope.row.userName)"
                                 type="danger"
                                 class="el-icon-error"
                                 size="mini">
@@ -86,7 +91,7 @@
                        <el-form-item label="身份：" prop="identity">
                           <!-- <el-input v-model="dialog.rechargeData.identity"></el-input> -->
                           <el-select v-model="dialog.list.identity">
-                              <el-option v-for="item in identity" 
+                              <el-option v-for="item in config.identity" 
                               :key="item.value"
                               :label="item.label"
                               :value="item.value"></el-option>
@@ -149,8 +154,10 @@ export default {
           
         }
       },
-
-      identity:configs.identity,
+      config:{
+        identity:configs.identity
+      },
+     
       rules: {
         advertName: [
           { required: true, message: "请输入姓名", trigger: "blur" }
@@ -175,7 +182,7 @@ export default {
       this.filters.name = name;
       let para = {
         identity: this.filters.identity, // 广告主身份
-        name: this.filters.name, //
+        name: this.filters.name, // 
         currentPage: this.totals.currentPage,
         pageSize: this.totals.pageSize,
         token: window.localStorage.getItem("token")
@@ -185,24 +192,44 @@ export default {
         if (res.status === 200) {
           _this.advertListData = [];
           let list = res.list;
-          list.forEach(item => {
-            let temp = {
-              advertName: item.advertName,
-              userName: item.userName,
-              email:item.email,
-              status:item.status,
-              identity:item.identity,
-              role:item.role
-            };
-            _this.advertListData.push(temp);
-          });
+          loopItem(list);
           _this.totals.totalNum = res.data.totalNum; //总条数
           this.tableLoading = false;
         } else if (res.status === 202) {
           _this.common.tokenCheck(_this);
           this.tableLoading = false;
         }
+      }).catch(()=>{
+        _this.$message.error("请求超时，请重新发送请求");
+        this.tableLoading=false;
+        return false;
       });
+    },
+    loopItem(list){
+       list.forEach(item => {
+         var identityNames="";
+            if(item.identity){
+              
+               this.config.identity.forEach(item=>{
+                 if(item.value===item.identity){
+                     identityNames=item.label;
+                 }
+               })
+            }//
+           var statusNames= item.status && iitem.status !== "1" ? "禁用" : "启用"
+            let temp = {
+              advertName: item.advertName,
+              userName: item.userName,
+              email:item.email,
+              identityName:identityNames,
+              status:item.status,
+              identity:item.identity,
+              statusName:item.statusName,
+              status:item.status,
+              role:item.role
+            };
+            _this.advertListData.push(temp);
+          });
     },
     // open编辑
     handleClick(row) {
@@ -221,7 +248,6 @@ export default {
     // 提交
     submit(formName) {
          this.dialog.loading = true;
-      debugger;
       var _this = this;
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -251,6 +277,7 @@ export default {
               }
                _this.dialog.loading = false;
             }).catch(err => {
+              _this.dialog.loading = false;
               _this.$message.error("请求超时，请重新发送请求");
               return false;
             });;

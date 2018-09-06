@@ -2,8 +2,12 @@
     <section>
         <div class="parent">
             <div class="margin-tops">
-                 <el-button type="success" size="medium" class="el-icon-plus" @click="addAdvertList">添加</el-button>
-                 <query :area = "areas" @querys = "queryAdvertList"></query>  
+                 <el-button 
+                 type="success" 
+                 size="medium" 
+                 class="el-icon-plus" 
+                 @click="addAdvertList">添加</el-button>
+                 <query :area = "areas" @querys = "queryPatternList"></query>  
             </div>
             <div class="margin-tops">
                  <el-table
@@ -110,11 +114,15 @@
 import query from "@/components/queryArea/queryList"; // 查询
 import paging from "@/components/common/paging.vue";
 import {
-  reqAdvertList,
-  reqAddAdvertList,
-  reqEditAdvertList,
-  reqRemoveAdvertisters
-} from "@/api/advertManage/advertList";
+  reqPatternList,
+  reqAddPatternList,
+  reqEditPatternList,
+  reqRemovePattern
+  // reqAdvertList,
+  // reqAddAdvertList,
+  // reqEditAdvertList,
+  // reqRemoveAdvertisters
+} from "@/api/patternManage/patternList";
 export default {
   data() {
     return {
@@ -152,45 +160,68 @@ export default {
     };
   },
   mounted(){
-      this.queryAdvertList();
+      this.queryPatternList();
   },
   methods: {
     // 查询
-    queryAdvertList(identity, name) {
+    queryPatternList(identity, name) {
       var _this = this;
       this.tableLoading = true;
-      this.filters.identity = identity;
-      this.filters.name = name;
+      // this.filters.identity = identity;
+      // this.filters.name = name;
       let para = {
-        identity: this.filters.identity, // 广告主身份
-        name: this.filters.name, //
+        identity: identity, // 广告主身份
+        name: name, //
         currentPage: this.totals.currentPage,
         pageSize: this.totals.pageSize,
         token: window.localStorage.getItem("token")
       };
       // 发送请求
-      reqAdvertList(para).then(res => {
+      reqPatternList(para).then(res => {
         if (res.status === 200) {
           _this.advertListData = [];
           let list = res.list;
-          list.forEach(item => {
-            let temp = {
-              advertName: item.advertName,
-              userName: item.userName,
-              email:item.email,
-              status:item.status,
-              identity:item.identity,
-              role:item.role
-            };
-            _this.advertListData.push(temp);
-          });
+          this.loopItemQ(list);
           _this.totals.totalNum = res.data.totalNum; //总条数
           this.tableLoading = false;
         } else if (res.status === 202) {
           _this.common.tokenCheck(_this);
           this.tableLoading = false;
         }
+      }).catch(()=>{
+        this.tableLoading = false;
+        _this.$message.error("请求超时，请重新发送请求")
       });
+    },
+    loopItemQ(list){
+       list.forEach(item => {
+          var identityNames="";
+            if(item.identity){
+              
+               this.config.identity.forEach(item=>{
+                 if(item.value===item.identity){
+                     identityNames=item.label;
+                 }
+               })
+            }//
+           var statusNames="";
+            if(item.status==="1"){
+              statusNames="启用"
+            }else if(item.status==="2"){
+              statusNames="禁用"
+            }
+            let temp = {
+              advertName: item.advertName,
+              userName: item.userName,
+              email:item.email,
+              status:item.status,
+              identity:item.identity,
+              role:item.role,
+              statusName:statusNames,
+              identityName:identityNames
+            };
+            _this.advertListData.push(temp);
+          });
     },
     // open编辑
     handleClick(row) {
@@ -227,7 +258,7 @@ export default {
           };
           if (list.title === "添加用户") {
             // 添加请求
-            reqAddAdvertList(para).then(res => {
+            reqAddPatternList(para).then(res => {
               if (res.status === 200) {
                 this.$message({
                   message: "添加成功",
@@ -237,20 +268,20 @@ export default {
                 _this.common.tokenCheck(_this);
               }
                _this.dialog.loading = false;
-               this.queryAdvertList(_this.filters.identity,_this.filters.name);
+               this.queryPatternList();
             }).catch(err => {
               _this.$message.error("请求超时，请重新发送请求");
               return false;
             });
           } else {
             // 修改请求
-            reqEditAdvertList(para).then(res => {
+            reqEditPatternList(para).then(res => {
               if (res.status === 200) {
                 this.$message({
                   message: "修改成功",
                   type: "success"
                 });
-                this.queryAdvertList(_this.filters.identity,_this.filters.name);
+                this.queryPatternList();
               } else if (res.status === 202) {
                 _this.common.tokenCheck(_this);
                 
@@ -280,13 +311,13 @@ export default {
             shopno: id, //门店编号
             token: window.localStorage.getItem("token")
           };
-          reqRemoveAdvertisters(para).then(res => {
+          reqRemovePattern(para).then(res => {
             if (res.status === 200) {
               this.$message({
                 message: "删除成功",
                 type: "success"
               });
-              this.queryAdvertList(_this.filters.identity,_this.filters.name);
+              this.queryPatternList();
             } else if (res.status === 202) {
               _this.common.tokenCheck(_this);
             }
@@ -303,7 +334,7 @@ export default {
     CurrentChanges(currentPage, pageSize) {
       this.totals.currentPage = currentPage;
       this.totals.pageSize = pageSize;
-      this.queryAdvertList(_this.filters.identity,_this.filters.name);
+      this.queryPatternList();
     }
   },
   components: {

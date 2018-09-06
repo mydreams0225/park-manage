@@ -51,7 +51,7 @@
                                 </el-button>
                             </template>
                      </el-table-column>
-                 </el-table>
+                </el-table>
             </div>
             <div class="margin-tops">
                 <paging :total="totals" @handleCurrentChange="CurrentChanges"></paging>

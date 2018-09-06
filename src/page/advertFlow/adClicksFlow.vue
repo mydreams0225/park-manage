@@ -19,7 +19,7 @@
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading"
                     element-loading-background="rgba(0, 0, 0, 0.8)"
-                    :data="adExpData"
+                    :data="adClickData"
                     border
                     style="width: 100%"
                     >
@@ -110,7 +110,7 @@
 <script>
 import query from "@/components/queryArea/queryExp";
 import paging from "@/components/common/paging.vue";
-import reqAdExpFlow from '@/api/advertFlow/adClicksFlow';
+import {reqAdClickFlow} from '@/api/advertFlow/adClicksFlow';
 export default {
   data() {
     return {
@@ -124,7 +124,7 @@ export default {
         planId: "投放计划编号"
       },
       tableLoading: false,
-      adExpData: [{}],
+      adClickData: [{}],
       filters: {
         adIds: "广告主编号",
         coopIds: "合作商编号",
@@ -140,12 +140,12 @@ export default {
     };
   },
   mounted() {
-    this.querys({});
+    this.querys();
   },
   methods: {
     querys(list) {
-      let filters = this.filters;
-      filters = list;
+      var _this=this;
+      this.tableLoading = true;
       let para = {
         adId: this.filters.adids,
         coopId: this.filters.coopId,
@@ -153,15 +153,26 @@ export default {
         ggwId: this.filters.ggwId,
         planId: this.filters.planId,
         expDate: this.expDate,
+        currentPage:this.totals.currentPage,
+        pageSize:this.totals.pageSize,
         token: window.localStorage.getItem("token")
       };
-    //   reqAdExpFlow(para)
-    //     .then(res => {
-    //       if (res.status === 200) {
-    //       } else if (res.status === 202) {
-    //       }
-    //     })
-    //     .catch({});
+      reqAdClickFlow(para)
+        .then(res => {
+          if (res.status === 200) {
+             var list = res.list;
+            _this.loopItem(list);
+            _this.totals.totalNum = res.data.totalNum;
+          } else if (res.status === 202) {
+             _this.common.tokenCheck(_this);
+          }
+          _this.tableLoading = false;
+        })
+        .catch(()=>{
+          this.$message.error("请求超时，请重新发送请求");
+          _this.tableLoading = false;
+          return false;
+        });
     },
     CurrentChanges(currentPage, pageSize) {
       this.totals.currentPage = currentPage;

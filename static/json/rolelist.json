@@ -5,7 +5,7 @@
     "data": [
         {
             "id": "a5afbe1f79524eae870ec0977195c3b8",
-            "name": "支付商户系统",
+            "name": "广告系统",
             "state": null,
             "checked": false,
             "path": "",
@@ -37,6 +37,17 @@
                             "parentId": "541e43f0a8054f62a4ab28c182f56a45",
                             "hasParent": true,
                             "hasChildren": false
+                        },
+                        {
+                            "id": "7628e5a9d244414ea2ad4a2e838dd78c",
+                            "name": "投放计划管理",
+                            "state": null,
+                            "checked": false,
+                            "path": "/advertiserManage/putPlanManage",
+                            "children": [],
+                            "parentId": "541e43f0a8054f62a4ab28c182f56a45",
+                            "hasParent": true,
+                            "hasChildren": false
                         }
                     ],
                     "parentId": "e5b13a3e28664f0a9be0050a9ed382c8",
@@ -56,6 +67,17 @@
                             "state": null,
                             "checked": false,
                             "path": "/cooperatorManage/cooperatorList",
+                            "children": [],
+                            "parentId": "541e43f0a8054f62a4ab28c182f56a45",
+                            "hasParent": true,
+                            "hasChildren": false
+                        },
+                        {
+                            "id": "7628e5a9d244414ea2ad4a2e838dd78c",
+                            "name": "广告位管理",
+                            "state": null,
+                            "checked": false,
+                            "path": "/cooperatorManage/ggwManage",
                             "children": [],
                             "parentId": "541e43f0a8054f62a4ab28c182f56a45",
                             "hasParent": true,
@@ -142,7 +164,7 @@
                         },
                         {
                             "id": "7628e5a9d244414ea2ad4a2e838dd78c",
-                            "name": "财务管理",
+                            "name": "财务报表",
                             "state": null,
                             "checked": false,
                             "path": "/financialManage/financialStatements",

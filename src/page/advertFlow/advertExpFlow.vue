@@ -110,11 +110,12 @@
 <script>
 import query from "@/components/queryArea/queryExp";
 import paging from "@/components/common/paging.vue";
+import { reqAdExpFlow } from "@/api/advertFlow/adExpFlow.js";
 export default {
   data() {
     return {
-        expDate:'',
-    //   expDate: new Date().getTime() + 3600 * 1000 * 24 * 3,
+      expDate: "",
+      //   expDate: new Date().getTime() + 3600 * 1000 * 24 * 3,
       area: {
         adId: "广告主编号",
         coopId: "合作商编号",
@@ -124,44 +125,72 @@ export default {
       },
       tableLoading: false,
       adExpData: [{}],
-      filters:{},
-      totals:{
-          totalNum:0,
-          pageSize:10,
-          currentPage:1
+      filters: {},
+      totals: {
+        totalNum: 0,
+        pageSize: 10,
+        currentPage: 1
       }
     };
   },
-  mounted(){
-      this.querys();
+  mounted() {
+    this.querys();
   },
   methods: {
-    querys(list) {      
-        let para = {
-           adId: this.filters.adids,
-           coopId: this.filters.coopId,
-           clickFlowId: this.filters.clickFlowId,
-           ggwId: this.filters.ggwId,
-           planId: this.filters.planId,
-           expDate:this.expDate,
-           token:window.localStorage.getItem("token")
+    querys(list) {
+      this.tableLoading = true;
+      let para = {
+        adId: this.filters.adids,
+        coopId: this.filters.coopId,
+        clickFlowId: this.filters.clickFlowId,
+        ggwId: this.filters.ggwId,
+        planId: this.filters.planId,
+        expDate: this.expDate,
+        token: window.localStorage.getItem("token")
+      };
+      reqAdExpFlow(para)
+        .then(res => {
+          if (res.status === 200) {
+            var list = res.list;
+            _this.loopItem(list);
+            _this.totals.totalNum = res.data.totalNum;
+          } else if (res.status === 202) {
+            _this.common.tokenCheck(_this);
+          }
+          this.tableLoading = false;
+        })
+        .catch(() => {
+          this.$message.error("请求超时，请重新发送请求");
+          this.tableLoading = false;
+          return false;
+        });
+    },
+    loopItem(list) {
+      list.forEach(item => {
+        let temp = {
+          expFlowId: item.expFlowId, // 曝光流水编号
+          adrId: item.adrId, //广告主编号
+          adrName: item.adrName, // 广告主
+          coop: item.coop, // 合作商
+          adId: item.adId, // 广告位编号
+          adName: item.adName, // 广告位名称
+          putPlanId: item.putPlanId, // 投放计划编号
+          adPlanName: item.adPlanName, // 广告计划名称
+          adEleName: item.adEleName, // 广告元素名称
+          feeMethod: item.feeMethod, //计费方式
+          terminalIP: item.terminalIP, //终端IP
+          expUnitPrice: item.expUnitPrice, // 曝光单价
+          coopBA: item.coopBA, // 合作商获益金额
+          expDate: item.expDate // 曝光时间
         };
-        // reqAdExpFlow(para).then(res=>{
-        //     if(res.status===200){
-                
-        //     }else if(res.status===202){
-
-        //     }
-        // }).catch({
-            
-        // })
-
+        this.adExpData.push(temp);
+      });
     },
     CurrentChanges(currentPage, pageSize) {
       this.totals.currentPage = currentPage;
       this.totals.pageSize = pageSize;
       this.querys();
-    //   this.queryAdvertList(_this.filters.identity,_this.filters.name);
+      //   this.queryAdvertList(_this.filters.identity,_this.filters.name);
     }
   },
   components: {

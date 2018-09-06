@@ -1,7 +1,7 @@
 <template>
     <div class="queryArea">
-        <el-input :placeholder="area.name" v-model="names" v-if="area.label"></el-input>
-        <el-input :placeholder="area.code" v-model="codes" v-if="area.id"></el-input>
+        <el-input :placeholder="area.name" v-model="names" ></el-input>
+        <el-input :placeholder="area.code" v-model="codes" ></el-input>
         <el-button size="medium" type="primary" @click="query">查询</el-button>
     </div>
 </template>

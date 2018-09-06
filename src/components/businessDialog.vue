@@ -41,7 +41,7 @@
                                       expand-trigger="hover"
                                       v-model="info.baseinfoarea"
                                       @change="handleChange">
-                                    </el-cascader>      
+                         </el-cascader>      
                     </el-form-item>
                     </el-form>
                     <div class="btn">

@@ -134,7 +134,6 @@ export default {
         pageSize: this.totals.pageSize,
         token: window.localStorage.getItem("token")
       };
-
       reqRechargeList(para)
         .then(res => {
           if (res.status === 200) {
@@ -143,7 +142,8 @@ export default {
             list.forEach(item => {
               let temp = {
                 advertId: item.advertId,
-                rechargeAmount: item.rechargeAmount
+                rechargeAmount: item.rechargeAmount,
+                advertName:item.advertNamepf,
               };
               _this.rechargeData.push(temp);
             });
@@ -164,7 +164,7 @@ export default {
     CurrentChanges(currentPage, pageSize) {
       this.totals.currentPage = currentPage;
       this.totals.pageSize = pageSize;
-      this.queryRecharge(this.filters.advertisterName);
+      this.queryRecharge();
     },
     // 打开充值界面
     rechargeClick(row) {
@@ -190,7 +190,7 @@ export default {
                   message: "充值成功",
                   type: "success"
                 });
-                this.queryRecharge(_this.filters.advertisterName);
+                this.queryRecharge();
               } else if (res.status === 202) {
                 _this.common.tokenCheck(_this);
                 _this.dialog.loading = false;

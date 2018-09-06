@@ -2,8 +2,8 @@ import $axios from 'axios';
 import qs from 'qs';
 let base = configs.base;
 
-// 1、查询 reqAdvertList  
-export const reqAdClickFlow = params => {
+// 1、查询   
+export const reqAdExpFlow = params => {
     return $axios.post(`${base}/team/shop/get`,
         qs.stringify(params, { indices: false }),
         {  // 这里是跨域写法  
